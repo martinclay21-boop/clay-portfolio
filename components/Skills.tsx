@@ -73,8 +73,11 @@ export default function Skills() {
         <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
           Capabilities
         </p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-12">
-          Skills &amp; Experience
+        <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-12 leading-tight">
+          Skills &amp;{" "}
+          <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+            Experience
+          </span>
         </h2>
 
         {/* Skill groups */}

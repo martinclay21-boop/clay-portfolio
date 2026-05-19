@@ -5,8 +5,11 @@ export default function Contact() {
         <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-4">
           Contact
         </p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-          Let's work together.
+        <h2 className="text-4xl sm:text-6xl font-bold text-white mb-4 leading-tight">
+          Let's{" "}
+          <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-400">
+            work together.
+          </span>
         </h2>
         <p className="text-slate-400 text-base max-w-lg mx-auto mb-10">
           I'm currently open to full-time roles and internships in UX and

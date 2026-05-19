@@ -35,9 +35,15 @@ export default function About() {
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
               About
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-6 leading-snug">
-              Designer who leads with empathy,{" "}
-              <span className="text-indigo-600">driven by research.</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-[1.1]">
+              Designer who leads with{" "}
+              <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+                empathy
+              </span>
+              , driven by{" "}
+              <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+                research.
+              </span>
             </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
               <p>
