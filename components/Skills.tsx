@@ -6,7 +6,6 @@ const groups = [
       "Adobe Photoshop",
       "Adobe Illustrator",
       "InDesign",
-      "Inkscape",
       "DaVinci Resolve",
     ],
   },
@@ -31,35 +30,37 @@ const groups = [
 
 const experience = [
   {
-    role: "Design Intern",
-    org: "Gaming Solutions",
+    role: "Intern",
+    org: "Damar Staffing Solutions",
     location: "Indianapolis, IN",
-    period: "May – Aug 2023",
+    period: "May – Aug 2025",
     bullets: [
-      "Designed graphic and presentation decks for in-between business presentations and a certification award ceremony, improving visual consistency across brand materials.",
-      "Supported social media design efforts on paid campaigns and helped implement a candidate management system.",
-      "Collaborated with the marketing team to refine visual identity guidelines across social, email, and sales collateral.",
+      "Designed branded graphics and presentation decks for 4+ inter-business presentations and 1 certification award ceremony, improving visual consistency across brand materials.",
+      "Supported end-to-end execution of digital and email campaigns while mapping process gaps and helping implement candidate retention initiatives.",
+      "Partnered with the marketing team to refine visual identity guidelines and apply them across social, email, and sales collateral.",
     ],
   },
   {
-    role: "Design Intern",
-    org: "Sparx",
+    role: "Intern",
+    org: "Spokenote",
     location: "Fishers, IN",
-    period: "Summer 2024",
+    period: "May 2023 – Aug 2024",
     bullets: [
-      "Created visuals across 3 product pages with 28 realistic product use-case images using Photoshop and Illustrator.",
+      "Updated visuals across 3 pages with 25 realistic product use-case images using Photoshop and Illustrator, improving clarity of product presentation.",
+      "Collaborated with the design team to ensure new visuals aligned with brand guidelines and maintained overall site consistency.",
       "Participated in weekly cross-functional sales and marketing meetings to align creative deliverables with campaign priorities.",
-      "Contributed to a Figma pitch deck aligned with company vision; presented outcomes to leadership to support business growth.",
+      "Delivered 8 design assets (sales one-pagers, pitch decks) aligned with company vision and supported business development initiatives.",
+      "Researched outreach efforts to generate 5–10 leads per day and uncover growth opportunities for the business.",
     ],
   },
   {
     role: "Emerging Technology Practicum",
-    org: "Miami University Foundation",
+    org: "Miami University Luxembourg Foundation",
     location: "Oxford, OH",
     period: "Aug 2024 – May 2025",
     bullets: [
       "Designed responsive UI for a donation-focused foundation website using Figma and WordPress.",
-      "Focused on clear interaction design so visitors could quickly understand the organization and navigate to the donate page.",
+      "Focused on clear interaction design so visitors could quickly understand the foundation and navigate to the donate page.",
     ],
   },
   {
@@ -68,9 +69,9 @@ const experience = [
     location: "Oxford, OH",
     period: "Aug 2024 – May 2025",
     bullets: [
-      "Managed social media presence across multiple platforms to promote team activities and increase visibility.",
-      "Produced branded graphics for tournaments, tryouts, and campus events using design software.",
-      "Livestreamed and uploaded game footage to YouTube, expanding audience reach and engagement.",
+      "Managed social media presence across multiple platforms to promote team activities and increase club visibility.",
+      "Produced branded graphics for tournaments, tryouts, and campus fairs using design software to attract new members and communicate event details.",
+      "Livestreamed and uploaded game footage to YouTube, expanding audience reach and engagement with team content.",
     ],
   },
 ];

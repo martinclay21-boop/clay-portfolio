@@ -1,12 +1,12 @@
 const timeline = [
   {
-    year: "May 2024",
-    title: "B.S. Emerging Technology in Business & Design",
+    year: "May 2026",
+    title: "B.A. Emerging Technology in Business & Design",
     org: "Miami University — Oxford, OH",
-    detail: "Concentration in Digital Design",
+    detail: "Concentration in Digital",
   },
   {
-    year: "Aug – Dec 2023",
+    year: "Aug – Dec 2025",
     title: "Study Abroad — Human Computer Interaction",
     org: "Korea University — Seoul, South Korea",
     detail: "Developed an interactive yearbook interface in Figma",
@@ -15,13 +15,13 @@ const timeline = [
     year: "Apr 2026",
     title: "ICAgile Certified Professional (ICP)",
     org: "ICAgile",
-    detail: "Certified in agile delivery methodologies",
+    detail: "Training in agile mindset, iterative delivery, and cross-functional collaboration",
   },
   {
     year: "Feb 2026",
     title: "Humans as Subjects — IRB Certification",
     org: "CITI Program",
-    detail: "Ethical research conduct for human subjects",
+    detail: "Training in research ethics and responsible conduct for human subjects research · Expires 2029",
   },
 ];
 
@@ -41,8 +41,8 @@ export default function About() {
             </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
               <p>
-                I'm a UX and product designer based in Fishers, IN, with a
-                B.S. in Emerging Technology in Business &amp; Design from Miami
+                I'm a UX and product designer based in Fishers, IN, pursuing a
+                B.A. in Emerging Technology in Business &amp; Design from Miami
                 University. I specialize in finding where users get stuck and
                 redesigning the experience so they don't.
               </p>
@@ -62,7 +62,7 @@ export default function About() {
             </div>
 
             <a
-              href="mailto:claymartin@miamioh.edu"
+              href="mailto:martinclay21@gmail.com"
               className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               Let's connect →

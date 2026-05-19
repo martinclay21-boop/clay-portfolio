@@ -1,54 +1,60 @@
 const projects = [
   {
-    title: "Spirra",
-    category: "UX Design · Mobile App",
+    slug: "cuekit",
+    title: "CueKit",
+    category: "UX Design · Senior Degree Project",
     description:
-      "A mental readiness journal and cue system for college volleyball athletes. Led end-to-end design from discovery to final prototype, including user research, usability testing, wireframing, and high-fidelity Figma prototypes.",
+      "A mental readiness journal and cue system for college volleyball athletes. Led end-to-end design from initial idea through final design, including user research, usability testing, and high-fidelity Figma wireframes.",
     tags: ["Figma", "User Research", "Usability Testing", "Prototyping"],
     accent: "from-indigo-50 to-purple-50",
     dot: "bg-indigo-400",
   },
   {
-    title: "SpeakSync AI",
+    slug: "speaksynci-ai",
+    title: "SpeakSyncAI",
     category: "UX Design · Concept App",
     description:
-      "A concept app providing live captions and AI-generated summaries for students with hearing loss. Focused on accessibility-first design patterns and reducing cognitive load in lecture environments.",
+      "A concept app providing real-time lecture transcription and AI-generated summaries for deaf and hard-of-hearing students. Focused on accessibility-first design patterns and reducing cognitive load.",
     tags: ["Figma", "Accessibility", "Interaction Design", "User Flows"],
     accent: "from-sky-50 to-cyan-50",
     dot: "bg-sky-400",
   },
   {
-    title: "MU Foundation Website",
+    slug: "mu-luxembourg",
+    title: "MU Luxembourg Foundation",
     category: "UI Design · WordPress",
     description:
-      "Redesigned the UI for Miami University Foundation's donation-focused website. Used Figma and WordPress to create responsive page layouts with clear interaction design, helping visitors quickly find and complete the donate flow.",
+      "Designed the UI for Miami University Luxembourg Foundation's donation-focused website using Figma and WordPress. Created responsive page layouts with clear interaction design to help visitors find and complete the donate flow.",
     tags: ["Figma", "WordPress", "Responsive Design", "UI Design"],
     accent: "from-red-50 to-orange-50",
     dot: "bg-red-400",
   },
   {
+    slug: "interactive-yearbook",
     title: "Interactive Yearbook",
     category: "Interaction Design · HCI",
     description:
-      "Developed an interactive yearbook interface during HCI coursework at Korea University in Seoul. Explored interaction models for browsing and memory recall within a digital artifact context.",
+      "A digital platform redesigning how students capture and revisit college memories. Built during HCI coursework at Korea University in Seoul, exploring interaction models for personalization and digital memory-making.",
     tags: ["Figma", "Interaction Design", "HCI", "Prototyping"],
     accent: "from-emerald-50 to-teal-50",
     dot: "bg-emerald-400",
   },
   {
+    slug: "academic-advising",
     title: "Academic Advising Navigation",
     category: "Service Design",
     description:
-      "A service design project addressing communication breakdowns in the student academic advising experience. Mapped the full service journey and proposed touchpoint improvements to reduce student confusion.",
+      "A service design project identifying communication breakdowns in the academic advising process. Prototyped a Canvas and Navigate integration to reduce student confusion around scheduling.",
     tags: ["Service Design", "Journey Mapping", "User Research"],
     accent: "from-amber-50 to-yellow-50",
     dot: "bg-amber-400",
   },
   {
+    slug: "spokenote",
     title: "Spokenote Use Cases",
     category: "Visual Design · Marketing",
     description:
-      "Created visuals across 3 product pages with 28 realistic product use-case images using Photoshop and Illustrator. Collaborated with the design team to ensure brand consistency and contributed to a Figma pitch deck.",
+      "Designed use case illustrations across 3 pages with 25 realistic product images using Photoshop and Illustrator to communicate real-world Spokenote applications to potential customers and partners.",
     tags: ["Photoshop", "Illustrator", "Figma", "Brand Design"],
     accent: "from-violet-50 to-fuchsia-50",
     dot: "bg-violet-400",
@@ -72,9 +78,10 @@ export default function Projects() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p) => (
-            <article
+            <a
               key={p.title}
-              className={`rounded-2xl bg-gradient-to-br ${p.accent} border border-white p-6 flex flex-col gap-4 hover:shadow-md transition-shadow`}
+              href={`/clay-portfolio/projects/${p.slug}/`}
+              className={`rounded-2xl bg-gradient-to-br ${p.accent} border border-white p-6 flex flex-col gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all`}
             >
               <div className="flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${p.dot}`} />
@@ -96,7 +103,10 @@ export default function Projects() {
                   </span>
                 ))}
               </div>
-            </article>
+              <span className="text-xs font-medium text-indigo-600 mt-1">
+                View case study →
+              </span>
+            </a>
           ))}
         </div>
       </div>

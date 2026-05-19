@@ -15,7 +15,7 @@ export default function Contact() {
 
         <div className="flex flex-wrap justify-center gap-4">
           <a
-            href="mailto:claymartin@miamioh.edu"
+            href="mailto:martinclay21@gmail.com"
             className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-500 transition-colors text-sm"
           >
             <svg
@@ -31,7 +31,7 @@ export default function Contact() {
                 d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            claymartin@miamioh.edu
+            martinclay21@gmail.com
           </a>
 
           <a
@@ -45,32 +45,10 @@ export default function Contact() {
             </svg>
             LinkedIn
           </a>
-
-          <a
-            href="https://claymartinportfolio.odoo.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 border border-slate-600 text-slate-300 px-6 py-3 rounded-full font-medium hover:border-slate-400 hover:text-white transition-colors text-sm"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"
-              />
-            </svg>
-            Current Site
-          </a>
         </div>
 
         <p className="text-slate-600 text-sm mt-10">
-          317-321-6771 &nbsp;·&nbsp; Fishers, IN
+          317-331-6771 &nbsp;·&nbsp; Fishers, IN
         </p>
       </div>
     </section>
