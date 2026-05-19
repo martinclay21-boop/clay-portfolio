@@ -1,6 +1,29 @@
 import ProjectLayout from "@/components/ProjectLayout";
-
 export const metadata = { title: "Spokenote Use Cases — Clay Martin" };
+
+const BASE = "/clay-portfolio";
+
+const images = [
+  { src: `${BASE}/images/spokenote/streamline-communication.jpg`, alt: "Scanning floral thank you card with phone" },
+  { src: `${BASE}/images/spokenote/welcome-guide.jpg`, alt: "Welcome guide presentation with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/town-hall.jpg`, alt: "Town Hall Meeting mailer with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/fundraising.jpg`, alt: "Fundraising campaign — See how you're making a difference" },
+  { src: `${BASE}/images/spokenote/spokenote-flyer.png`, alt: "Spokenote flyer design" },
+  { src: `${BASE}/images/spokenote/informed.jpg`, alt: "Fundraising print and phone mockup" },
+  { src: `${BASE}/images/spokenote/community-engagement.jpg`, alt: "Community engagement — Town Hall meeting yard sign" },
+  { src: `${BASE}/images/spokenote/wedding-thankyou.jpg`, alt: "Wedding thank you card with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/higher-education.jpg`, alt: "Higher education use case with laptop and pamphlet" },
+  { src: `${BASE}/images/spokenote/real-estate.jpg`, alt: "For Sale yard sign with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/customer-loyalty.jpg`, alt: "Spokenote store thank you card" },
+  { src: `${BASE}/images/spokenote/in-store.jpg`, alt: "In-store retail transaction with Spokenote thank you" },
+  { src: `${BASE}/images/spokenote/alumni.jpg`, alt: "Alumni event YOU'RE INVITED mailers" },
+  { src: `${BASE}/images/spokenote/direct-mail.jpg`, alt: "Business meeting with Spokenote one-pager" },
+  { src: `${BASE}/images/spokenote/auto-service.jpg`, alt: "Auto service use case — repair order with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/thank-you-card.jpg`, alt: "Floral thank you card with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/cards-collage.png`, alt: "Hospitality use cases — Hotel Van Zandt, Parks Place Pub" },
+  { src: `${BASE}/images/spokenote/construction.jpg`, alt: "Construction blueprints with Spokenote QR code" },
+  { src: `${BASE}/images/spokenote/personalized-marketing.jpg`, alt: "Personalized discount mailer with Spokenote QR code" },
+];
 
 export default function Spokenote() {
   return (
@@ -24,6 +47,25 @@ export default function Spokenote() {
         contexts — not abstract mockups. Potential customers and partners needed
         to immediately understand how and where Spokenote fits into their world.
       </p>
+
+      <h2>Selected Work</h2>
+      <p>
+        A sample of use case visuals across industries — automotive, hospitality,
+        construction, weddings, and retail marketing.
+      </p>
+
+      {/* Image grid — outside prose so we can go full width */}
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+        {images.map((img) => (
+          <div key={img.src} className="rounded-xl overflow-hidden bg-slate-100">
+            <img
+              src={img.src}
+              alt={img.alt}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
 
       <h2>What I Did</h2>
       <ul>

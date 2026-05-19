@@ -54,16 +54,6 @@ const experience = [
     ],
   },
   {
-    role: "Emerging Technology Practicum",
-    org: "Miami University Luxembourg Foundation",
-    location: "Oxford, OH",
-    period: "Aug 2024 – May 2025",
-    bullets: [
-      "Designed responsive UI for a donation-focused foundation website using Figma and WordPress.",
-      "Focused on clear interaction design so visitors could quickly understand the foundation and navigate to the donate page.",
-    ],
-  },
-  {
     role: "Social Media Executive",
     org: "Miami University Men's Club Volleyball",
     location: "Oxford, OH",
