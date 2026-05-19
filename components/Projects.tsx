@@ -11,7 +11,7 @@ const projects = [
       "A mental readiness journal and cue system for college volleyball athletes — end-to-end design from research to high-fidelity Figma prototype.",
     tags: ["Figma", "User Research", "Usability Testing"],
     accent: "from-indigo-100 via-purple-50 to-white",
-    image: `${BASE}/images/spokenote/streamline-communication.jpg`,
+    image: `${BASE}/images/cuekit/logo.jpg`,
     preview: "🏐",
   },
   {
@@ -32,6 +32,7 @@ const projects = [
       "Donation-focused foundation website with responsive page layouts and clear interaction design that guides visitors to the donate flow.",
     tags: ["Figma", "WordPress", "UI Design"],
     accent: "from-red-100 via-orange-50 to-white",
+    image: `${BASE}/images/mu-luxembourg/logo.png`,
     preview: "🎓",
   },
   {

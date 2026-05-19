@@ -9,6 +9,13 @@ export default function CueKit() {
       category="UX Design · Senior Degree Project"
       tags={["Figma", "User Research", "Usability Testing", "Wireframing", "Prototyping"]}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/clay-portfolio/images/cuekit/logo.jpg"
+        alt="CK Mental Performance logo"
+        className="not-prose w-full rounded-2xl bg-slate-50 mb-10"
+      />
+
       <h2>Overview</h2>
       <p>
         CueKit is a mental readiness journal and cue system designed for college
