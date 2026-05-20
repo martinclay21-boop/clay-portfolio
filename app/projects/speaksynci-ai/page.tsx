@@ -1,5 +1,7 @@
 import ProjectLayout from "@/components/ProjectLayout";
 
+const BASE = "/clay-portfolio";
+
 export const metadata = { title: "SpeakSyncAI — Clay Martin" };
 
 export default function SpeakSyncAI() {
@@ -9,24 +11,33 @@ export default function SpeakSyncAI() {
       category="UX Design · Concept App"
       tags={["Figma", "Accessibility", "Interaction Design", "User Research", "User Flows"]}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/speaksynci/three-phone-mockup.png`}
+        alt="SpeakSyncAI — three screen mockup showing live captions, settings, and case"
+        className="not-prose w-full rounded-2xl bg-slate-50 mb-10"
+      />
+
       <h2>Overview</h2>
       <p>
-        SpeakSyncAI is a mobile app concept designed to provide real-time
-        lecture transcription, AI-generated summaries, and saved session history
-        for deaf and hard-of-hearing students.
+        SpeakSyncAI is a mobile app concept designed to give deaf and
+        hard-of-hearing students equal access to lecture content — in the
+        moment and after class. It combines real-time speech-to-text
+        transcription, AI-generated summaries, handwritten annotations, and
+        saved session history in one focused experience.
       </p>
       <p>
-        The core problem: in traditional classroom environments, students with
-        hearing loss must simultaneously manage lip-reading, interpreter
-        watching, and note-taking — an impossible cognitive load that puts them
-        at a consistent disadvantage.
+        The core problem: in a traditional classroom, students with hearing
+        loss have to simultaneously manage lip-reading, watching an
+        interpreter, and taking notes — an impossible cognitive load that puts
+        them at a consistent disadvantage before the lecture even starts.
       </p>
 
       <h2>Design Problem</h2>
       <p>
         <em>
           "How might we give deaf and hard-of-hearing students equal access to
-          the full lecture content, both in the moment and afterward, without
+          full lecture content — both in the moment and afterward — without
           adding more cognitive load?"
         </em>
       </p>
@@ -42,31 +53,78 @@ export default function SpeakSyncAI() {
         <li>Secondary interests included translation (52%) and notation tools (40%)</li>
       </ul>
 
-      <h2>Key Features</h2>
-      <ul>
-        <li>Real-time speech-to-text captions with high-contrast display</li>
-        <li>AI-powered note summarization that extracts key concepts</li>
-        <li>Customizable accessibility options — font sizes, color themes, playback controls</li>
-        <li>Color-coded interface organizing live captions, summaries, and archives</li>
-        <li>Saved session history for review after class</li>
-      </ul>
-
-      <h2>Design Decisions</h2>
+      <h2>Onboarding</h2>
       <p>
-        Accessibility was treated as a foundation, not a feature. Every design
-        decision — contrast ratios, tap target sizes, alt text, layout
-        hierarchy — was validated against accessibility standards. The interface
-        was kept intentionally minimal so students could focus on the lecture,
-        not the app.
+        Setup is fast and personalized. Students select their preferred
+        language, enter their name, and toggle on exactly which features they
+        want — AI Summarize, Live Captions, Language Translation, or Note
+        Taking. No bloat, just what's relevant to them.
+      </p>
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/speaksynci/onboarding.png`}
+        alt="SpeakSyncAI onboarding — language selection and primary use toggles"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
+      <h2>Live Captions</h2>
+      <p>
+        The core screen is intentionally minimal. Transcribed text appears
+        large and high-contrast as the professor speaks. A record button starts
+        and stops the session, and the bottom nav keeps settings and audio
+        controls one tap away — nothing competes with the captions themselves.
+      </p>
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/speaksynci/live-captions.png`}
+        alt="SpeakSyncAI live captions screen during an active recording session"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
+      <h2>Annotation Tools</h2>
+      <p>
+        Students can annotate directly on the transcription — handwriting notes
+        alongside the live text, or pulling up a color picker to highlight key
+        concepts. These annotations are saved with the session so context isn't
+        lost when reviewing later.
+      </p>
+
+      <div className="not-prose grid grid-cols-2 gap-4 my-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/speaksynci/annotation.png`}
+          alt="SpeakSyncAI handwritten annotation on live transcript"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/speaksynci/color-picker.png`}
+          alt="SpeakSyncAI color picker for annotation highlighting"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+      </div>
+
+      <h2>Key Design Decisions</h2>
+      <p>
+        Accessibility was treated as a foundation, not a feature. Every
+        decision — contrast ratios, tap target sizes, layout hierarchy — was
+        validated against accessibility standards. The interface stays
+        intentionally minimal so students can focus on the lecture, not the
+        app. Customizable font sizes, color themes, and playback controls give
+        each student control over the experience without overwhelming the
+        default view.
       </p>
 
       <h2>Reflection</h2>
       <p>
-        This project reinforced that accessibility extends beyond captions — it
-        means supporting the complete learning cycle, including review and
-        retention. Future steps would include usability testing with deaf and
-        hard-of-hearing students and MVP development with real speech-to-text
-        integration.
+        This project reinforced that accessibility extends well beyond captions
+        — it means supporting the complete learning cycle, including review,
+        annotation, and retention. The annotation tools came directly from
+        research showing that 40% of users wanted notation capabilities. Future
+        steps would include usability testing with deaf and hard-of-hearing
+        students and MVP development with real speech-to-text integration.
       </p>
     </ProjectLayout>
   );

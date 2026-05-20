@@ -22,6 +22,7 @@ const projects = [
       "Real-time lecture transcription and AI-generated summaries for deaf and hard-of-hearing students. Accessibility-first design.",
     tags: ["Figma", "Accessibility", "Interaction Design"],
     accent: "from-sky-100 via-cyan-50 to-white",
+    image: `${BASE}/images/speaksynci/three-phone-mockup.png`,
     preview: "🎧",
   },
   {
@@ -104,7 +105,7 @@ export default function Projects() {
                     <img
                       src={p.image}
                       alt={p.title}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <span className="text-7xl group-hover:scale-110 transition-transform duration-500">
