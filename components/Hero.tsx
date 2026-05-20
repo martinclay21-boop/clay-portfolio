@@ -2,23 +2,41 @@
 
 import { useEffect, useState } from "react";
 
-function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: string }) {
+function AnimatedNumber({ target, suffix = "", delay = 0 }: { target: number; suffix?: string; delay?: number }) {
   const [value, setValue] = useState(0);
   useEffect(() => {
-    let start = 0;
-    const duration = 1400;
-    const startTime = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - startTime) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setValue(Math.round(start + (target - start) * eased));
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target]);
+    const timeout = setTimeout(() => {
+      const duration = 1400;
+      const startTime = performance.now();
+      let raf = 0;
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setValue(Math.round(target * eased));
+        if (t < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(raf);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [target, delay]);
   return <>{value}{suffix}</>;
+}
+
+function AnimatedText({ text, delay = 0 }: { text: string; delay?: number }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+  return (
+    <span
+      style={{ transition: `opacity 600ms ease ${delay}ms, transform 600ms ease ${delay}ms` }}
+      className={visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
+    >
+      {text}
+    </span>
+  );
 }
 
 export default function Hero() {
@@ -78,25 +96,31 @@ export default function Hero() {
 
         {/* Quick stats with animated counters */}
         <div className="mt-16 pt-10 border-t border-slate-200 grid grid-cols-3 gap-6 sm:gap-16 max-w-2xl">
-          {[
-            { value: 6, suffix: "+", label: "Case Studies" },
-            { value: 2, suffix: "+", label: "Years Experience" },
-            { value: 0, suffix: "", label: "Agile Certified", text: "ICP" },
-          ].map((s) => (
-            <div key={s.label}>
-              <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
-                {s.text ? s.text : <AnimatedNumber target={s.value} suffix={s.suffix} />}
-              </div>
-              <div className="text-xs sm:text-sm text-slate-500 mt-1">{s.label}</div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
+              <AnimatedNumber target={6} suffix="+" delay={0} />
             </div>
-          ))}
+            <div className="text-xs sm:text-sm text-slate-500 mt-1">Case Studies</div>
+          </div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
+              <AnimatedNumber target={2} suffix="+" delay={200} />
+            </div>
+            <div className="text-xs sm:text-sm text-slate-500 mt-1">Years Experience</div>
+          </div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
+              <AnimatedText text="ICP" delay={400} />
+            </div>
+            <div className="text-xs sm:text-sm text-slate-500 mt-1">Agile Certified</div>
+          </div>
         </div>
+      </div>
 
-        {/* Scroll indicator */}
-        <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-slate-400">
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-10 bg-gradient-to-b from-slate-400 to-transparent" />
-        </div>
+      {/* Scroll indicator — positioned relative to the full section */}
+      <div className="hidden md:flex absolute bottom-8 left-0 right-0 justify-center flex-col items-center gap-2 text-slate-400 pointer-events-none">
+        <span className="text-xs uppercase tracking-widest">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-slate-400 to-transparent" />
       </div>
     </section>
   );
