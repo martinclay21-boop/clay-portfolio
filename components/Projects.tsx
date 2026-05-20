@@ -43,6 +43,7 @@ const projects = [
       "A digital platform reimagining yearbooks as personalized, multimedia experiences — built during HCI coursework at Korea University.",
     tags: ["Figma", "HCI", "Prototyping"],
     accent: "from-emerald-100 via-teal-50 to-white",
+    image: `${BASE}/images/fourward/login.webp`,
     preview: "📖",
   },
   {
@@ -77,7 +78,6 @@ export default function Projects() {
             Work
           </p>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            Selected{" "}
             <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
               Projects
             </span>
