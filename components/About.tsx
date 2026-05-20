@@ -1,4 +1,4 @@
-const timeline = [
+const education = [
   {
     year: "May 2026",
     title: "B.A. Emerging Technology in Business & Design",
@@ -11,6 +11,9 @@ const timeline = [
     org: "Korea University — Seoul, South Korea",
     detail: "Developed an interactive yearbook interface in Figma",
   },
+];
+
+const certifications = [
   {
     year: "Apr 2026",
     title: "ICAgile Certified Professional (ICP)",
@@ -78,14 +81,42 @@ export default function About() {
           {/* Right — timeline */}
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-6">
-              Education &amp; Certifications
+              Education
             </p>
-            <ol className="space-y-6">
-              {timeline.map((item) => (
+            <ol className="space-y-6 mb-8">
+              {education.map((item, i) => (
                 <li key={item.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
-                    <div className="w-px flex-1 bg-slate-200 mt-2" />
+                    {i < education.length - 1 && (
+                      <div className="w-px flex-1 bg-slate-200 mt-2" />
+                    )}
+                  </div>
+                  <div className="pb-6">
+                    <span className="text-xs font-medium text-slate-400 block mb-1">
+                      {item.year}
+                    </span>
+                    <p className="font-semibold text-slate-800 text-sm">
+                      {item.title}
+                    </p>
+                    <p className="text-slate-500 text-sm">{item.org}</p>
+                    <p className="text-slate-400 text-xs mt-1">{item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-6">
+              Certifications
+            </p>
+            <ol className="space-y-6">
+              {certifications.map((item, i) => (
+                <li key={item.title} className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
+                    {i < certifications.length - 1 && (
+                      <div className="w-px flex-1 bg-slate-200 mt-2" />
+                    )}
                   </div>
                   <div className="pb-6">
                     <span className="text-xs font-medium text-slate-400 block mb-1">

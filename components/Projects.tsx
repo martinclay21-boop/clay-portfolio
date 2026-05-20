@@ -65,7 +65,7 @@ const projects = [
       "Use case illustrations across product pages using Photoshop and Illustrator — communicating Spokenote to potential customers and partners.",
     tags: ["Photoshop", "Illustrator", "Brand"],
     accent: "from-violet-100 via-fuchsia-50 to-white",
-    image: `${BASE}/images/spokenote/cards-collage.png`,
+    image: `${BASE}/images/spokenote/logo-opengraph.png`,
     preview: "✨",
   },
 ];
