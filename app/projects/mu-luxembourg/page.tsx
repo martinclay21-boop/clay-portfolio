@@ -145,6 +145,34 @@ export default function MULuxembourg() {
         helped surface improvements to the donation flow before launch.
       </p>
 
+      <h2>Wireframes</h2>
+      <p>
+        Medium-fidelity wireframes produced in Sprint 2 for all five site
+        pages — Home, About, Donation, Thank You, and Contact. Each team
+        member owned an assigned page and iterated based on group feedback.
+      </p>
+
+      <div className="not-prose grid grid-cols-2 sm:grid-cols-3 gap-4 my-8">
+        {[
+          { file: "wireframe-home", label: "Home" },
+          { file: "wireframe-about", label: "About" },
+          { file: "wireframe-donation-hero", label: "Donation" },
+          { file: "wireframe-donation-form", label: "Donation Form" },
+          { file: "wireframe-thank-you", label: "Thank You" },
+          { file: "wireframe-contact", label: "Contact" },
+        ].map(({ file, label }) => (
+          <div key={file} className="flex flex-col gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`${BASE}/images/mu-luxembourg/${file}.png`}
+              alt={`MULF wireframe — ${label} page`}
+              className="w-full rounded-xl border border-slate-200 bg-white"
+            />
+            <p className="text-xs text-center text-slate-500 font-medium">{label}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="not-prose mt-10 rounded-2xl border border-slate-200 bg-slate-50 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div className="flex-1">
           <p className="font-semibold text-slate-800 text-sm">Full Process Book</p>
