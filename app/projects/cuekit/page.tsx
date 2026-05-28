@@ -32,6 +32,13 @@ export default function CueKit() {
         court on their laces.
       </p>
 
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/cuekit/website-home.png`}
+        alt="CueKit homepage — 'Struggle mentally during matches?' hero section"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
       <h2>The Problem</h2>
       <p>
         Picture this: it's 30 minutes before a match. Alex, a junior libero, is
@@ -186,6 +193,13 @@ export default function CueKit() {
         lightweight and usable anywhere — locker room, bus, dorm room.
       </p>
 
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/cuekit/website-journal.png`}
+        alt="CueKit website — 'Three pieces, one loop' journal section"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
       <h3>The Cue Plan Builder</h3>
       <p>
         The journal is fully self-contained — an athlete who never touches the
@@ -223,6 +237,13 @@ export default function CueKit() {
         color system does double duty: it's the product and the brand at the same
         time.
       </p>
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/cuekit/website-colors.png`}
+        alt="CueKit website — 'Your cue colors' showing six technique cards"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
 
       <h2>Feedback & Iteration</h2>
       <p>
@@ -263,6 +284,21 @@ export default function CueKit() {
         athlete can actually use this season. Knowing what not to change is just
         as important as knowing what to fix.
       </p>
+
+      <div className="not-prose grid grid-cols-2 gap-4 my-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/cuekit/website-techniques.png`}
+          alt="CueKit techniques page — Breathing technique with color filter tabs"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/cuekit/website-breathing.png`}
+          alt="CueKit techniques page — four researched ways to put breathing to work"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+      </div>
 
       <h2>Reflection</h2>
       <p>
