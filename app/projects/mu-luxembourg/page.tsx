@@ -64,12 +64,47 @@ export default function MULuxembourg() {
           comprehensive style guide covering color palette, typography, logo
           usage, and imagery direction.
         </li>
+      </ul>
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/mu-luxembourg/about-us-moodboard.png`}
+        alt="About Us page mood board — visual inspiration for the MULF website"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
+      <ul>
         <li>
           <strong>Sprint 2 — Wireframing:</strong> Produced hand-drawn layout
           sketches, then iterated into low- and medium-fidelity wireframes in
           Figma. Each team member owned an assigned page while the full team
           reviewed and gave feedback to maintain consistency.
         </li>
+      </ul>
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${BASE}/images/mu-luxembourg/about-us-sketches.png`}
+        alt="About Us page hand-drawn layout sketches"
+        className="not-prose w-full rounded-2xl bg-slate-50 my-8"
+      />
+
+      <div className="not-prose grid grid-cols-2 gap-6 my-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/mu-luxembourg/about-us-lofi-desktop.png`}
+          alt="About Us page low-fidelity wireframe — desktop"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE}/images/mu-luxembourg/about-us-lofi-mobile.png`}
+          alt="About Us page low-fidelity wireframe — mobile"
+          className="w-full rounded-2xl bg-slate-50"
+        />
+      </div>
+
+      <ul>
         <li>
           <strong>Sprint 3 — WordPress Build:</strong> Translated Figma
           wireframes into a live WordPress site hosted on CloudHosting.lu,
@@ -109,6 +144,27 @@ export default function MULuxembourg() {
         usability testing phase confirmed that core flows were navigable and
         helped surface improvements to the donation flow before launch.
       </p>
+
+      <div className="not-prose mt-10 rounded-2xl border border-slate-200 bg-slate-50 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="flex-1">
+          <p className="font-semibold text-slate-800 text-sm">Full Process Book</p>
+          <p className="text-slate-500 text-sm mt-1">
+            The complete IMS 440 class process book documenting all teams' sprints,
+            research, wireframes, and reflections across the semester.
+          </p>
+        </div>
+        <a
+          href={`${BASE}/documents/mulf-process-book.pdf`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 shrink-0 bg-red-700 text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-red-800 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
+          View Process Book
+        </a>
+      </div>
     </ProjectLayout>
   );
 }
