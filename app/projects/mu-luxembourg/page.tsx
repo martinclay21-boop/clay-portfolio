@@ -90,18 +90,26 @@ export default function MULuxembourg() {
       />
 
       <div className="not-prose grid grid-cols-2 gap-6 my-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`${BASE}/images/mu-luxembourg/about-us-lofi-desktop.png`}
-          alt="About Us page low-fidelity wireframe — desktop"
-          className="w-full rounded-2xl bg-slate-50"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`${BASE}/images/mu-luxembourg/about-us-lofi-mobile.png`}
-          alt="About Us page low-fidelity wireframe — mobile"
-          className="w-full rounded-2xl bg-slate-50"
-        />
+        <div className="flex flex-col gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${BASE}/images/mu-luxembourg/about-us-lofi-desktop.png`}
+            alt="About Us page low-fidelity wireframe — desktop"
+            className="w-full rounded-xl border border-slate-200 bg-white object-top object-cover"
+            style={{ maxHeight: "380px" }}
+          />
+          <p className="text-xs text-center text-slate-500 font-medium">Desktop</p>
+        </div>
+        <div className="flex flex-col gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${BASE}/images/mu-luxembourg/about-us-lofi-mobile.png`}
+            alt="About Us page low-fidelity wireframe — mobile"
+            className="w-full rounded-xl border border-slate-200 bg-white object-top object-cover"
+            style={{ maxHeight: "380px" }}
+          />
+          <p className="text-xs text-center text-slate-500 font-medium">Mobile</p>
+        </div>
       </div>
 
       <ul>
