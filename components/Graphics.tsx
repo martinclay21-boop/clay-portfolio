@@ -48,12 +48,12 @@ export default function Graphics() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {graphics.map((g, i) => (
             <Reveal key={g.label} delay={i * 80}>
-              <div className="group relative overflow-hidden rounded-2xl bg-slate-100 aspect-[3/4]">
+              <div className="group relative overflow-hidden rounded-2xl bg-slate-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={g.src}
                   alt={g.alt}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-auto block group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <p className="absolute bottom-3 left-3 text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
