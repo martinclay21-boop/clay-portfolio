@@ -251,7 +251,7 @@ export default function CityExperience() {
 
       <Canvas
         shadows
-        camera={{ fov: 70, near: 0.1, far: 600, position: [0, 1.8, 9] }}
+        camera={{ fov: 70, near: 0.1, far: 600, position: [0, 1.8, 0] }}
         style={{ position: "absolute", inset: 0 }}
         onClick={handleCanvasClick}
         onCreated={({ gl }) => {
