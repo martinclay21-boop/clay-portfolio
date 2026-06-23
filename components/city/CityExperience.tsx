@@ -246,19 +246,20 @@ export default function CityExperience() {
   if (isMobile) return <MobileFallback />;
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#05050f" }}>
+    <div style={{ position: "fixed", inset: 0, background: "#cdd8e8" }}>
       {!started && <StartScreen onStart={handleStart} />}
 
       <Canvas
-        camera={{ fov: 75, near: 0.1, far: 200, position: [0, 1.8, 4] }}
+        shadows
+        camera={{ fov: 70, near: 0.1, far: 600, position: [0, 1.8, 9] }}
         style={{ position: "absolute", inset: 0 }}
         onClick={handleCanvasClick}
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          // ACES filmic tone mapping gives the warm cinematic contrast
-          // that makes neon lights pop against a dark city night
+          // ACES filmic tone mapping keeps the bright daytime sky from
+          // blowing out while giving facades natural warmth
           gl.toneMapping = 4; // ACESFilmicToneMapping
-          gl.toneMappingExposure = 0.9;
+          gl.toneMappingExposure = 1.0;
         }}
       >
         <CityScene
