@@ -99,6 +99,8 @@ function ProjectBody({ place }: { place: Place }) {
       </p>
       <a
         href={`${BASE}/projects/${place.slug}/`}
+        target="_blank"
+        rel="noopener noreferrer"
         style={{
           display: "inline-flex", alignItems: "center", gap: 8,
           background: place.color, color: "white",
@@ -106,7 +108,7 @@ function ProjectBody({ place }: { place: Place }) {
           fontSize: "0.85rem", fontWeight: 600, textDecoration: "none",
         }}
       >
-        Read case study →
+        Read case study ↗
       </a>
     </>
   );
@@ -270,9 +272,7 @@ function HUD({ isLocked }: { isLocked: boolean }) {
 export default function CityExperience() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-  const [started, setStarted] = useState(() =>
-    typeof window !== "undefined" && sessionStorage.getItem("city-started") === "1"
-  );
+  const [started, setStarted] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [selected, setSelected] = useState<Place | null>(null);
   const [pending, setPending] = useState<Place | null>(null);
@@ -293,7 +293,6 @@ export default function CityExperience() {
 
   const handleStart = useCallback(() => {
     setStarted(true);
-    sessionStorage.setItem("city-started", "1");
     try { controlsRef.current?.lock(); } catch (e) { console.warn("PointerLock:", e); }
   }, []);
 
