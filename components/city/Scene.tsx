@@ -2,108 +2,19 @@
 
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { PointerLockControls, Text, Sky } from "@react-three/drei";
+import { PointerLockControls, Text, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import type { PointerLockControls as PLCImpl } from "three-stdlib";
+import { PLACES, type Place } from "./data";
 
-export interface Project {
-  slug: string;
-  title: string;
-  category: string;
-  description: string;
-  color: string;    // accent (sign / awning / cornice)
-  facade: string;   // light building wall color
-  position: [number, number, number];
-  rotationY: number; // so the storefront faces the plaza
-  buildingHeight: number;
-  buildingWidth: number;
-}
+export { PLACES };
+export type { Place };
 
-// Square plaza: buildings line the four sides, all facing inward.
-// FRONT (z-) faces +z → rotation π · BACK (z+) faces -z → 0
-// LEFT (x-) faces +x → -π/2 · RIGHT (x+) faces -x → π/2
-const FACE_FRONT = Math.PI;
-const FACE_BACK = 0;
-const FACE_LEFT = -Math.PI / 2;
-const FACE_RIGHT = Math.PI / 2;
-
-export const PROJECTS: Project[] = [
-  {
-    slug: "cuekit",
-    title: "CueKit",
-    category: "UX Design · Senior Degree Project",
-    description: "A mental readiness journal and cue system for college volleyball athletes — end-to-end from research to high-fidelity prototype.",
-    color: "#7F77DD",
-    facade: "#e9e7f6",
-    position: [-11, 0, -18],
-    rotationY: FACE_FRONT,
-    buildingHeight: 15,
-    buildingWidth: 15,
-  },
-  {
-    slug: "mu-luxembourg",
-    title: "MU Luxembourg",
-    category: "UI Design · WordPress",
-    description: "Donation-focused foundation website with responsive layouts guiding visitors to the donate flow.",
-    color: "#E24B4A",
-    facade: "#f6e7e5",
-    position: [11, 0, -18],
-    rotationY: FACE_FRONT,
-    buildingHeight: 17,
-    buildingWidth: 16,
-  },
-  {
-    slug: "speaksynci-ai",
-    title: "SpeakSyncAI",
-    category: "UX Design · Concept App",
-    description: "Real-time lecture transcription and AI summaries for deaf and hard-of-hearing students. Accessibility-first design.",
-    color: "#378ADD",
-    facade: "#e3eef8",
-    position: [-18, 0, 0],
-    rotationY: FACE_LEFT,
-    buildingHeight: 16,
-    buildingWidth: 16,
-  },
-  {
-    slug: "academic-advising",
-    title: "Academic Advising",
-    category: "Service Design",
-    description: "Identified communication breakdowns in Miami's advising process and prototyped a Canvas + Navigate integration.",
-    color: "#BA7517",
-    facade: "#f6efe1",
-    position: [18, 0, 0],
-    rotationY: FACE_RIGHT,
-    buildingHeight: 13,
-    buildingWidth: 16,
-  },
-  {
-    slug: "spokenote",
-    title: "Spokenote",
-    category: "Visual Design · Marketing",
-    description: "Use case illustrations across product pages using Photoshop and Illustrator, communicating Spokenote to customers.",
-    color: "#9F7AEA",
-    facade: "#f0e9f8",
-    position: [-11, 0, 18],
-    rotationY: FACE_BACK,
-    buildingHeight: 14,
-    buildingWidth: 15,
-  },
-  {
-    slug: "interactive-yearbook",
-    title: "Fourward",
-    category: "Interaction Design · HCI",
-    description: "A digital platform reimagining yearbooks as personalized multimedia experiences, built during HCI at Korea University.",
-    color: "#1D9E75",
-    facade: "#e5f3eb",
-    position: [11, 0, 18],
-    rotationY: FACE_BACK,
-    buildingHeight: 14,
-    buildingWidth: 15,
-  },
-];
-
-const INTERACT_DIST = 14;
-const PLAZA_HALF = 14; // player movement bound (square)
+const INTERACT_DIST = 13;
+// Player roams the square interior; these keep them off the buildings
+const BOUND_X = 13.5;
+const BOUND_Z_NEAR = 15;   // open front side
+const BOUND_Z_FAR = -13.5; // back wall
 
 function useKeys() {
   const keys = useRef({ w: false, a: false, s: false, d: false });
@@ -152,7 +63,7 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
     );
     if (direction.current.length() > 0) direction.current.normalize();
 
-    const speed = 26;
+    const speed = 24;
     if (keys.current.w || keys.current.s) velocity.current.z -= direction.current.z * speed * dt;
     if (keys.current.a || keys.current.d) velocity.current.x -= direction.current.x * speed * dt;
 
@@ -167,56 +78,42 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
       camera.position.y = THREE.MathUtils.damp(camera.position.y, 1.8, 10, dt);
     }
 
-    // Square plaza bounds
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -PLAZA_HALF, PLAZA_HALF);
-    camera.position.z = THREE.MathUtils.clamp(camera.position.z, -PLAZA_HALF, PLAZA_HALF);
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -BOUND_X, BOUND_X);
+    camera.position.z = THREE.MathUtils.clamp(camera.position.z, BOUND_Z_FAR, BOUND_Z_NEAR);
   });
 
   return null;
 }
 
-// Window grid with frames — "in-between" detail. Renders on one face,
-// the parent <group> positions/orients it onto the building.
-function WindowGrid({ faceWidth, height, color }: {
-  faceWidth: number; height: number; color: string;
-}) {
+// Simple toy windows: a few rounded panes on the front face
+function ToyWindows({ width, height, color }: { width: number; height: number; color: string }) {
   const panes = useMemo(() => {
-    const cols = Math.max(2, Math.floor(faceWidth / 3.2));
-    const rows = Math.max(2, Math.floor((height - 6) / 2.9));
-    const out: { x: number; y: number; lit: boolean; key: string }[] = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
+    const cols = Math.max(2, Math.round(width / 3));
+    const rows = Math.max(1, Math.round((height - 4) / 2.6));
+    const out: { x: number; y: number; key: string }[] = [];
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
         out.push({
-          x: -faceWidth / 2 + (faceWidth / cols) * (c + 0.5),
-          y: 5.5 + r * 2.9,
-          lit: Math.random() > 0.55,
+          x: -width / 2 + (width / cols) * (c + 0.5),
+          y: 4.2 + r * 2.4,
           key: `${r}-${c}`,
         });
-      }
-    }
     return out;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [faceWidth, height]);
+  }, [width, height]);
 
   return (
     <>
-      {panes.map(({ x, y, lit, key }) => (
+      {panes.map(({ x, y, key }) => (
         <group key={key} position={[x, y, 0]}>
-          {/* Frame / trim */}
-          <mesh position={[0, 0, -0.03]}>
-            <planeGeometry args={[1.95, 2.25]} />
-            <meshStandardMaterial color="#f4f1ea" roughness={0.6} />
+          {/* frame */}
+          <mesh position={[0, 0, -0.04]}>
+            <planeGeometry args={[1.5, 1.7]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.7} />
           </mesh>
-          {/* Glass */}
+          {/* glass */}
           <mesh>
-            <planeGeometry args={[1.55, 1.85]} />
-            <meshStandardMaterial
-              color={lit ? "#bfe2ff" : "#9fb8d4"}
-              emissive={lit ? color : "#000000"}
-              emissiveIntensity={lit ? 0.22 : 0}
-              roughness={0.12}
-              metalness={0.45}
-            />
+            <planeGeometry args={[1.15, 1.35]} />
+            <meshStandardMaterial color="#bfe2ff" emissive={color} emissiveIntensity={0.12} roughness={0.2} metalness={0.3} />
           </mesh>
         </group>
       ))}
@@ -224,173 +121,185 @@ function WindowGrid({ faceWidth, height, color }: {
   );
 }
 
-function Building({ project, onSelect }: {
-  project: Project;
-  onSelect: (p: Project) => void;
-}) {
+function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => void }) {
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
   const [near, setNear] = useState(false);
 
   useFrame(() => {
-    const dx = camera.position.x - project.position[0];
-    const dz = camera.position.z - project.position[2];
+    const dx = camera.position.x - place.position[0];
+    const dz = camera.position.z - place.position[2];
     const isNear = Math.sqrt(dx * dx + dz * dz) < INTERACT_DIST;
     if (isNear !== near) setNear(isNear);
   });
 
-  const w = project.buildingWidth;
-  const h = project.buildingHeight;
-  const d = 9;
-  const [px, , pz] = project.position;
-  const frontZ = -d / 2; // local front face
+  const w = place.width;
+  const h = place.height;
+  const d = 6;
+  const [px, , pz] = place.position;
+  const frontZ = -d / 2;
+
+  // Hip roof: a 4-sided pyramid, rotated 45° so its faces align with the walls
+  const roofR = Math.hypot(w / 2, d / 2) * 1.08;
+  const roofH = 2.4;
+
+  const lift = hovered && near ? 0.15 : 0; // gentle bob on hover
 
   return (
-    <group position={[px, 0, pz]} rotation={[0, project.rotationY, 0]}>
-      {/* Base plinth */}
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[w + 0.6, 1, d + 0.6]} />
-        <meshStandardMaterial color="#9a948a" roughness={0.9} />
-      </mesh>
-
-      {/* Main body */}
-      <mesh
+    <group position={[px, lift, pz]} rotation={[0, place.rotationY, 0]}>
+      {/* Body */}
+      <RoundedBox
+        args={[w, h, d]}
+        radius={0.35}
+        smoothness={4}
         position={[0, h / 2, 0]}
         castShadow
         receiveShadow
-        onClick={() => { if (near) onSelect(project); }}
+        onClick={() => { if (near) onSelect(place); }}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
-        <boxGeometry args={[w, h, d]} />
-        <meshStandardMaterial color={project.facade} roughness={0.7} metalness={0.05} />
+        <meshStandardMaterial color={place.facade} roughness={0.85} metalness={0} />
+      </RoundedBox>
+
+      {/* Hip roof */}
+      <mesh position={[0, h + roofH / 2, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <coneGeometry args={[roofR, roofH, 4]} />
+        <meshStandardMaterial color={place.color} roughness={0.8} flatShading />
+      </mesh>
+      {/* Little roof finial */}
+      <mesh position={[0, h + roofH + 0.2, 0]} castShadow>
+        <sphereGeometry args={[0.22, 10, 10]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.6} />
       </mesh>
 
-      {/* Corner pilasters (front) for vertical relief */}
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * (w / 2 - 0.4), h / 2, frontZ - 0.2]} castShadow>
-          <boxGeometry args={[0.8, h, 0.4]} />
-          <meshStandardMaterial color="#cec8bb" roughness={0.8} />
-        </mesh>
-      ))}
-
-      {/* Horizontal string course at floor line */}
-      <mesh position={[0, h * 0.55, frontZ - 0.06]}>
-        <boxGeometry args={[w + 0.1, 0.35, 0.2]} />
-        <meshStandardMaterial color="#cec8bb" roughness={0.8} />
+      {/* Door */}
+      <mesh position={[0, 1.3, frontZ - 0.02]}>
+        <planeGeometry args={[1.6, 2.6]} />
+        <meshStandardMaterial color={place.color} roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 1.3, frontZ - 0.03]}>
+        <planeGeometry args={[1.2, 2.2]} />
+        <meshStandardMaterial color="#2b2b3a" roughness={0.3} metalness={0.4} />
       </mesh>
 
-      {/* Colored cornice / parapet */}
-      <mesh position={[0, h + 0.4, 0]} castShadow>
-        <boxGeometry args={[w + 0.6, 0.9, d + 0.6]} />
-        <meshStandardMaterial color={project.color} roughness={0.5} metalness={0.1} />
-      </mesh>
-      {/* Roof slab */}
-      <mesh position={[0, h + 0.9, 0]}>
-        <boxGeometry args={[w - 1, 0.4, d - 1]} />
-        <meshStandardMaterial color="#3a3a48" roughness={0.9} />
+      {/* Striped awning over the door */}
+      <mesh position={[0, 2.9, frontZ - 0.7]} rotation={[Math.PI / 2.7, 0, 0]} castShadow>
+        <boxGeometry args={[Math.min(w * 0.6, 4), 1.3, 0.12]} />
+        <meshStandardMaterial color={place.color} roughness={0.7} />
       </mesh>
 
-      {/* Storefront band */}
-      <mesh position={[0, 2, frontZ - 0.01]}>
-        <planeGeometry args={[w, 4]} />
-        <meshStandardMaterial color="#2c2c3a" roughness={0.6} metalness={0.2} />
-      </mesh>
-      {/* Glass door */}
-      <mesh position={[0, 1.6, frontZ - 0.02]}>
-        <planeGeometry args={[3, 3.2]} />
-        <meshStandardMaterial color="#1a2433" roughness={0.1} metalness={0.6} />
-      </mesh>
-      {/* Awning */}
-      <mesh position={[0, 4.2, frontZ - 0.9]} rotation={[Math.PI / 2.6, 0, 0]} castShadow>
-        <boxGeometry args={[w * 0.7, 1.8, 0.15]} />
-        <meshStandardMaterial color={project.color} roughness={0.6} />
-      </mesh>
-
-      {/* Windows — front + both sides */}
+      {/* Windows */}
       <group position={[0, 0, frontZ - 0.05]}>
-        <WindowGrid faceWidth={w} height={h} color={project.color} />
-      </group>
-      <group position={[-w / 2 - 0.05, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
-        <WindowGrid faceWidth={d} height={h} color={project.color} />
-      </group>
-      <group position={[w / 2 + 0.05, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <WindowGrid faceWidth={d} height={h} color={project.color} />
+        <ToyWindows width={w} height={h} color={place.color} />
       </group>
 
-      {/* Sign — above the awning, FLIPPED to face the plaza (drei Text
-          faces +z by default; the player views the front from -z) */}
+      {/* Sign — flipped to face the plaza (drei Text faces +z by default) */}
       <Text
-        position={[0, 6.4, frontZ - 0.08]}
+        position={[0, h + 0.05, frontZ - 0.08]}
         rotation={[0, Math.PI, 0]}
-        fontSize={1}
-        color={project.color}
+        fontSize={0.85}
+        color="#ffffff"
         anchorX="center"
         anchorY="middle"
-        maxWidth={w - 1.5}
-        outlineWidth={0.05}
-        outlineColor="#ffffff"
+        maxWidth={w - 0.5}
+        outlineWidth={0.06}
+        outlineColor={place.color}
       >
-        {project.title.toUpperCase()}
+        {place.title}
       </Text>
 
-      {/* Soft sign light */}
-      <pointLight
-        position={[0, 6.4, frontZ - 1.5]}
-        color={project.color}
-        intensity={hovered ? 30 : 12}
-        distance={14}
-        decay={2}
-      />
-
-      {/* Proximity prompt (also flipped to face the plaza) */}
+      {/* Proximity prompt */}
       {near && (
         <Text
-          position={[0, h + 2, frontZ - 0.2]}
+          position={[0, h + roofH + 1.4, frontZ - 0.2]}
           rotation={[0, Math.PI, 0]}
-          fontSize={0.7}
-          color="#1b1b2a"
+          fontSize={0.6}
+          color="#33333f"
           anchorX="center"
           anchorY="middle"
           outlineWidth={0.05}
           outlineColor="#ffffff"
         >
-          {`[ click to open ]`}
+          {`[ click to enter ]`}
         </Text>
       )}
     </group>
   );
 }
 
-function Tree({ position }: { position: [number, number, number] }) {
+function Tree({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   return (
-    <group position={position}>
-      <mesh position={[0, 1.3, 0]} castShadow>
-        <cylinderGeometry args={[0.25, 0.35, 2.6, 6]} />
-        <meshStandardMaterial color="#6b4b32" roughness={0.9} />
+    <group position={position} scale={scale}>
+      <mesh position={[0, 1, 0]} castShadow>
+        <cylinderGeometry args={[0.3, 0.4, 2, 7]} />
+        <meshStandardMaterial color="#a9764e" roughness={0.9} />
       </mesh>
-      <mesh position={[0, 3.4, 0]} castShadow>
-        <coneGeometry args={[1.7, 3.2, 8]} />
-        <meshStandardMaterial color="#3f8f4f" roughness={0.85} />
+      <mesh position={[0, 2.6, 0]} castShadow>
+        <sphereGeometry args={[1.5, 12, 12]} />
+        <meshStandardMaterial color="#7cc47f" roughness={0.9} flatShading />
       </mesh>
-      <mesh position={[0, 4.6, 0]} castShadow>
-        <coneGeometry args={[1.2, 2.4, 8]} />
-        <meshStandardMaterial color="#4aa05c" roughness={0.85} />
+      <mesh position={[0.9, 2, 0.3]} castShadow>
+        <sphereGeometry args={[0.9, 12, 12]} />
+        <meshStandardMaterial color="#8fd190" roughness={0.9} flatShading />
+      </mesh>
+      <mesh position={[-0.8, 2.1, -0.2]} castShadow>
+        <sphereGeometry args={[0.8, 12, 12]} />
+        <meshStandardMaterial color="#8fd190" roughness={0.9} flatShading />
       </mesh>
     </group>
   );
 }
 
-function Planter({ position }: { position: [number, number, number] }) {
+function Lamp({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2.4, 1, 2.4]} />
-        <meshStandardMaterial color="#cfc8ba" roughness={0.85} />
+      <mesh position={[0, 1.6, 0]} castShadow>
+        <cylinderGeometry args={[0.12, 0.16, 3.2, 8]} />
+        <meshStandardMaterial color="#5b6472" roughness={0.7} metalness={0.3} />
       </mesh>
-      <mesh position={[0, 1.4, 0]} castShadow>
-        <sphereGeometry args={[1.3, 10, 10]} />
-        <meshStandardMaterial color="#4aa05c" roughness={0.85} />
+      <mesh position={[0, 3.4, 0]}>
+        <sphereGeometry args={[0.32, 12, 12]} />
+        <meshStandardMaterial color="#fff4cf" emissive="#fff0b8" emissiveIntensity={1.4} roughness={0.4} />
+      </mesh>
+      <pointLight position={[0, 3.4, 0]} color="#fff0c0" intensity={8} distance={9} decay={2} />
+    </group>
+  );
+}
+
+function Bench({ position, rotationY = 0 }: { position: [number, number, number]; rotationY?: number }) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      <mesh position={[0, 0.5, 0]} castShadow>
+        <boxGeometry args={[2.2, 0.18, 0.7]} />
+        <meshStandardMaterial color="#c98a52" roughness={0.85} />
+      </mesh>
+      <mesh position={[0, 0.9, -0.28]} castShadow>
+        <boxGeometry args={[2.2, 0.6, 0.14]} />
+        <meshStandardMaterial color="#c98a52" roughness={0.85} />
+      </mesh>
+    </group>
+  );
+}
+
+function Fountain() {
+  return (
+    <group position={[0, 0, 0]}>
+      <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[2.4, 2.6, 0.7, 24]} />
+        <meshStandardMaterial color="#e7e0d2" roughness={0.85} />
+      </mesh>
+      <mesh position={[0, 0.55, 0]}>
+        <cylinderGeometry args={[2.1, 2.1, 0.25, 24]} />
+        <meshStandardMaterial color="#8ecae6" roughness={0.2} metalness={0.2} transparent opacity={0.9} />
+      </mesh>
+      <mesh position={[0, 1, 0]} castShadow>
+        <cylinderGeometry args={[0.35, 0.5, 1.2, 12]} />
+        <meshStandardMaterial color="#e7e0d2" roughness={0.85} />
+      </mesh>
+      <mesh position={[0, 1.7, 0]} castShadow>
+        <sphereGeometry args={[0.45, 14, 14]} />
+        <meshStandardMaterial color="#8ecae6" roughness={0.2} metalness={0.2} />
       </mesh>
     </group>
   );
@@ -399,11 +308,11 @@ function Planter({ position }: { position: [number, number, number] }) {
 function Cloud({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   return (
     <group position={position} scale={scale}>
-      {[[0, 0, 0, 3], [3, -0.3, 0.5, 2.4], [-3, -0.2, -0.4, 2.6], [1.4, 0.6, 0.3, 2], [-1.6, 0.5, 0.2, 1.9]].map(
+      {[[0, 0, 0, 2.6], [2.6, -0.2, 0.3, 2], [-2.6, -0.2, -0.3, 2.1], [1.2, 0.5, 0.2, 1.7], [-1.3, 0.4, 0.2, 1.6]].map(
         ([x, y, z, s], i) => (
           <mesh key={i} position={[x, y, z]}>
             <sphereGeometry args={[s, 10, 10]} />
-            <meshStandardMaterial color="#ffffff" roughness={1} emissive="#dfe8f5" emissiveIntensity={0.15} />
+            <meshStandardMaterial color="#ffffff" roughness={1} />
           </mesh>
         ),
       )}
@@ -413,16 +322,18 @@ function Cloud({ position, scale = 1 }: { position: [number, number, number]; sc
 
 function Skyline() {
   const blocks = useMemo(() => {
-    const arr: { x: number; z: number; w: number; h: number; depth: number; key: number }[] = [];
-    for (let i = 0; i < 60; i++) {
-      const ang = (i / 60) * Math.PI * 2 + Math.random() * 0.1;
-      const rad = 70 + Math.random() * 70;
+    const palette = ["#cdd6ea", "#d6cee6", "#cfe2e0", "#e6d9cf"];
+    const arr: { x: number; z: number; w: number; h: number; depth: number; color: string; key: number }[] = [];
+    for (let i = 0; i < 46; i++) {
+      const ang = (i / 46) * Math.PI * 2 + Math.random() * 0.12;
+      const rad = 60 + Math.random() * 55;
       arr.push({
         x: Math.sin(ang) * rad,
         z: -Math.cos(ang) * rad,
-        w: 6 + Math.random() * 10,
-        depth: 6 + Math.random() * 10,
-        h: 14 + Math.random() * 50,
+        w: 6 + Math.random() * 9,
+        depth: 6 + Math.random() * 9,
+        h: 10 + Math.random() * 34,
+        color: palette[i % palette.length],
         key: i,
       });
     }
@@ -434,100 +345,140 @@ function Skyline() {
       {blocks.map((b) => (
         <mesh key={b.key} position={[b.x, b.h / 2, b.z]}>
           <boxGeometry args={[b.w, b.h, b.depth]} />
-          <meshStandardMaterial color="#9aabc8" roughness={0.9} />
+          <meshStandardMaterial color={b.color} roughness={0.95} />
         </mesh>
       ))}
     </>
   );
 }
 
-function PlazaGround() {
+function GradientSky() {
+  const mat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        side: THREE.BackSide,
+        depthWrite: false,
+        uniforms: {
+          topColor: { value: new THREE.Color("#a9d4f2") },
+          bottomColor: { value: new THREE.Color("#fdeede") },
+          offset: { value: 28 },
+          exponent: { value: 0.7 },
+        },
+        vertexShader: `
+          varying vec3 vWorldPosition;
+          void main() {
+            vec4 wp = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = wp.xyz;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }`,
+        fragmentShader: `
+          uniform vec3 topColor;
+          uniform vec3 bottomColor;
+          uniform float offset;
+          uniform float exponent;
+          varying vec3 vWorldPosition;
+          void main() {
+            float h = normalize(vWorldPosition + vec3(0.0, offset, 0.0)).y;
+            float t = pow(max(h, 0.0), exponent);
+            gl_FragColor = vec4(mix(bottomColor, topColor, t), 1.0);
+          }`,
+      }),
+    [],
+  );
+  return (
+    <mesh material={mat}>
+      <sphereGeometry args={[400, 32, 16]} />
+    </mesh>
+  );
+}
+
+function Ground() {
   return (
     <>
-      {/* Grass surround */}
+      {/* Grass */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
-        <planeGeometry args={[600, 600]} />
-        <meshStandardMaterial color="#7faa5a" roughness={1} />
+        <planeGeometry args={[800, 800]} />
+        <meshStandardMaterial color="#9cc06f" roughness={1} />
       </mesh>
-
-      {/* Square plaza stone */}
+      {/* Square plaza */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[46, 46]} />
-        <meshStandardMaterial color="#cdc7ba" roughness={0.95} />
+        <planeGeometry args={[44, 44]} />
+        <meshStandardMaterial color="#ece4d3" roughness={0.95} />
       </mesh>
-
       {/* Cross paths */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-        <planeGeometry args={[5, 46]} />
-        <meshStandardMaterial color="#bdb6a7" roughness={0.92} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]}>
+        <planeGeometry args={[5, 44]} />
+        <meshStandardMaterial color="#ddd2bb" roughness={0.95} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-        <planeGeometry args={[46, 5]} />
-        <meshStandardMaterial color="#bdb6a7" roughness={0.92} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]}>
+        <planeGeometry args={[44, 5]} />
+        <meshStandardMaterial color="#ddd2bb" roughness={0.95} />
       </mesh>
-
       {/* Center medallion */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-        <circleGeometry args={[4.5, 40]} />
-        <meshStandardMaterial color="#b6afa0" roughness={0.9} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <ringGeometry args={[3.6, 4.1, 40]} />
-        <meshStandardMaterial color="#8f887a" roughness={0.85} side={THREE.DoubleSide} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 0]}>
+        <circleGeometry args={[4, 36]} />
+        <meshStandardMaterial color="#d3c7a9" roughness={0.9} />
       </mesh>
     </>
   );
 }
 
 export function CityScene({
-  onSelectProject,
+  onSelectPlace,
   controlsRef,
 }: {
-  onSelectProject: (p: Project) => void;
+  onSelectPlace: (p: Place) => void;
   controlsRef: React.RefObject<PLCImpl | null>;
 }) {
   return (
     <>
-      <fog attach="fog" args={["#cdd8e8", 70, 240]} />
-      <Sky distance={450000} sunPosition={[80, 45, 60]} turbidity={4} rayleigh={1.2} />
+      <fog attach="fog" args={["#dfe7ee", 75, 260]} />
+      <GradientSky />
 
-      {/* Daytime lighting */}
-      <ambientLight intensity={0.9} />
-      <hemisphereLight args={["#cfe0ff", "#6f7a55", 1.1]} />
+      {/* Soft toy-world lighting */}
+      <ambientLight intensity={0.85} />
+      <hemisphereLight args={["#dfeefe", "#9ab06a", 0.9]} />
       <directionalLight
-        position={[45, 70, 35]}
-        intensity={2.6}
-        color="#fff4e0"
+        position={[28, 44, 22]}
+        intensity={2.2}
+        color="#fff3df"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={1}
-        shadow-camera-far={160}
-        shadow-camera-left={-50}
-        shadow-camera-right={50}
-        shadow-camera-top={50}
-        shadow-camera-bottom={-50}
+        shadow-camera-far={130}
+        shadow-camera-left={-40}
+        shadow-camera-right={40}
+        shadow-camera-top={40}
+        shadow-camera-bottom={-40}
         shadow-bias={-0.0004}
       />
 
-      <PlazaGround />
+      <Ground />
       <Skyline />
+      <Fountain />
 
-      {/* Corner trees + planters flanking each path */}
-      {([[15, 15], [-15, 15], [15, -15], [-15, -15]] as [number, number][]).map(([x, z], i) => (
-        <Tree key={`t${i}`} position={[x, 0, z]} />
+      {/* Benches around the fountain */}
+      <Bench position={[0, 0, 6]} rotationY={Math.PI} />
+      <Bench position={[0, 0, -6]} />
+      <Bench position={[6, 0, 0]} rotationY={Math.PI / 2} />
+      <Bench position={[-6, 0, 0]} rotationY={-Math.PI / 2} />
+
+      {/* Corner lamps + trees */}
+      {([[12, 12], [-12, 12], [12, -12], [-12, -12]] as [number, number][]).map(([x, z], i) => (
+        <Lamp key={`l${i}`} position={[x, 0, z]} />
       ))}
-      {([[6, 6], [-6, 6], [6, -6], [-6, -6]] as [number, number][]).map(([x, z], i) => (
-        <Planter key={`p${i}`} position={[x, 0, z]} />
+      {([[16, 16], [-16, 16], [9, 16], [-9, 16]] as [number, number][]).map(([x, z], i) => (
+        <Tree key={`tr${i}`} position={[x, 0, z]} scale={0.9 + (i % 2) * 0.25} />
       ))}
 
-      <Cloud position={[-40, 55, -40]} scale={1.4} />
-      <Cloud position={[50, 65, -20]} scale={1.8} />
-      <Cloud position={[10, 60, 60]} scale={1.5} />
-      <Cloud position={[-55, 70, 30]} scale={2} />
+      <Cloud position={[-34, 48, -34]} scale={1.4} />
+      <Cloud position={[42, 56, -18]} scale={1.8} />
+      <Cloud position={[8, 52, 52]} scale={1.5} />
+      <Cloud position={[-48, 60, 26]} scale={2} />
 
-      {PROJECTS.map((p) => (
-        <Building key={p.slug} project={p} onSelect={onSelectProject} />
+      {PLACES.map((p) => (
+        <Building key={p.id} place={p} onSelect={onSelectPlace} />
       ))}
 
       <PointerLockControls ref={controlsRef} />
