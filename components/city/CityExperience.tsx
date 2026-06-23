@@ -195,25 +195,41 @@ function HUD({ isLocked }: { isLocked: boolean }) {
 export default function CityExperience() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-  const [started, setStarted] = useState(false);
+  // Restore started state so pressing Back from a case study skips the start screen
+  const [started, setStarted] = useState(() =>
+    typeof window !== "undefined" && sessionStorage.getItem("city-started") === "1"
+  );
   const [isLocked, setIsLocked] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  // Building that was clicked — we wait for pointer lock to fully release before showing overlay
+  const [pendingProject, setPendingProject] = useState<Project | null>(null);
   const controlsRef = useRef<PLCImpl | null>(null);
 
   useEffect(() => {
-    const onChange = () => setIsLocked(!!document.pointerLockElement);
+    const onChange = () => {
+      const locked = !!document.pointerLockElement;
+      setIsLocked(locked);
+      // Show overlay only after pointer lock is confirmed released
+      if (!locked && pendingProject) {
+        setSelectedProject(pendingProject);
+        setPendingProject(null);
+      }
+    };
     document.addEventListener("pointerlockchange", onChange);
     return () => document.removeEventListener("pointerlockchange", onChange);
-  }, []);
+  }, [pendingProject]);
 
   const handleStart = useCallback(() => {
     setStarted(true);
+    sessionStorage.setItem("city-started", "1");
     try { controlsRef.current?.lock(); } catch (e) { console.warn("PointerLock:", e); }
   }, []);
 
   const handleSelectProject = useCallback((p: Project) => {
+    // Queue the project — overlay will appear once pointerlockchange fires
+    setPendingProject(p);
+    document.exitPointerLock();
     try { controlsRef.current?.unlock(); } catch {}
-    setSelectedProject(p);
   }, []);
 
   const handleCloseOverlay = useCallback(() => {
@@ -222,10 +238,10 @@ export default function CityExperience() {
 
   // Re-lock when overlay closes and user clicks canvas
   const handleCanvasClick = useCallback(() => {
-    if (!selectedProject && started) {
+    if (!selectedProject && !pendingProject && started) {
       try { controlsRef.current?.lock(); } catch {}
     }
-  }, [selectedProject, started]);
+  }, [selectedProject, pendingProject, started]);
 
   if (isMobile) return <MobileFallback />;
 

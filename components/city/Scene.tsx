@@ -122,7 +122,7 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
     direction.current.set(
       (keys.current.d ? 1 : 0) - (keys.current.a ? 1 : 0),
       0,
-      (keys.current.s ? 1 : 0) - (keys.current.w ? 1 : 0)
+      (keys.current.w ? 1 : 0) - (keys.current.s ? 1 : 0)
     );
 
     if (direction.current.length() > 0) direction.current.normalize();
@@ -338,7 +338,8 @@ export function CityScene({
     <>
       <fog attach="fog" args={["#05050f", 20, 90]} />
       <color attach="background" args={["#05050f"]} />
-      <ambientLight intensity={0.15} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[0, 20, 10]} intensity={0.8} color="#8888cc" />
       <Stars radius={80} depth={40} count={3000} factor={3} saturation={0} fade />
 
       <Ground />
