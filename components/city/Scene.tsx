@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls, Text, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import type { PointerLockControls as PLCImpl } from "three-stdlib";
-
-const BASE = "/clay-portfolio";
 
 export interface Project {
   slug: string;
@@ -82,19 +80,22 @@ export const PROJECTS: Project[] = [
   },
 ];
 
+// Proximity threshold to interact with buildings
+const INTERACT_DIST = 14;
+
 function useKeys() {
   const keys = useRef({ w: false, a: false, s: false, d: false });
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.code === "KeyW" || e.code === "ArrowUp") keys.current.w = true;
-      if (e.code === "KeyS" || e.code === "ArrowDown") keys.current.s = true;
-      if (e.code === "KeyA" || e.code === "ArrowLeft") keys.current.a = true;
+      if (e.code === "KeyW" || e.code === "ArrowUp")    keys.current.w = true;
+      if (e.code === "KeyS" || e.code === "ArrowDown")  keys.current.s = true;
+      if (e.code === "KeyA" || e.code === "ArrowLeft")  keys.current.a = true;
       if (e.code === "KeyD" || e.code === "ArrowRight") keys.current.d = true;
     };
     const up = (e: KeyboardEvent) => {
-      if (e.code === "KeyW" || e.code === "ArrowUp") keys.current.w = false;
-      if (e.code === "KeyS" || e.code === "ArrowDown") keys.current.s = false;
-      if (e.code === "KeyA" || e.code === "ArrowLeft") keys.current.a = false;
+      if (e.code === "KeyW" || e.code === "ArrowUp")    keys.current.w = false;
+      if (e.code === "KeyS" || e.code === "ArrowDown")  keys.current.s = false;
+      if (e.code === "KeyA" || e.code === "ArrowLeft")  keys.current.a = false;
       if (e.code === "KeyD" || e.code === "ArrowRight") keys.current.d = false;
     };
     window.addEventListener("keydown", down);
@@ -112,29 +113,42 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
   const direction = useRef(new THREE.Vector3());
+  const bobTime = useRef(0);
+  const moving = useRef(false);
 
   useFrame((_, delta) => {
     if (!controlsRef.current?.isLocked) return;
 
-    velocity.current.x -= velocity.current.x * 10 * delta;
-    velocity.current.z -= velocity.current.z * 10 * delta;
+    // Friction — slightly lower than before for a smoother glide feel
+    const friction = 8;
+    velocity.current.x = THREE.MathUtils.damp(velocity.current.x, 0, friction, delta);
+    velocity.current.z = THREE.MathUtils.damp(velocity.current.z, 0, friction, delta);
 
     direction.current.set(
       (keys.current.d ? 1 : 0) - (keys.current.a ? 1 : 0),
       0,
-      (keys.current.w ? 1 : 0) - (keys.current.s ? 1 : 0)
+      (keys.current.w ? 1 : 0) - (keys.current.s ? 1 : 0),
     );
-
     if (direction.current.length() > 0) direction.current.normalize();
 
-    const speed = 40;
+    const speed = 25; // natural walking pace
     if (keys.current.w || keys.current.s) velocity.current.z -= direction.current.z * speed * delta;
     if (keys.current.a || keys.current.d) velocity.current.x -= direction.current.x * speed * delta;
+
+    moving.current = Math.abs(velocity.current.x) + Math.abs(velocity.current.z) > 0.05;
 
     controlsRef.current.moveRight(-velocity.current.x * delta);
     controlsRef.current.moveForward(-velocity.current.z * delta);
 
-    camera.position.y = 1.8;
+    // Subtle head bob when walking
+    if (moving.current) {
+      bobTime.current += delta * 7;
+      camera.position.y = 1.8 + Math.sin(bobTime.current) * 0.04;
+    } else {
+      // Smoothly return to eye level
+      camera.position.y = THREE.MathUtils.damp(camera.position.y, 1.8, 10, delta);
+    }
+
     camera.position.x = THREE.MathUtils.clamp(camera.position.x, -6, 6);
     camera.position.z = THREE.MathUtils.clamp(camera.position.z, -120, 6);
   });
@@ -142,82 +156,94 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
   return null;
 }
 
-function Windows({
-  width,
-  height,
-  depth,
-  color,
-}: {
-  width: number;
-  height: number;
-  depth: number;
-  color: string;
+// Memoize window layout so random pattern is stable across re-renders
+function Windows({ width, height, depth, color }: {
+  width: number; height: number; depth: number; color: string;
 }) {
-  const cols = Math.floor(width / 3.5);
-  const rows = Math.floor((height - 2) / 3);
-  const windows = [];
+  const layout = useMemo(() => {
+    const cols = Math.floor(width / 3.5);
+    const rows = Math.floor((height - 2) / 3);
+    const out: { x: number; y: number; lit: boolean; key: string }[] = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        out.push({
+          x: -width / 2 + 2 + c * (width / cols),
+          y: 2 + r * 3 + 1.2,
+          lit: Math.random() > 0.3,
+          key: `${r}-${c}`,
+        });
+      }
+    }
+    return out;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, height]);
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const x = -width / 2 + 2 + c * (width / cols);
-      const y = 2 + r * 3 + 1.2;
-      const lit = Math.random() > 0.25;
-      windows.push(
-        <mesh key={`${r}-${c}`} position={[x, y, -depth / 2 - 0.05]}>
+  return (
+    <>
+      {layout.map(({ x, y, lit, key }) => (
+        <mesh key={key} position={[x, y, -depth / 2 - 0.05]}>
           <planeGeometry args={[1.4, 1.8]} />
           <meshStandardMaterial
-            color={lit ? color : "#0a0a14"}
+            color={lit ? color : "#080810"}
             emissive={lit ? color : "#000000"}
-            emissiveIntensity={lit ? 0.6 : 0}
+            emissiveIntensity={lit ? 1.2 : 0}
             roughness={0.1}
+            metalness={0.1}
           />
         </mesh>
-      );
-    }
-  }
-  return <>{windows}</>;
+      ))}
+    </>
+  );
 }
 
-function Building({
-  project,
-  onSelect,
-}: {
+function Building({ project, onSelect }: {
   project: Project;
   onSelect: (p: Project) => void;
 }) {
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
+  const distRef = useRef(9999);
   const [near, setNear] = useState(false);
 
   useFrame(() => {
-    const dist = Math.sqrt(
-      Math.pow(camera.position.x - project.position[0], 2) +
-        Math.pow(camera.position.z - project.position[2], 2)
-    );
-    setNear(dist < 12);
+    const dx = camera.position.x - project.position[0];
+    const dz = camera.position.z - project.position[2];
+    const d = Math.sqrt(dx * dx + dz * dz);
+    distRef.current = d;
+    const isNear = d < INTERACT_DIST;
+    if (isNear !== near) setNear(isNear);
   });
 
   const w = project.buildingWidth;
   const h = project.buildingHeight;
   const d = 8;
 
+  // Physical light values — Three.js r155+ uses candelas for point lights.
+  // Sign glow: ~60 cd, boosted to ~120 cd on hover. Ground wash: ~20/40 cd.
+  const signIntensity  = hovered ? 120 : 60;
+  const glowIntensity  = hovered ? 40  : 18;
+
   return (
     <group position={project.position}>
       {/* Main body */}
       <mesh
         position={[0, h / 2, 0]}
-        onClick={() => onSelect(project)}
+        onClick={() => { if (near) onSelect(project); }}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
         <boxGeometry args={[w, h, d]} />
-        <meshStandardMaterial color={hovered ? "#1a1a2e" : "#0f0f1a"} roughness={0.9} />
+        <meshStandardMaterial
+          color={hovered && near ? "#1e1e34" : "#0f0f1a"}
+          roughness={0.85}
+          metalness={0.05}
+        />
       </mesh>
 
-      {/* Ground floor storefront */}
-      <mesh position={[0, 1.5, -0.02]}>
-        <boxGeometry args={[w, 3, d - 0.1]} />
-        <meshStandardMaterial color="#0a0a12" roughness={0.8} />
+      {/* Ground floor storefront — slightly lighter face */}
+      <mesh position={[0, 1.5, -d / 2 + 0.01]}>
+        <planeGeometry args={[w, 3]} />
+        <meshStandardMaterial color="#111120" roughness={0.8} />
       </mesh>
 
       {/* Door opening */}
@@ -241,33 +267,35 @@ function Building({
         {project.title.toUpperCase()}
       </Text>
 
-      {/* Neon sign glow */}
+      {/* Sign point light — physical units (candelas) */}
       <pointLight
-        position={[0, h + 0.8, -d / 2 + 1]}
+        position={[0, h + 0.8, -d / 2 + 1.5]}
         color={project.color}
-        intensity={hovered ? 4 : 2}
-        distance={16}
+        intensity={signIntensity}
+        distance={22}
+        decay={2}
       />
 
-      {/* Ground glow */}
+      {/* Ground color wash */}
       <pointLight
-        position={[0, 0.1, -d / 2 + 1]}
+        position={[0, 0.3, -d / 2 + 1]}
         color={project.color}
-        intensity={hovered ? 1.5 : 0.6}
-        distance={8}
+        intensity={glowIntensity}
+        distance={12}
+        decay={2}
       />
 
-      {/* Proximity prompt */}
+      {/* Proximity prompt — only appears when close enough to interact */}
       {near && (
         <Text
-          position={[0, 4, -d / 2 + 0.2]}
-          fontSize={0.5}
-          color="#ffffff"
+          position={[0, 3.5, -d / 2 + 0.2]}
+          fontSize={0.55}
+          color="white"
           anchorX="center"
           anchorY="middle"
-          fillOpacity={0.8}
+          fillOpacity={0.9}
         >
-          Click to open
+          {`[ click to open ]`}
         </Text>
       )}
     </group>
@@ -275,22 +303,43 @@ function Building({
 }
 
 function Streetlight({ z }: { z: number }) {
-  const side = z % 30 === 0 ? 1 : -1;
+  // Alternate sides every streetlight for realism
+  const side = ((z / 15) % 2 === 0) ? 1 : -1;
+  // Physical point light: a real sodium street lamp is ~100–200 cd
   return (
-    <group position={[side * 6, 0, z]}>
+    <group position={[side * 6.2, 0, z]}>
+      {/* Pole */}
       <mesh position={[0, 4, 0]}>
         <boxGeometry args={[0.12, 8, 0.12]} />
-        <meshStandardMaterial color="#1a1a2a" roughness={0.8} />
+        <meshStandardMaterial color="#1e1e30" roughness={0.9} />
       </mesh>
-      <mesh position={[side * -1, 7.8, 0]}>
-        <boxGeometry args={[2, 0.12, 0.12]} />
-        <meshStandardMaterial color="#1a1a2a" roughness={0.8} />
+      {/* Arm */}
+      <mesh position={[side * -1.2, 7.85, 0]}>
+        <boxGeometry args={[2.4, 0.1, 0.1]} />
+        <meshStandardMaterial color="#1e1e30" roughness={0.9} />
       </mesh>
-      <mesh position={[side * -1, 7.6, 0]}>
-        <sphereGeometry args={[0.25]} />
-        <meshStandardMaterial color="#fffbe0" emissive="#fffbe0" emissiveIntensity={1} />
+      {/* Lamp housing */}
+      <mesh position={[side * -2.4, 7.7, 0]}>
+        <boxGeometry args={[0.6, 0.25, 0.6]} />
+        <meshStandardMaterial color="#111118" roughness={0.8} />
       </mesh>
-      <pointLight position={[side * -1, 7.4, 0]} color="#fffbe0" intensity={1.2} distance={18} />
+      {/* Glowing bulb */}
+      <mesh position={[side * -2.4, 7.52, 0]}>
+        <sphereGeometry args={[0.15, 8, 8]} />
+        <meshStandardMaterial
+          color="#fffbe8"
+          emissive="#fffbe8"
+          emissiveIntensity={3}
+        />
+      </mesh>
+      {/* Physical point light — warm sodium yellow, ~150 cd */}
+      <pointLight
+        position={[side * -2.4, 7.3, 0]}
+        color="#ffedb0"
+        intensity={150}
+        distance={28}
+        decay={2}
+      />
     </group>
   );
 }
@@ -298,30 +347,39 @@ function Streetlight({ z }: { z: number }) {
 function Ground() {
   return (
     <>
-      {/* Main ground */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -60]}>
         <planeGeometry args={[200, 200]} />
-        <meshStandardMaterial color="#080810" roughness={0.95} />
+        <meshStandardMaterial color="#07070f" roughness={0.98} metalness={0} />
       </mesh>
       {/* Street */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, -60]}>
-        <planeGeometry args={[10, 200]} />
-        <meshStandardMaterial color="#0d0d1a" roughness={0.9} />
+        <planeGeometry args={[10.2, 200]} />
+        <meshStandardMaterial color="#0c0c18" roughness={0.92} metalness={0.02} />
       </mesh>
-      {/* Center line */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, -60]}>
-        <planeGeometry args={[0.15, 200]} />
-        <meshStandardMaterial color="#2a2a4a" roughness={0.8} />
+      {/* Center dashes */}
+      {[-10, -28, -46, -64, -82, -100].map((z) => (
+        <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z]}>
+          <planeGeometry args={[0.15, 6]} />
+          <meshStandardMaterial color="#29294a" roughness={0.8} />
+        </mesh>
+      ))}
+      {/* Sidewalks */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-8.5, 0.01, -60]}>
+        <planeGeometry args={[5, 200]} />
+        <meshStandardMaterial color="#0a0a16" roughness={0.95} />
       </mesh>
-      {/* Left curb */}
-      <mesh position={[-5.1, 0.15, -60]}>
-        <boxGeometry args={[0.3, 0.3, 200]} />
-        <meshStandardMaterial color="#111122" roughness={0.9} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[8.5, 0.01, -60]}>
+        <planeGeometry args={[5, 200]} />
+        <meshStandardMaterial color="#0a0a16" roughness={0.95} />
       </mesh>
-      {/* Right curb */}
-      <mesh position={[5.1, 0.15, -60]}>
-        <boxGeometry args={[0.3, 0.3, 200]} />
-        <meshStandardMaterial color="#111122" roughness={0.9} />
+      {/* Curbs */}
+      <mesh position={[-5.15, 0.12, -60]}>
+        <boxGeometry args={[0.3, 0.24, 200]} />
+        <meshStandardMaterial color="#111125" roughness={0.9} />
+      </mesh>
+      <mesh position={[5.15, 0.12, -60]}>
+        <boxGeometry args={[0.3, 0.24, 200]} />
+        <meshStandardMaterial color="#111125" roughness={0.9} />
       </mesh>
     </>
   );
@@ -336,15 +394,25 @@ export function CityScene({
 }) {
   return (
     <>
-      <fog attach="fog" args={["#05050f", 20, 90]} />
+      <fog attach="fog" args={["#05050f", 25, 100]} />
       <color attach="background" args={["#05050f"]} />
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[0, 20, 10]} intensity={0.8} color="#8888cc" />
-      <Stars radius={80} depth={40} count={3000} factor={3} saturation={0} fade />
+
+      {/* Ambient fill — low but non-zero so nothing is pitch black */}
+      <ambientLight intensity={0.6} />
+      {/* Cool moonlight directional fill */}
+      <directionalLight
+        position={[10, 30, 20]}
+        intensity={0.4}
+        color="#9999cc"
+      />
+      {/* Warm ground bounce — subtly fills shadowed faces from below */}
+      <hemisphereLight args={["#1a1a3a", "#0a0a10", 0.3]} />
+
+      <Stars radius={90} depth={50} count={4000} factor={3} saturation={0} fade />
 
       <Ground />
 
-      {[0, -15, -30, -45, -60, -75, -90, -105].map((z) => (
+      {[-5, -20, -35, -50, -65, -80, -95, -110].map((z) => (
         <Streetlight key={z} z={z} />
       ))}
 

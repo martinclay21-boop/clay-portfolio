@@ -255,6 +255,10 @@ export default function CityExperience() {
         onClick={handleCanvasClick}
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          // ACES filmic tone mapping gives the warm cinematic contrast
+          // that makes neon lights pop against a dark city night
+          gl.toneMapping = 4; // ACESFilmicToneMapping
+          gl.toneMappingExposure = 0.9;
         }}
       >
         <CityScene
