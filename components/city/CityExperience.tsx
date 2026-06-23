@@ -206,14 +206,10 @@ export default function CityExperience() {
     return () => document.removeEventListener("pointerlockchange", onChange);
   }, []);
 
-  const tryLock = useCallback(() => {
-    try { controlsRef.current?.lock(); } catch {}
-  }, []);
-
   const handleStart = useCallback(() => {
     setStarted(true);
-    setTimeout(tryLock, 100);
-  }, [tryLock]);
+    try { controlsRef.current?.lock(); } catch (e) { console.warn("PointerLock:", e); }
+  }, []);
 
   const handleSelectProject = useCallback((p: Project) => {
     try { controlsRef.current?.unlock(); } catch {}
@@ -222,8 +218,14 @@ export default function CityExperience() {
 
   const handleCloseOverlay = useCallback(() => {
     setSelectedProject(null);
-    setTimeout(tryLock, 100);
-  }, [tryLock]);
+  }, []);
+
+  // Re-lock when overlay closes and user clicks canvas
+  const handleCanvasClick = useCallback(() => {
+    if (!selectedProject && started) {
+      try { controlsRef.current?.lock(); } catch {}
+    }
+  }, [selectedProject, started]);
 
   if (isMobile) return <MobileFallback />;
 
@@ -234,6 +236,7 @@ export default function CityExperience() {
       <Canvas
         camera={{ fov: 75, near: 0.1, far: 200, position: [0, 1.8, 4] }}
         style={{ position: "absolute", inset: 0 }}
+        onClick={handleCanvasClick}
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         }}
