@@ -1,0 +1,125 @@
+// All audience-specific copy + structure lives here. Keep everything TRUTHFUL —
+// no invented metrics. The wow is that the portfolio reshapes itself per visitor.
+
+export type Audience = "recruiter" | "designer" | "curious";
+export type SectionKey = "about" | "projects" | "graphics" | "skills" | "contact";
+
+export const AUDIENCES: Audience[] = ["recruiter", "designer", "curious"];
+
+// Shown in the entry gate + lens switcher
+export const AUDIENCE_META: Record<
+  Audience,
+  { label: string; chip: string; line: string; blurb: string; accent: string }
+> = {
+  recruiter: {
+    label: "Recruiter / Hiring manager",
+    chip: "Recruiter",
+    line: "Show me impact, fast.",
+    blurb: "Outcomes, highlights, and a résumé — no scrolling marathon.",
+    accent: "#4f46e5", // indigo-600
+  },
+  designer: {
+    label: "Fellow designer",
+    chip: "Designer",
+    line: "Walk me through the craft.",
+    blurb: "Process, the decisions, and the messy middle.",
+    accent: "#0ea5e9", // sky-500
+  },
+  curious: {
+    label: "Just exploring",
+    chip: "Exploring",
+    line: "I'm only curious.",
+    blurb: "The short, human version. No jargon.",
+    accent: "#7c3aed", // violet-600
+  },
+};
+
+// Order of sections AFTER the hero, per audience. Recruiter hides the "fun"
+// graphics; designer surfaces craft; curious leads with the human/visual side.
+export const SECTION_ORDER: Record<Audience, SectionKey[]> = {
+  recruiter: ["projects", "skills", "about", "contact"],
+  designer: ["about", "projects", "skills", "graphics", "contact"],
+  curious: ["about", "graphics", "projects", "skills", "contact"],
+};
+
+export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "graphics", "skills", "contact"];
+
+export interface HeroCopy {
+  eyebrow: string;
+  showBadge: boolean;
+  headLead: string;   // plain line
+  headAccent: string; // serif-italic indigo line
+  sub: string;
+  primary: { label: string; href: string };
+  secondary: { label: string; href: string };
+  quickFacts?: string[]; // recruiter scan-strip
+}
+
+export const HERO_DEFAULT: HeroCopy = {
+  eyebrow: "Available for opportunities",
+  showBadge: true,
+  headLead: "Hi, I'm Clay Martin —",
+  headAccent: "UX & Product Designer.",
+  sub: "I turn real problems into clearer, more usable experiences — using research, usability testing, and visual design to find where people get stuck and redesign the flows that move them forward.",
+  primary: { label: "View my work", href: "#projects" },
+  secondary: { label: "Contact me", href: "#contact" },
+};
+
+export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
+  recruiter: {
+    eyebrow: "For recruiters & hiring managers",
+    showBadge: true,
+    headLead: "Research in,",
+    headAccent: "shipped experiences out.",
+    sub: "UX & product designer with two design internships and six end-to-end case studies. Here's the work — scannable, outcomes first.",
+    primary: { label: "See the work", href: "#projects" },
+    secondary: { label: "Get in touch", href: "#contact" },
+    quickFacts: [
+      "End-to-end UX",
+      "2× design intern",
+      "ICAgile Certified",
+      "Figma · Research · Prototyping",
+    ],
+  },
+  designer: {
+    eyebrow: "For fellow designers",
+    showBadge: false,
+    headLead: "I sweat the",
+    headAccent: "why behind every flow.",
+    sub: "Interviews, usability tests, journey maps, and a lot of iteration before anything gets polished. Come for the process — stay for the messy middle.",
+    primary: { label: "See my process", href: "#projects" },
+    secondary: { label: "Talk craft", href: "#contact" },
+  },
+  curious: {
+    eyebrow: "Hey, nice to meet you 👋",
+    showBadge: false,
+    headLead: "I make confusing things",
+    headAccent: "make sense.",
+    sub: "I'm Clay — a designer who figures out where people get stuck and smooths the path. Have a look around; it's friendlier than it sounds.",
+    primary: { label: "Take a look", href: "#projects" },
+    secondary: { label: "Say hi", href: "#contact" },
+  },
+};
+
+// Audience-tuned intro line for the Projects section
+export const PROJECTS_INTRO: Record<Audience, string> = {
+  recruiter:
+    "Six case studies across UX, product, and visual design. Each one links to the full breakdown — skim the outcomes, dig in where it matters.",
+  designer:
+    "A mix of UX, product, and visual work. Open any one for the research, the trade-offs, and the iterations that didn't make the final cut.",
+  curious:
+    "A little bit of everything I've made — apps, a nonprofit site, even some posters. Poke around whatever looks interesting.",
+};
+
+export const PROJECTS_INTRO_DEFAULT =
+  "A mix of UX, product, and visual design work spanning consumer apps, service design, and marketing.";
+
+export function heroFor(a: Audience | null): HeroCopy {
+  return a ? HERO_BY_AUDIENCE[a] : HERO_DEFAULT;
+}
+export function orderFor(a: Audience | null): SectionKey[] {
+  return a ? SECTION_ORDER[a] : DEFAULT_ORDER;
+}
+export function projectsIntroFor(a: Audience | null): string {
+  return a ? PROJECTS_INTRO[a] : PROJECTS_INTRO_DEFAULT;
+}

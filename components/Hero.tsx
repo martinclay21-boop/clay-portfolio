@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAudience } from "@/components/audience/AudienceContext";
+import { heroFor } from "@/components/audience/content";
 
 function AnimatedNumber({ target, suffix = "", delay = 0 }: { target: number; suffix?: string; delay?: number }) {
   const [value, setValue] = useState(0);
@@ -40,43 +42,47 @@ function AnimatedText({ text, delay = 0 }: { text: string; delay?: number }) {
 }
 
 export default function Hero() {
+  const { audience } = useAudience();
+  const copy = heroFor(audience);
+
   return (
     <section className="relative min-h-screen flex items-center bg-gradient-to-br from-slate-50 via-white to-indigo-50 px-6 overflow-hidden">
       {/* Soft floating blobs */}
       <div className="absolute top-20 right-20 w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl float pointer-events-none" />
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl float pointer-events-none" style={{ animationDelay: "2s" }} />
 
-      <div className="max-w-5xl mx-auto w-full pt-24 pb-16 relative">
-        <div className="inline-flex items-center gap-2 text-sm text-indigo-600 font-medium bg-indigo-50 px-3 py-1.5 rounded-full mb-6 reveal in-view">
-          <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-          Available for opportunities
-        </div>
+      {/* key forces a soft re-animation when the lens changes */}
+      <div key={audience ?? "default"} className="max-w-5xl mx-auto w-full pt-24 pb-16 relative hero-swap">
+        {copy.showBadge && (
+          <div className="inline-flex items-center gap-2 text-sm text-indigo-600 font-medium bg-indigo-50 px-3 py-1.5 rounded-full mb-6">
+            <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+            {copy.eyebrow}
+          </div>
+        )}
+        {!copy.showBadge && (
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500 mb-5">
+            {copy.eyebrow}
+          </p>
+        )}
 
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.05] tracking-tight mb-6">
-          Hi, I&apos;m Clay Martin.
+          {copy.headLead}
           <br />
           <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
-            UX &amp; Product
-          </span>{" "}
-          <span className="text-indigo-600">Designer.</span>
+            {copy.headAccent}
+          </span>
         </h1>
 
         <p className="text-lg sm:text-xl text-slate-500 max-w-2xl leading-relaxed mb-10">
-          I turn real problems into clearer, more usable experiences — using
-          research, usability testing, and visual design to find where people
-          get stuck and{" "}
-          <span className="font-[family-name:var(--font-serif)] italic text-slate-700">
-            redesign flows
-          </span>{" "}
-          that move them forward.
+          {copy.sub}
         </p>
 
         <div className="flex flex-wrap gap-4">
           <a
-            href="#projects"
+            href={copy.primary.href}
             className="group inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition-colors text-sm"
           >
-            View my work
+            {copy.primary.label}
             <svg
               className="w-4 h-4 transition-transform group-hover:translate-x-1"
               fill="none"
@@ -87,12 +93,23 @@ export default function Hero() {
             </svg>
           </a>
           <a
-            href="#contact"
+            href={copy.secondary.href}
             className="inline-flex items-center gap-2 border border-slate-200 text-slate-700 px-6 py-3 rounded-full font-medium hover:border-indigo-300 hover:text-indigo-600 transition-colors text-sm bg-white/60 backdrop-blur"
           >
-            Contact me
+            {copy.secondary.label}
           </a>
         </div>
+
+        {/* Recruiter-only scan strip — truthful quick facts */}
+        {copy.quickFacts && (
+          <div className="flex flex-wrap gap-2 mt-6">
+            {copy.quickFacts.map((fact) => (
+              <span key={fact} className="text-xs font-medium bg-white/70 border border-slate-200 text-slate-600 px-3 py-1.5 rounded-full backdrop-blur">
+                {fact}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Quick stats with animated counters */}
         <div className="mt-16 pt-10 border-t border-slate-200 grid grid-cols-3 gap-6 sm:gap-16 max-w-2xl">

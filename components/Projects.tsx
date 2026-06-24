@@ -1,4 +1,8 @@
+"use client";
+
 import Reveal from "@/components/Reveal";
+import { useAudience } from "@/components/audience/AudienceContext";
+import { projectsIntroFor } from "@/components/audience/content";
 
 const BASE = "/clay-portfolio";
 
@@ -71,6 +75,7 @@ const projects = [
 ];
 
 export default function Projects() {
+  const { audience } = useAudience();
   return (
     <section id="projects" className="py-24 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
@@ -84,8 +89,7 @@ export default function Projects() {
             </span>
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-16">
-            A mix of UX, product, and visual design work spanning consumer
-            apps, service design, and marketing.
+            {projectsIntroFor(audience)}
           </p>
         </Reveal>
 

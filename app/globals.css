@@ -39,6 +39,19 @@
   animation: float 4s ease-in-out infinite;
 }
 
+/* Soft fade/rise when the hero re-renders for a new audience lens */
+@keyframes heroSwap {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-swap {
+  animation: heroSwap 0.5s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-swap { animation: none; }
+  .float { animation: none; }
+}
+
 html {
   scroll-behavior: smooth;
 }
