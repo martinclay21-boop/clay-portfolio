@@ -1,5 +1,26 @@
-import CityLoader from "@/components/city/CityLoader";
+import Nav from "@/components/Nav";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Projects from "@/components/Projects";
+import Graphics from "@/components/Graphics";
+import Skills from "@/components/Skills";
+import Contact from "@/components/Contact";
 
 export default function Home() {
-  return <CityLoader />;
+  return (
+    <>
+      <Nav />
+      <main>
+        <Hero />
+        <About />
+        <Projects />
+        <Graphics />
+        <Skills />
+        <Contact />
+      </main>
+      <footer className="py-8 text-center text-sm text-slate-400 border-t border-slate-100">
+        © {new Date().getFullYear()} Clay Martin. Built with Next.js.
+      </footer>
+    </>
+  );
 }
