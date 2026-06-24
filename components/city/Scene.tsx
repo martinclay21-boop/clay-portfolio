@@ -11,16 +11,129 @@ export { PLACES };
 export type { Place };
 
 const INTERACT_DIST = 13;
+const LOOK_THRESH = 0.72; // ~44° cone — counts as "looking at" a building
 const BOUND_X = 13.5;
 const BOUND_Z_NEAR = 15;
 const BOUND_Z_FAR = -13.5;
 
-// Darken a hex color toward black by amount (0..1) — used for trim/shadow tones
+// reusable temp so we don't allocate every frame
+const _fwd = new THREE.Vector3();
+
 function shade(hex: string, amt: number) {
   const c = new THREE.Color(hex);
   c.multiplyScalar(1 - amt);
   return `#${c.getHexString()}`;
 }
+
+/* ---------------- Procedural textures (client-only, cached) ----------------
+   Built on a <canvas> at runtime so there are no external image files to load
+   in the static export. Adds real surface variation + bump relief so flat
+   boxes catch light unevenly and read as dimensional. */
+
+function canvas2d(size: number) {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  return { c, ctx: c.getContext("2d")! };
+}
+
+function makeFacadeMap(color: string): THREE.Texture {
+  const { c, ctx } = canvas2d(256);
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 256, 256);
+  // plaster speckle
+  for (let i = 0; i < 2600; i++) {
+    const a = Math.random() * 0.06;
+    ctx.fillStyle = Math.random() > 0.5 ? `rgba(0,0,0,${a})` : `rgba(255,255,255,${a})`;
+    ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+  }
+  // faint horizontal courses
+  ctx.strokeStyle = "rgba(0,0,0,0.05)";
+  ctx.lineWidth = 1;
+  for (let y = 0; y < 256; y += 32) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(256, y);
+    ctx.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(2, 2);
+  t.anisotropy = 4;
+  return t;
+}
+
+function makeBump(): THREE.Texture {
+  const { c, ctx } = canvas2d(128);
+  const img = ctx.createImageData(128, 128);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = 128 + (Math.random() - 0.5) * 70;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    img.data[i + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(4, 4);
+  return t;
+}
+
+function makeCobble(): THREE.Texture {
+  const { c, ctx } = canvas2d(256);
+  ctx.fillStyle = "#bcb09a"; // grout
+  ctx.fillRect(0, 0, 256, 256);
+  const tile = 32;
+  for (let gy = 0; gy < 256 / tile; gy++) {
+    for (let gx = 0; gx < 256 / tile; gx++) {
+      const off = gy % 2 === 0 ? 0 : tile / 2;
+      const x = gx * tile + off;
+      const y = gy * tile;
+      const shadeV = 200 + Math.floor(Math.random() * 30);
+      ctx.fillStyle = `rgb(${shadeV},${shadeV - 12},${shadeV - 30})`;
+      ctx.beginPath();
+      if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(x + 2, y + 2, tile - 4, tile - 4, 6);
+        ctx.fill();
+      } else {
+        ctx.fillRect(x + 2, y + 2, tile - 4, tile - 4);
+      }
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(7, 7);
+  t.anisotropy = 4;
+  return t;
+}
+
+function makeGrass(): THREE.Texture {
+  const { c, ctx } = canvas2d(128);
+  ctx.fillStyle = "#9cc06f";
+  ctx.fillRect(0, 0, 128, 128);
+  for (let i = 0; i < 4000; i++) {
+    const g = 90 + Math.floor(Math.random() * 70);
+    ctx.fillStyle = `rgba(${g - 40},${g + 30},${g - 30},0.5)`;
+    ctx.fillRect(Math.random() * 128, Math.random() * 128, 2, 3);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(60, 60);
+  return t;
+}
+
+// lazy module-level caches (only invoked inside client useMemo)
+const _facadeCache = new Map<string, THREE.Texture>();
+function getFacadeMap(color: string) {
+  if (!_facadeCache.has(color)) _facadeCache.set(color, makeFacadeMap(color));
+  return _facadeCache.get(color)!;
+}
+let _bump: THREE.Texture | null = null;
+const getBump = () => (_bump ??= makeBump());
+let _cobble: THREE.Texture | null = null;
+const getCobble = () => (_cobble ??= makeCobble());
+let _grass: THREE.Texture | null = null;
+const getGrass = () => (_grass ??= makeGrass());
+
+/* ---------------- Controls ---------------- */
 
 function useKeys() {
   const keys = useRef({ w: false, a: false, s: false, d: false });
@@ -91,6 +204,49 @@ function PlayerController({ controlsRef }: { controlsRef: React.RefObject<PLCImp
   return null;
 }
 
+// Returns the place the camera is near + looking at, or null. Shared by the
+// click handler and per-building highlight so they always agree.
+function focusedPlace(camera: THREE.Camera): Place | null {
+  camera.getWorldDirection(_fwd);
+  const fx = _fwd.x, fz = _fwd.z;
+  const flen = Math.hypot(fx, fz) || 1;
+  let best: Place | null = null;
+  let bestAlign = LOOK_THRESH;
+  for (const p of PLACES) {
+    const dx = p.position[0] - camera.position.x;
+    const dz = p.position[2] - camera.position.z;
+    const dist = Math.hypot(dx, dz);
+    if (dist > INTERACT_DIST) continue;
+    const align = (fx * dx + fz * dz) / (flen * (dist || 1));
+    if (align > bestAlign) { bestAlign = align; best = p; }
+  }
+  return best;
+}
+
+// Click → open whatever building you're aiming at (crosshair), independent of
+// the OS cursor position which is frozen during pointer lock.
+function Interactor({ onSelect, controlsRef }: {
+  onSelect: (p: Place) => void;
+  controlsRef: React.RefObject<PLCImpl | null>;
+}) {
+  const { camera, gl } = useThree();
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+
+  useEffect(() => {
+    const handler = () => {
+      if (!controlsRef.current?.isLocked) return;
+      const p = focusedPlace(camera);
+      if (p) onSelectRef.current(p);
+    };
+    const el = gl.domElement;
+    el.addEventListener("click", handler);
+    return () => el.removeEventListener("click", handler);
+  }, [camera, gl, controlsRef]);
+
+  return null;
+}
+
 /* ---------------- Building pieces ---------------- */
 
 function Roof({ style, w, d, h, color, facade }: {
@@ -117,12 +273,10 @@ function Roof({ style, w, d, h, color, facade }: {
   if (style === "flat") {
     return (
       <group>
-        {/* parapet */}
         <mesh position={[0, h + 0.35, 0]} castShadow>
           <boxGeometry args={[w + 0.4, 0.7, d + 0.4]} />
           <meshStandardMaterial color={color} roughness={0.8} />
         </mesh>
-        {/* recessed roof deck */}
         <mesh position={[0, h + 0.3, 0]}>
           <boxGeometry args={[w - 0.3, 0.3, d - 0.3]} />
           <meshStandardMaterial color={shade(facade, 0.25)} roughness={0.95} />
@@ -133,11 +287,10 @@ function Roof({ style, w, d, h, color, facade }: {
 
   if (style === "gable") {
     const roofH = 2.4;
-    const ov = 0.5;                 // eave overhang
+    const ov = 0.5;
     const run = w / 2 + ov;
     const slope = Math.hypot(run, roofH);
     const ang = Math.atan2(roofH, run);
-    // Gable end triangle (front + back walls under the ridge)
     const endShape = new THREE.Shape();
     endShape.moveTo(-w / 2, 0);
     endShape.lineTo(w / 2, 0);
@@ -145,7 +298,6 @@ function Roof({ style, w, d, h, color, facade }: {
     endShape.closePath();
     return (
       <group position={[0, h, 0]}>
-        {/* two slopes */}
         <mesh position={[run / 2, roofH / 2, 0]} rotation={[0, 0, -ang]} castShadow>
           <boxGeometry args={[slope, 0.18, d + 2 * ov]} />
           <meshStandardMaterial color={color} roughness={0.75} />
@@ -154,12 +306,10 @@ function Roof({ style, w, d, h, color, facade }: {
           <boxGeometry args={[slope, 0.18, d + 2 * ov]} />
           <meshStandardMaterial color={color} roughness={0.75} />
         </mesh>
-        {/* ridge cap */}
         <mesh position={[0, roofH, 0]} castShadow>
           <boxGeometry args={[0.22, 0.22, d + 2 * ov]} />
           <meshStandardMaterial color={trim} roughness={0.6} />
         </mesh>
-        {/* gable ends (wall-colored) */}
         <mesh position={[0, 0, -d / 2 - 0.02]} rotation={[0, Math.PI, 0]}>
           <shapeGeometry args={[endShape]} />
           <meshStandardMaterial color={facade} roughness={0.85} side={THREE.DoubleSide} />
@@ -172,7 +322,7 @@ function Roof({ style, w, d, h, color, facade }: {
     );
   }
 
-  // hip (default) — pyramid
+  // hip
   const roofR = Math.hypot(w / 2, d / 2) * 1.06;
   const roofH = 2.5;
   return (
@@ -200,7 +350,6 @@ function Awning({ span, y, z, color }: { span: number; y: number; z: number; col
           <meshStandardMaterial color={i % 2 === 0 ? color : "#fbf7ef"} roughness={0.7} />
         </mesh>
       ))}
-      {/* scalloped valance bar */}
       <mesh position={[0, -0.78, 0.02]}>
         <boxGeometry args={[span, 0.18, 0.16]} />
         <meshStandardMaterial color={shade(color, 0.15)} roughness={0.7} />
@@ -222,7 +371,6 @@ function Window({ x, y, frontZ, w = 1.3, h = 1.6, withBox = false, flower = "#e8
         <planeGeometry args={[w, h]} />
         <meshStandardMaterial color="#bfe2ff" emissive="#9fc6ec" emissiveIntensity={0.15} roughness={0.15} metalness={0.4} />
       </mesh>
-      {/* muntins */}
       <mesh position={[0, 0, 0.01]}>
         <boxGeometry args={[0.06, h, 0.02]} />
         <meshStandardMaterial color="#ffffff" />
@@ -249,16 +397,22 @@ function Window({ x, y, frontZ, w = 1.3, h = 1.6, withBox = false, flower = "#e8
   );
 }
 
-function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => void }) {
-  const [hovered, setHovered] = useState(false);
+function Building({ place }: { place: Place }) {
   const { camera } = useThree();
-  const [near, setNear] = useState(false);
+  const [active, setActive] = useState(false);
+  const groupRef = useRef<THREE.Group>(null);
+
+  const facadeMap = useMemo(() => getFacadeMap(place.facade), [place.facade]);
+  const bump = useMemo(() => getBump(), []);
 
   useFrame(() => {
-    const dx = camera.position.x - place.position[0];
-    const dz = camera.position.z - place.position[2];
-    const isNear = Math.sqrt(dx * dx + dz * dz) < INTERACT_DIST;
-    if (isNear !== near) setNear(isNear);
+    const isActive = focusedPlace(camera)?.id === place.id;
+    if (isActive !== active) setActive(isActive);
+    // gentle hover bob when focused
+    if (groupRef.current) {
+      const target = isActive ? 0.12 : 0;
+      groupRef.current.position.y += (target - groupRef.current.position.y) * 0.15;
+    }
   });
 
   const w = place.width;
@@ -266,26 +420,22 @@ function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => v
   const d = 6;
   const [px, , pz] = place.position;
   const frontZ = -d / 2;
-  const f = frontZ - 0.06; // just in front of the facade
+  const f = frontZ - 0.06;
 
   const signY = Math.min(4.5, h - 0.7);
   const trim = shade(place.color, 0.2);
-  const lift = hovered && near ? 0.12 : 0;
 
-  // Upper windows (only where they fit above the sign)
   const upperWindows: number[] = [];
   for (let y = signY + 1.6; y < h - 0.5; y += 1.9) upperWindows.push(y);
   const upperCols = Math.max(2, Math.round(w / 2.6));
 
   return (
-    <group position={[px, lift, pz]} rotation={[0, place.rotationY, 0]}>
-      {/* Base course */}
+    <group ref={groupRef} position={[px, 0, pz]} rotation={[0, place.rotationY, 0]}>
       <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
         <boxGeometry args={[w + 0.5, 0.7, d + 0.5]} />
         <meshStandardMaterial color={shade(place.facade, 0.22)} roughness={0.9} />
       </mesh>
 
-      {/* Body */}
       <RoundedBox
         args={[w, h, d]}
         radius={0.28}
@@ -293,16 +443,13 @@ function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => v
         position={[0, h / 2, 0]}
         castShadow
         receiveShadow
-        onClick={() => { if (near) onSelect(place); }}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
       >
-        <meshStandardMaterial color={place.facade} roughness={0.85} metalness={0} />
+        <meshStandardMaterial map={facadeMap} bumpMap={bump} bumpScale={0.04} roughness={0.88} metalness={0} />
       </RoundedBox>
 
       <Roof style={place.roof} w={w} d={d} h={h} color={place.color} facade={place.facade} />
 
-      {/* Storefront: door + flanking display windows */}
+      {/* Storefront */}
       <mesh position={[0, 1.4, f]}>
         <planeGeometry args={[1.8, 2.8]} />
         <meshStandardMaterial color={trim} roughness={0.6} />
@@ -318,10 +465,9 @@ function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => v
       <Window x={-(w / 2 - 1.3)} y={1.5} frontZ={f} w={1.5} h={1.9} />
       <Window x={w / 2 - 1.3} y={1.5} frontZ={f} w={1.5} h={1.9} />
 
-      {/* Striped awning across the storefront */}
       <Awning span={Math.min(w - 0.4, 5)} y={3.0} z={frontZ - 0.7} color={place.color} />
 
-      {/* Sign fascia board (text sits ON it — fixes the floating-text look) */}
+      {/* Sign fascia */}
       <group position={[0, signY, frontZ - 0.12]}>
         <RoundedBox args={[w - 0.6, 1.2, 0.25]} radius={0.1} smoothness={3} castShadow>
           <meshStandardMaterial color={trim} roughness={0.55} />
@@ -335,32 +481,20 @@ function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => v
           anchorY="middle"
           maxWidth={w - 1}
           textAlign="center"
-          fontWeight={700}
         >
           {place.title}
         </Text>
       </group>
 
-      {/* Upper windows with flower boxes */}
       {upperWindows.map((y, ri) =>
         Array.from({ length: upperCols }).map((_, ci) => {
           const x = -w / 2 + (w / upperCols) * (ci + 0.5);
           return (
-            <Window
-              key={`${ri}-${ci}`}
-              x={x}
-              y={y}
-              frontZ={f}
-              w={1.2}
-              h={1.5}
-              withBox={ri === 0}
-              flower={place.color}
-            />
+            <Window key={`${ri}-${ci}`} x={x} y={y} frontZ={f} w={1.2} h={1.5} withBox={ri === 0} flower={place.color} />
           );
         }),
       )}
 
-      {/* Chimney for gable / hip roofs */}
       {(place.roof === "gable" || place.roof === "hip") && (
         <group position={[w / 2 - 1.2, h + 1.4, 0.4]}>
           <mesh castShadow>
@@ -374,11 +508,9 @@ function Building({ place, onSelect }: { place: Place; onSelect: (p: Place) => v
         </group>
       )}
 
-      {/* Soft accent glow */}
-      <pointLight position={[0, signY, frontZ - 1.4]} color={place.color} intensity={hovered ? 22 : 9} distance={12} decay={2} />
+      <pointLight position={[0, signY, frontZ - 1.4]} color={place.color} intensity={active ? 24 : 9} distance={12} decay={2} />
 
-      {/* Proximity prompt */}
-      {near && (
+      {active && (
         <Text
           position={[0, h + 2.6, frontZ - 0.2]}
           rotation={[0, Math.PI, 0]}
@@ -403,18 +535,18 @@ function Tree({ position, scale = 1, tone = "#7cc47f" }: { position: [number, nu
     <group position={position} scale={scale}>
       <mesh position={[0, 1, 0]} castShadow>
         <cylinderGeometry args={[0.3, 0.42, 2, 7]} />
-        <meshStandardMaterial color="#a9764e" roughness={0.9} />
+        <meshStandardMaterial color="#a9764e" roughness={0.9} flatShading />
       </mesh>
       <mesh position={[0, 2.7, 0]} castShadow>
-        <sphereGeometry args={[1.5, 12, 12]} />
+        <icosahedronGeometry args={[1.5, 1]} />
         <meshStandardMaterial color={tone} roughness={0.9} flatShading />
       </mesh>
       <mesh position={[0.95, 2.1, 0.3]} castShadow>
-        <sphereGeometry args={[0.95, 12, 12]} />
+        <icosahedronGeometry args={[0.95, 1]} />
         <meshStandardMaterial color={shade(tone, 0.08)} roughness={0.9} flatShading />
       </mesh>
       <mesh position={[-0.85, 2.2, -0.2]} castShadow>
-        <sphereGeometry args={[0.85, 12, 12]} />
+        <icosahedronGeometry args={[0.85, 1]} />
         <meshStandardMaterial color={tone} roughness={0.9} flatShading />
       </mesh>
     </group>
@@ -425,11 +557,11 @@ function Bush({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
       <mesh position={[0, 0.4, 0]} castShadow>
-        <sphereGeometry args={[0.7, 10, 10]} />
+        <icosahedronGeometry args={[0.7, 1]} />
         <meshStandardMaterial color="#7bbf74" roughness={0.95} flatShading />
       </mesh>
       <mesh position={[0.5, 0.3, 0.1]} castShadow>
-        <sphereGeometry args={[0.5, 10, 10]} />
+        <icosahedronGeometry args={[0.5, 1]} />
         <meshStandardMaterial color="#88c97f" roughness={0.95} flatShading />
       </mesh>
     </group>
@@ -525,7 +657,7 @@ function WelcomeSign() {
         <boxGeometry args={[5, 1.1, 0.05]} />
         <meshStandardMaterial color="#c98a52" roughness={0.8} />
       </mesh>
-      <Text position={[0, 2.72, 0.18]} fontSize={0.5} color="#fff7ec" anchorX="center" anchorY="middle" fontWeight={700}>
+      <Text position={[0, 2.72, 0.18]} fontSize={0.5} color="#fff7ec" anchorX="center" anchorY="middle">
         CLAY MARTIN
       </Text>
       <Text position={[0, 2.24, 0.18]} fontSize={0.26} color="#ffe9cf" anchorX="center" anchorY="middle" letterSpacing={0.1}>
@@ -623,22 +755,18 @@ function GradientSky() {
 }
 
 function Ground() {
+  const cobble = useMemo(() => getCobble(), []);
+  const grass = useMemo(() => getGrass(), []);
+  const bump = useMemo(() => getBump(), []);
   return (
     <>
-      {/* Grass */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
         <planeGeometry args={[800, 800]} />
-        <meshStandardMaterial color="#9cc06f" roughness={1} />
+        <meshStandardMaterial map={grass} color="#aacb80" roughness={1} />
       </mesh>
-      {/* Plaza */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
         <planeGeometry args={[44, 44]} />
-        <meshStandardMaterial color="#ece4d3" roughness={0.95} />
-      </mesh>
-      {/* Cobble border ring */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
-        <ringGeometry args={[20.5, 22, 4, 1]} />
-        <meshStandardMaterial color="#c7bca2" roughness={0.95} side={THREE.DoubleSide} />
+        <meshStandardMaterial map={cobble} bumpMap={bump} bumpScale={0.06} color="#eee7d8" roughness={0.95} />
       </mesh>
       {/* Cross paths */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]}>
@@ -649,7 +777,6 @@ function Ground() {
         <planeGeometry args={[44, 5]} />
         <meshStandardMaterial color="#ddd2bb" roughness={0.95} />
       </mesh>
-      {/* Medallion */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 0]}>
         <circleGeometry args={[4, 36]} />
         <meshStandardMaterial color="#d3c7a9" roughness={0.9} />
@@ -674,12 +801,13 @@ export function CityScene({
       <fog attach="fog" args={["#dfe7ee", 78, 270]} />
       <GradientSky />
 
-      <ambientLight intensity={0.85} />
-      <hemisphereLight args={["#dfeefe", "#9ab06a", 0.9]} />
+      {/* More contrast for dimensional form: stronger key, less fill */}
+      <ambientLight intensity={0.5} />
+      <hemisphereLight args={["#dfeefe", "#8f9a64", 0.55]} />
       <directionalLight
-        position={[28, 44, 22]}
-        intensity={2.3}
-        color="#fff3df"
+        position={[26, 40, 20]}
+        intensity={3.1}
+        color="#fff2da"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -691,6 +819,8 @@ export function CityScene({
         shadow-camera-bottom={-40}
         shadow-bias={-0.0004}
       />
+      {/* cool rim/fill from the opposite side so shadows aren't muddy */}
+      <directionalLight position={[-22, 16, -18]} intensity={0.5} color="#adc4e0" />
 
       <Ground />
       <Skyline />
@@ -706,7 +836,6 @@ export function CityScene({
         <Lamp key={`l${i}`} position={[x, 0, z]} />
       ))}
 
-      {/* Greenery framing the entrance and corners */}
       {([[16, 15], [-16, 15], [10, 15], [-10, 15]] as [number, number][]).map(([x, z], i) => (
         <Tree key={`tr${i}`} position={[x, 0, z]} scale={0.85 + (i % 2) * 0.3} tone={i % 2 ? "#86cf86" : "#73bd72"} />
       ))}
@@ -720,11 +849,12 @@ export function CityScene({
       <Cloud position={[-48, 60, 26]} scale={2} />
 
       {PLACES.map((p) => (
-        <Building key={p.id} place={p} onSelect={onSelectPlace} />
+        <Building key={p.id} place={p} />
       ))}
 
       <PointerLockControls ref={controlsRef} />
       <PlayerController controlsRef={controlsRef} />
+      <Interactor onSelect={onSelectPlace} controlsRef={controlsRef} />
     </>
   );
 }
