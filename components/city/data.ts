@@ -2,6 +2,7 @@
 // is, and (for the info buildings) the content its overlay shows.
 
 export type PlaceKind = "project" | "about" | "skills" | "experience";
+export type RoofStyle = "gable" | "hip" | "dome" | "flat";
 
 export interface Place {
   id: string;
@@ -10,6 +11,7 @@ export interface Place {
   subtitle: string;        // small label above the title in the overlay
   color: string;           // accent (roof / awning / sign)
   facade: string;          // pastel wall color
+  roof: RoofStyle;         // roof silhouette — varied for personality
   position: [number, number, number];
   rotationY: number;       // so the storefront faces the plaza
   width: number;
@@ -32,6 +34,7 @@ export const PLACES: Place[] = [
     subtitle: "Capabilities",
     color: "#E8A13A",
     facade: "#fdeccb",
+    roof: "gable",
     position: [-12, 0, -18],
     rotationY: FACE_BACK,
     width: 8,
@@ -44,6 +47,7 @@ export const PLACES: Place[] = [
     subtitle: "Designer · Fishers, IN",
     color: "#2BB0A4",
     facade: "#d8f3ef",
+    roof: "dome",
     position: [0, 0, -18],
     rotationY: FACE_BACK,
     width: 9,
@@ -56,6 +60,7 @@ export const PLACES: Place[] = [
     subtitle: "Where I've worked",
     color: "#E2607A",
     facade: "#fbe0e6",
+    roof: "hip",
     position: [12, 0, -18],
     rotationY: FACE_BACK,
     width: 8,
@@ -73,6 +78,7 @@ export const PLACES: Place[] = [
     slug: "cuekit",
     color: "#7F77DD",
     facade: "#e9e7f6",
+    roof: "hip",
     position: [-18, 0, -8],
     rotationY: FACE_LEFT,
     width: 7,
@@ -88,6 +94,7 @@ export const PLACES: Place[] = [
     slug: "speaksynci-ai",
     color: "#378ADD",
     facade: "#dceaf8",
+    roof: "flat",
     position: [-18, 0, 2],
     rotationY: FACE_LEFT,
     width: 7,
@@ -103,6 +110,7 @@ export const PLACES: Place[] = [
     slug: "mu-luxembourg",
     color: "#E24B4A",
     facade: "#f6e0de",
+    roof: "gable",
     position: [-18, 0, 12],
     rotationY: FACE_LEFT,
     width: 8,
@@ -120,6 +128,7 @@ export const PLACES: Place[] = [
     slug: "interactive-yearbook",
     color: "#1D9E75",
     facade: "#dcf2e6",
+    roof: "dome",
     position: [18, 0, -8],
     rotationY: FACE_RIGHT,
     width: 7,
@@ -135,6 +144,7 @@ export const PLACES: Place[] = [
     slug: "academic-advising",
     color: "#BA7517",
     facade: "#f6ecd6",
+    roof: "hip",
     position: [18, 0, 2],
     rotationY: FACE_RIGHT,
     width: 7,
@@ -150,6 +160,7 @@ export const PLACES: Place[] = [
     slug: "spokenote",
     color: "#9F7AEA",
     facade: "#efe3fb",
+    roof: "gable",
     position: [18, 0, 12],
     rotationY: FACE_RIGHT,
     width: 7,

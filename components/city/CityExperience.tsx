@@ -277,6 +277,9 @@ export default function CityExperience() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [pending, setPending] = useState<Place | null>(null);
   const controlsRef = useRef<PLCImpl | null>(null);
+  // Swallows the canvas click that immediately follows a building click,
+  // so it can't re-lock the pointer while we're opening an overlay.
+  const suppressRelock = useRef(false);
 
   useEffect(() => {
     const onChange = () => {
@@ -297,6 +300,7 @@ export default function CityExperience() {
   }, []);
 
   const handleSelectPlace = useCallback((p: Place) => {
+    suppressRelock.current = true; // block the trailing canvas click
     setPending(p);
     document.exitPointerLock();
     try { controlsRef.current?.unlock(); } catch {}
@@ -305,6 +309,10 @@ export default function CityExperience() {
   const handleClose = useCallback(() => setSelected(null), []);
 
   const handleCanvasClick = useCallback(() => {
+    if (suppressRelock.current) {
+      suppressRelock.current = false;
+      return;
+    }
     if (!selected && !pending && started) {
       try { controlsRef.current?.lock(); } catch {}
     }
