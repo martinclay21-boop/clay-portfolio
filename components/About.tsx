@@ -2,7 +2,7 @@
 
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
-import { aboutFor } from "@/components/audience/content";
+import { aboutFor, PRINCIPLES } from "@/components/audience/content";
 
 const education = [
   {
@@ -54,29 +54,52 @@ export default function About() {
             </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
               <p>
-                I'm a UX and product designer based in Fishers, IN, pursuing a
-                B.A. in Emerging Technology in Business &amp; Design from Miami
-                University. I specialize in finding where users get stuck and
-                redesigning the experience so they don't.
+                I'm a UX and product designer finishing my B.A. in Emerging
+                Technology at Miami University. I've always had an eye for
+                composition — in drawing, photography, and design, I can usually
+                feel when something is right before I can explain why. A lot of
+                what I do is chasing that feeling, then backing it up with
+                research.
               </p>
               <p>
-                My process starts with real users — interviews, usability
-                tests, and journey mapping — then moves through wireframing and
-                prototyping in Figma before landing on polished, thoughtful
-                interfaces. I've applied this across consumer apps, nonprofit
-                websites, and marketing materials.
+                The most important part of any project, for me, is understanding
+                the root need — what the client or user actually wants, and the
+                context the design lives in. From there it's a puzzle: there's
+                rarely one right answer, so I gather inspiration, dig into user
+                needs, and interpret all of it into something that does exactly
+                what was asked — and maybe a little more.
               </p>
               <p>
-                Outside of design, I managed social media and branded content
-                for Miami University's Men's Club Volleyball team, and I'm
-                conversational in Korean after studying at Korea University in
-                Seoul.
+                I also believe design only gets good through iteration. You
+                build, you test, it fails, and each failure points to the small
+                thing to change. Somewhere in all that group work I found out I
+                lead well, too — teammates started calling me the &ldquo;glue&rdquo; of
+                the team. Turns out kindness and patience move people a lot
+                further than pressure ever could.
               </p>
+            </div>
+
+            {/* What I believe */}
+            <div className="mt-8">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
+                What I believe
+              </p>
+              <ul className="space-y-3">
+                {PRINCIPLES.map((p) => (
+                  <li key={p.t} className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--accent)" }} />
+                    <span className="text-sm text-slate-600 leading-relaxed">
+                      <span className="font-semibold text-slate-800">{p.t}.</span> {p.d}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <a
               href="mailto:martinclay21@gmail.com"
-              className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+              className="inline-flex items-center gap-2 mt-8 text-sm font-medium hover:opacity-80 transition-opacity"
+              style={{ color: "var(--accent)" }}
             >
               Let's connect →
             </a>
@@ -84,7 +107,7 @@ export default function About() {
 
           {/* Right — timeline */}
           <Reveal delay={120}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: "var(--accent)" }}>
               Education
             </p>
             <ol className="space-y-6 mb-8">
@@ -110,7 +133,7 @@ export default function About() {
               ))}
             </ol>
 
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: "var(--accent)" }}>
               Certifications
             </p>
             <ol className="space-y-6">

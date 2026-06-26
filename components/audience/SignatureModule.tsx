@@ -42,6 +42,11 @@ function RecruiterTLDR() {
               </div>
             </div>
 
+            <blockquote className="pl-4 border-l-2 mb-7 text-sm text-slate-600 leading-relaxed italic" style={{ borderColor: "var(--accent)" }}>
+              {t.quote}
+              <span className="block not-italic text-xs text-slate-400 mt-1.5">— teammates, group projects</span>
+            </blockquote>
+
             <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Why I'm worth a call</p>
             <ul className="space-y-2 mb-7">
               {t.highlights.map((h) => (
@@ -54,9 +59,17 @@ function RecruiterTLDR() {
               ))}
             </ul>
 
-            <div className="flex flex-wrap gap-2 mb-7">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Top skills</p>
+            <div className="flex flex-wrap gap-2 mb-6">
               {t.topSkills.map((s) => (
                 <span key={s} className="text-xs font-medium bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full">{s}</span>
+              ))}
+            </div>
+
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Curious about</p>
+            <div className="flex flex-wrap gap-2 mb-7">
+              {t.interests.map((x) => (
+                <span key={x} className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>{x}</span>
               ))}
             </div>
 
@@ -93,7 +106,7 @@ function DesignerProcess() {
             , not the first.
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-12">
-            Every project runs through the same loop — research before pixels, and testing before I call anything done.
+            Every project runs the same loop — understand the real need first, and let the work fail a few times before I call it done.
           </p>
         </Reveal>
 
