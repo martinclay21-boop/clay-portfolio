@@ -34,8 +34,8 @@ function Toast() {
           </svg>
         </span>
         <p className="text-xs leading-relaxed">
-          Reshaped for a <span className="font-semibold">{meta.chip.toLowerCase()}</span> —
-          sections reordered and the intro rewritten for you.
+          Reshaped for a <span className="font-semibold">{meta.chip.toLowerCase()}</span>.
+          Sections reordered and the intro rewritten for you.
         </p>
       </div>
     </div>

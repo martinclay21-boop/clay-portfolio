@@ -8,13 +8,13 @@ const education = [
   {
     year: "May 2026",
     title: "B.A. Emerging Technology in Business & Design",
-    org: "Miami University — Oxford, OH",
+    org: "Miami University, Oxford, OH",
     detail: "Concentration in Digital",
   },
   {
     year: "Aug – Dec 2025",
-    title: "Study Abroad — Human Computer Interaction",
-    org: "Korea University — Seoul, South Korea",
+    title: "Study Abroad, Human Computer Interaction",
+    org: "Korea University, Seoul, South Korea",
     detail: "Developed an interactive yearbook interface in Figma",
   },
 ];
@@ -28,7 +28,7 @@ const certifications = [
   },
   {
     year: "Feb 2026",
-    title: "Humans as Subjects — IRB Certification",
+    title: "Humans as Subjects, IRB Certification",
     org: "CITI Program",
     detail: "Training in research ethics and responsible conduct for human subjects research · Expires 2029",
   },
@@ -56,24 +56,24 @@ export default function About() {
               <p>
                 I'm a UX and product designer finishing my B.A. in Emerging
                 Technology at Miami University. I've always had an eye for
-                composition — in drawing, photography, and design, I can usually
+                composition. In drawing, photography, and design, I can usually
                 feel when something is right before I can explain why. A lot of
                 what I do is chasing that feeling, then backing it up with
                 research.
               </p>
               <p>
                 The most important part of any project, for me, is understanding
-                the root need — what the client or user actually wants, and the
+                the root need, what the client or user actually wants, and the
                 context the design lives in. From there it's a puzzle: there's
                 rarely one right answer, so I gather inspiration, dig into user
                 needs, and interpret all of it into something that does exactly
-                what was asked — and maybe a little more.
+                what was asked, and maybe a little more.
               </p>
               <p>
                 I also believe design only gets good through iteration. You
                 build, you test, it fails, and each failure points to the small
                 thing to change. Somewhere in all that group work I found out I
-                lead well, too — teammates started calling me the &ldquo;glue&rdquo; of
+                lead well, too. Teammates started calling me the &ldquo;glue&rdquo; of
                 the team. Turns out kindness and patience move people a lot
                 further than pressure ever could.
               </p>

@@ -15,7 +15,7 @@ export const AUDIENCE_META: Record<
     label: "Recruiter / Hiring manager",
     chip: "Recruiter",
     line: "Show me the highlights.",
-    blurb: "The quick, scannable version — what I do, the proof, and a résumé.",
+    blurb: "The quick, scannable version of what I do, the proof, and a résumé.",
     accent: "#4f46e5", // indigo-600
   },
   designer: {
@@ -58,9 +58,9 @@ export interface HeroCopy {
 export const HERO_DEFAULT: HeroCopy = {
   eyebrow: "Available for opportunities",
   showBadge: true,
-  headLead: "Hi, I'm Clay Martin —",
+  headLead: "Hi, I'm Clay Martin,",
   headAccent: "UX designer & researcher.",
-  sub: "I start every project with the root need — the real thing someone's trying to do — then treat the rest like a puzzle worth solving: research, iteration, and a lot of care for the small details.",
+  sub: "I start every project with the root need, the real thing someone's trying to do, then treat the rest like a puzzle worth solving: research, iteration, and a lot of care for the small details.",
   primary: { label: "View my work", href: "#projects" },
   secondary: { label: "Contact me", href: "#contact" },
 };
@@ -87,7 +87,7 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
     showBadge: false,
     headLead: "Design is a puzzle",
     headAccent: "with no single right answer.",
-    sub: "So I start with context and the root need, look everywhere for inspiration, then interpret and build — and let it fail a few times until the small stuff is right.",
+    sub: "So I start with context and the root need, look everywhere for inspiration, then interpret and build, and let it fail a few times until the small stuff is right.",
     primary: { label: "See my process", href: "#projects" },
     secondary: { label: "Talk craft", href: "#contact" },
   },
@@ -96,7 +96,7 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
 // Audience-tuned intro line for the Projects section
 export const PROJECTS_INTRO: Record<Audience, string> = {
   recruiter:
-    "Six case studies across UX, product, and visual design. Each one links to the full breakdown — skim the outcomes, dig in where it matters.",
+    "Six case studies across UX, product, and visual design. Each one links to the full breakdown. Skim the outcomes, dig in where it matters.",
   designer:
     "A mix of UX, product, and visual work. Open any one for the research, the trade-offs, and the iterations that didn't make the final cut.",
 };
@@ -114,7 +114,7 @@ export const ABOUT_DEFAULT: AboutCopy = {
   headAccent: "root need.",
 };
 export const ABOUT_BY_AUDIENCE: Record<Audience, AboutCopy> = {
-  recruiter: { headLead: "A designer who ships —", headAccent: "root need to final pixel." },
+  recruiter: { headLead: "A designer who ships,", headAccent: "root need to final pixel." },
   designer: { headLead: "Backed by purpose,", headAccent: "shaped by iteration." },
 };
 export function aboutFor(a: Audience | null): AboutCopy {
@@ -126,12 +126,12 @@ export const PRINCIPLES: { t: string; d: string }[] = [
   { t: "Start with the root need", d: "A design out of context is just decoration. I get the real need first." },
   { t: "There's no single right answer", d: "Only the best interpretation of the problem in front of me." },
   { t: "Iteration over perfection", d: "You build, it fails, and each failure shows you the next thing to fix." },
-  { t: "Purpose first, polish last", d: "Backed by research — but it should still look good and feel effortless." },
+  { t: "Purpose first, polish last", d: "Backed by research, but it should still look good and feel effortless." },
 ];
 
 // ---- Skills section intro line, per lens ----
 export const SKILLS_INTRO: Record<Audience, string> = {
-  recruiter: "The tools and methods I'm fluent in — and where I've already put them to work.",
+  recruiter: "The tools and methods I'm fluent in, and where I've already put them to work.",
   designer: "How I actually work: research- and method-led, tool-agnostic, detail-obsessed.",
 };
 export const SKILLS_INTRO_DEFAULT =
@@ -144,13 +144,13 @@ export function skillsIntroFor(a: Audience | null): string {
 
 // Recruiter: a 15-second "TL;DR" card
 export const RECRUITER_TLDR = {
-  status: "Open to UX Designer & Researcher roles — also into product design and Agile project management",
+  status: "Open to UX Designer & Researcher roles, also into product design and Agile project management",
   location: "Fishers, IN",
-  graduating: "B.A. Emerging Technology — Miami University, May 2026",
+  graduating: "B.A. Emerging Technology, Miami University, May 2026",
   quote:
-    "Teammates kept calling me the “glue” of the team — detail-obsessed, full of ideas, and the reason the work felt cohesive.",
+    "Teammates kept calling me the “glue” of the team, detail-obsessed, full of ideas, and the reason the work felt cohesive.",
   highlights: [
-    "6 end-to-end case studies — from root need to tested, high-fidelity prototypes",
+    "6 end-to-end case studies, from root need to tested, high-fidelity prototypes",
     "2 design internships (Damar Staffing and Spokenote)",
     "ICAgile Certified · IRB (Human-Subjects) Certified",
   ],
@@ -160,11 +160,11 @@ export const RECRUITER_TLDR = {
 
 // Designer: the "how I work" process strip
 export const DESIGNER_PROCESS: { step: string; blurb: string }[] = [
-  { step: "Find the root need", blurb: "First I get clear on what's actually being asked — and the context it lives in. Miss this and everything after is off." },
+  { step: "Find the root need", blurb: "First I get clear on what's actually being asked, and the context it lives in. Miss this and everything after is off." },
   { step: "Gather the pieces", blurb: "I look everywhere for inspiration and dig into real user needs. No single right answer, so I collect a lot before I commit." },
-  { step: "Interpret & build", blurb: "All of it turns into wireframes and flows — something that does exactly what was asked, and maybe a little more." },
+  { step: "Interpret & build", blurb: "All of it turns into wireframes and flows, something that does exactly what was asked, and maybe a little more." },
   { step: "Test, and let it fail", blurb: "I put it in front of real people expecting it to break. Every failure points straight to the next fix." },
-  { step: "Sweat the details", blurb: "Then the small stuff — a color a shade off, a button a few pixels over. Nothing's ever perfect, but it gets close." },
+  { step: "Sweat the details", blurb: "Then the small stuff, a color a shade off, a button a few pixels over. Nothing's ever perfect, but it gets close." },
 ];
 
 // ---- Per-lens project treatment ----

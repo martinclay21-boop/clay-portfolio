@@ -15,7 +15,7 @@ export default function Contact() {
         </h2>
         <p className="text-slate-400 text-base max-w-lg mx-auto mb-10">
           I'm currently open to full-time roles and internships in UX and
-          product design. Reach out — I'd love to connect.
+          product design. Reach out, I'd love to connect.
         </p>
 
         <div className="flex flex-wrap justify-center gap-4">

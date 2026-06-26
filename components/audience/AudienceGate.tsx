@@ -102,7 +102,7 @@ export default function AudienceGate() {
         </div>
 
         <h1 id="gate-title" className="text-3xl sm:text-5xl font-bold text-slate-900 leading-[1.1] mb-4">
-          First — who{" "}
+          First, who{" "}
           <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
             are you?
           </span>
@@ -152,7 +152,7 @@ export default function AudienceGate() {
         </div>
 
         <p className="mt-7 text-xs text-slate-400">
-          You can switch views anytime — there&apos;s a toggle in the corner.
+          You can switch views anytime using the toggle in the corner.
         </p>
         <button
           onClick={closeGate}

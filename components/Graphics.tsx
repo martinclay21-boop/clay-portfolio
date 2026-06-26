@@ -40,7 +40,7 @@ export default function Graphics() {
             </span>
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-12">
-            Posters and graphics I've made outside of class — just exploring
+            Posters and graphics I've made outside of class, just exploring
             Photoshop and Illustrator for the love of it.
           </p>
         </Reveal>

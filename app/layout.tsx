@@ -15,7 +15,7 @@ const serif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Clay Martin — UX & Product Designer",
+  title: "Clay Martin, UX & Product Designer",
   description:
     "Portfolio of Clay Martin, a UX and product designer focused on turning real problems into clearer, more usable experiences.",
 };
