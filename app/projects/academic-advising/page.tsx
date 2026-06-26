@@ -1,6 +1,6 @@
 import ProjectLayout from "@/components/ProjectLayout";
 
-export const metadata = { title: "Academic Advising Navigation — Clay Martin" };
+export const metadata = { title: "Academic Advising Navigation, Clay Martin" };
 
 export default function AcademicAdvising() {
   return (

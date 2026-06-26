@@ -2,7 +2,7 @@ import ProjectLayout from "@/components/ProjectLayout";
 
 const BASE = "/clay-portfolio";
 
-export const metadata = { title: "SpeakSyncAI — Clay Martin" };
+export const metadata = { title: "SpeakSyncAI, Clay Martin" };
 
 export default function SpeakSyncAI() {
   return (

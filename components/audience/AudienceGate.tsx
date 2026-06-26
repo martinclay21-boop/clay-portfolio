@@ -101,12 +101,12 @@ export default function AudienceGate() {
           </span>
         </div>
 
-        <h1 id="gate-title" className="text-3xl sm:text-5xl font-bold text-slate-900 leading-[1.1] mb-4">
+        <h2 id="gate-title" className="text-3xl sm:text-5xl font-bold text-slate-900 leading-[1.1] mb-4">
           First, who{" "}
           <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
             are you?
           </span>
-        </h1>
+        </h2>
         <p className="text-slate-500 text-base sm:text-lg max-w-md mx-auto mb-10">
           I tailor this portfolio to whoever&apos;s reading it. To make this the
           best experience I can, which version would you like to see?

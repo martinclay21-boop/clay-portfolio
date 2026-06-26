@@ -23,7 +23,7 @@ export const AUDIENCE_META: Record<
     chip: "Designer",
     line: "Walk me through the craft.",
     blurb: "My process, the decisions, and the messy middle.",
-    accent: "#0ea5e9", // sky-500
+    accent: "#0369a1", // sky-700 — passes WCAG AA (~5.9:1) for accent text on white
   },
 };
 

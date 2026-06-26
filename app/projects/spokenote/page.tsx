@@ -1,5 +1,5 @@
 import ProjectLayout from "@/components/ProjectLayout";
-export const metadata = { title: "Spokenote Use Cases — Clay Martin" };
+export const metadata = { title: "Spokenote Use Cases, Clay Martin" };
 
 const BASE = "/clay-portfolio";
 

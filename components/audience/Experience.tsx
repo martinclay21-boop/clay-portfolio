@@ -50,7 +50,7 @@ function Themed() {
     <div style={style}>
       <ScrollProgress />
       <Nav />
-      <main>
+      <main id="main-content">
         <Hero />
         <AdaptiveSections />
       </main>
