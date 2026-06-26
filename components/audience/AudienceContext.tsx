@@ -21,30 +21,23 @@ export function useAudience() {
   return c;
 }
 
-const KEY = "cm-audience";
-const isAudience = (v: unknown): v is Audience =>
-  v === "recruiter" || v === "designer" || v === "curious";
-
 export function AudienceProvider({ children }: { children: React.ReactNode }) {
   const [audience, setAudience] = useState<Audience | null>(null);
   const [mounted, setMounted] = useState(false);
   const [gateOpen, setGateOpen] = useState(false);
   const [changeSignal, setChangeSignal] = useState(0);
 
-  // On first mount, restore a saved lens or open the gate
+  // Greet every visit with the gate — the first thing anyone sees is the
+  // "who are you?" question, so the experience is always tailored on entry.
   useEffect(() => {
     setMounted(true);
-    let stored: string | null = null;
-    try { stored = localStorage.getItem(KEY); } catch {}
-    if (isAudience(stored)) setAudience(stored);
-    else setGateOpen(true);
+    setGateOpen(true);
   }, []);
 
   const choose = useCallback((a: Audience) => {
     setAudience(a);
     setGateOpen(false);
     setChangeSignal((n) => n + 1);
-    try { localStorage.setItem(KEY, a); } catch {}
   }, []);
 
   const reopenGate = useCallback(() => setGateOpen(true), []);

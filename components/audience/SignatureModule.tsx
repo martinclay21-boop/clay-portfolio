@@ -2,12 +2,7 @@
 
 import Reveal from "@/components/Reveal";
 import { useAudience } from "./AudienceContext";
-import {
-  RECRUITER_TLDR,
-  DESIGNER_PROCESS,
-  CURIOUS_HUMAN,
-  RESUME_HREF,
-} from "./content";
+import { RECRUITER_TLDR, DESIGNER_PROCESS, RESUME_HREF } from "./content";
 
 /* Recruiter — a scannable 15-second summary card */
 function RecruiterTLDR() {
@@ -128,39 +123,9 @@ function DesignerProcess() {
   );
 }
 
-/* Curious — the warm "human" panel */
-function CuriousHuman() {
-  const h = CURIOUS_HUMAN;
-  return (
-    <section className="py-20 px-6 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <Reveal>
-          <div className="rounded-3xl p-8 sm:p-12 text-center" style={{ background: "color-mix(in srgb, var(--accent) 8%, white)" }}>
-            <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl text-white text-2xl font-bold mb-6" style={{ background: "var(--accent)" }}>
-              CM
-            </span>
-            <p className="text-xl sm:text-2xl text-slate-800 leading-relaxed font-[family-name:var(--font-serif)] mb-10">
-              {h.intro}
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4 text-left">
-              {h.facts.map((f) => (
-                <div key={f.text} className="flex items-start gap-3 bg-white/70 rounded-2xl p-4">
-                  <span className="text-2xl shrink-0">{f.emoji}</span>
-                  <p className="text-sm text-slate-600 leading-relaxed">{f.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 export default function SignatureModule() {
   const { audience } = useAudience();
   if (audience === "recruiter") return <RecruiterTLDR />;
   if (audience === "designer") return <DesignerProcess />;
-  if (audience === "curious") return <CuriousHuman />;
   return null;
 }

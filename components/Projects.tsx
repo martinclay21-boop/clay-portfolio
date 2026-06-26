@@ -2,7 +2,7 @@
 
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
-import { projectsIntroFor, projectCtaFor, CURIOUS_TOP3 } from "@/components/audience/content";
+import { projectsIntroFor, projectCtaFor } from "@/components/audience/content";
 
 const BASE = "/clay-portfolio";
 
@@ -89,8 +89,6 @@ const projects = [
 export default function Projects() {
   const { audience } = useAudience();
   const cta = projectCtaFor(audience);
-  const isCurious = audience === "curious";
-  const shown = isCurious ? projects.filter((p) => CURIOUS_TOP3.includes(p.slug)) : projects;
   return (
     <section id="projects" className="py-24 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
@@ -100,7 +98,7 @@ export default function Projects() {
           </p>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4 leading-tight">
             <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
-              {isCurious ? "A few favorites" : "Projects"}
+              Projects
             </span>
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-16">
@@ -109,7 +107,7 @@ export default function Projects() {
         </Reveal>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {shown.map((p, i) => (
+          {projects.map((p, i) => (
             <Reveal key={p.slug} delay={i * 80}>
               <a
                 href={`${BASE}/projects/${p.slug}/`}
@@ -117,7 +115,7 @@ export default function Projects() {
               >
                 {/* Image / Preview area */}
                 <div
-                  className={`relative ${isCurious ? "h-64" : "h-48"} bg-gradient-to-br ${p.accent} overflow-hidden flex items-center justify-center`}
+                  className={`relative h-48 bg-gradient-to-br ${p.accent} overflow-hidden flex items-center justify-center`}
                 >
                   {p.image ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
