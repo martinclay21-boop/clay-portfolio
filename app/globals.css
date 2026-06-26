@@ -47,8 +47,19 @@
 .hero-swap {
   animation: heroSwap 0.5s ease-out;
 }
+
+/* Gentle cross-fade when the section order reshapes for a new lens */
+@keyframes sectionSwap {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.section-swap {
+  animation: sectionSwap 0.45s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-swap { animation: none; }
+  .section-swap { animation: none; }
   .float { animation: none; }
 }
 

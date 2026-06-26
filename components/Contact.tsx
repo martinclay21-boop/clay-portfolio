@@ -1,7 +1,9 @@
+import Reveal from "@/components/Reveal";
+
 export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 bg-slate-900">
-      <div className="max-w-5xl mx-auto text-center">
+      <Reveal className="max-w-5xl mx-auto text-center">
         <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-4">
           Contact
         </p>
@@ -53,7 +55,7 @@ export default function Contact() {
         <p className="text-slate-600 text-sm mt-10">
           317-331-6771 &nbsp;·&nbsp; Fishers, IN
         </p>
-      </div>
+      </Reveal>
     </section>
   );
 }

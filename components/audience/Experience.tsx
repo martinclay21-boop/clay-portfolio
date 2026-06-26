@@ -7,6 +7,7 @@ import Projects from "@/components/Projects";
 import Graphics from "@/components/Graphics";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
+import ScrollProgress from "@/components/ScrollProgress";
 import { AudienceProvider, useAudience } from "./AudienceContext";
 import AudienceGate from "./AudienceGate";
 import LensSwitcher from "./LensSwitcher";
@@ -24,18 +25,19 @@ function AdaptiveSections() {
   const { audience } = useAudience();
   const order = orderFor(audience);
   return (
-    <>
+    <div key={audience ?? "default"} className="section-swap">
       {order.map((key) => {
         const Section = SECTIONS[key];
         return <Section key={key} />;
       })}
-    </>
+    </div>
   );
 }
 
 export default function Experience() {
   return (
     <AudienceProvider>
+      <ScrollProgress />
       <Nav />
       <main>
         <Hero />

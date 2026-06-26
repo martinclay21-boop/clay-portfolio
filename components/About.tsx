@@ -1,3 +1,9 @@
+"use client";
+
+import Reveal from "@/components/Reveal";
+import { useAudience } from "@/components/audience/AudienceContext";
+import { aboutFor } from "@/components/audience/content";
+
 const education = [
   {
     year: "May 2026",
@@ -29,23 +35,21 @@ const certifications = [
 ];
 
 export default function About() {
+  const { audience } = useAudience();
+  const copy = aboutFor(audience);
   return (
     <section id="about" className="py-24 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left — bio */}
-          <div>
+          <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
               About
             </p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-[1.1]">
-              Designer who leads with{" "}
+            <h2 key={audience ?? "default"} className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-[1.1] hero-swap">
+              {copy.headLead}{" "}
               <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
-                empathy
-              </span>
-              , driven by{" "}
-              <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
-                research.
+                {copy.headAccent}
               </span>
             </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
@@ -76,10 +80,10 @@ export default function About() {
             >
               Let's connect →
             </a>
-          </div>
+          </Reveal>
 
           {/* Right — timeline */}
-          <div>
+          <Reveal delay={120}>
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-6">
               Education
             </p>
@@ -131,7 +135,7 @@ export default function About() {
                 </li>
               ))}
             </ol>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

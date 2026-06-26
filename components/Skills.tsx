@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useAudience } from "@/components/audience/AudienceContext";
+import { skillsIntroFor } from "@/components/audience/content";
 
 const groups = [
   {
@@ -87,6 +89,7 @@ const experience = [
 ];
 
 export default function Skills() {
+  const { audience } = useAudience();
   const [active, setActive] = useState<string | null>(null);
 
   const visibleGroups = active ? groups.filter((g) => g.heading === active) : groups;
@@ -103,6 +106,10 @@ export default function Skills() {
             Experience
           </span>
         </h2>
+
+        <p key={audience ?? "default"} className="text-slate-500 text-base max-w-xl mb-8 hero-swap">
+          {skillsIntroFor(audience)}
+        </p>
 
         {/* Category filter tabs */}
         <div className="flex flex-wrap gap-2 mb-10">

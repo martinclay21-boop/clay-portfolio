@@ -44,6 +44,8 @@ export const SECTION_ORDER: Record<Audience, SectionKey[]> = {
 
 export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "graphics", "skills", "contact"];
 
+export const RESUME_HREF = "/clay-portfolio/documents/clay-martin-resume.pdf";
+
 export interface HeroCopy {
   eyebrow: string;
   showBadge: boolean;
@@ -52,6 +54,7 @@ export interface HeroCopy {
   sub: string;
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
+  resume?: { label: string; href: string }; // recruiter résumé download
   quickFacts?: string[]; // recruiter scan-strip
 }
 
@@ -74,6 +77,7 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
     sub: "UX & product designer with two design internships and six end-to-end case studies. Here's the work — scannable, outcomes first.",
     primary: { label: "See the work", href: "#projects" },
     secondary: { label: "Get in touch", href: "#contact" },
+    resume: { label: "Résumé", href: RESUME_HREF },
     quickFacts: [
       "End-to-end UX",
       "2× design intern",
@@ -113,6 +117,36 @@ export const PROJECTS_INTRO: Record<Audience, string> = {
 
 export const PROJECTS_INTRO_DEFAULT =
   "A mix of UX, product, and visual design work spanning consumer apps, service design, and marketing.";
+
+// ---- About section heading, per lens ----
+export interface AboutCopy {
+  headLead: string;
+  headAccent: string;
+}
+export const ABOUT_DEFAULT: AboutCopy = {
+  headLead: "Designer who leads with empathy,",
+  headAccent: "driven by research.",
+};
+export const ABOUT_BY_AUDIENCE: Record<Audience, AboutCopy> = {
+  recruiter: { headLead: "A designer who ships —", headAccent: "research to final pixel." },
+  designer: { headLead: "Empathy first,", headAccent: "iteration always." },
+  curious: { headLead: "Hi — I'm Clay,", headAccent: "I like untangling things." },
+};
+export function aboutFor(a: Audience | null): AboutCopy {
+  return a ? ABOUT_BY_AUDIENCE[a] : ABOUT_DEFAULT;
+}
+
+// ---- Skills section intro line, per lens ----
+export const SKILLS_INTRO: Record<Audience, string> = {
+  recruiter: "The tools and methods I'm fluent in — and where I've already put them to work.",
+  designer: "How I actually work: research- and method-led, tool-agnostic, detail-obsessed.",
+  curious: "The stuff I'm good at — design tools, a bit of code, and working well with people.",
+};
+export const SKILLS_INTRO_DEFAULT =
+  "A snapshot of the tools, methods, and soft skills I bring to a team.";
+export function skillsIntroFor(a: Audience | null): string {
+  return a ? SKILLS_INTRO[a] : SKILLS_INTRO_DEFAULT;
+}
 
 export function heroFor(a: Audience | null): HeroCopy {
   return a ? HERO_BY_AUDIENCE[a] : HERO_DEFAULT;
