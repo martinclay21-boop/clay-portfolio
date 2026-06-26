@@ -30,12 +30,12 @@ export default function Graphics() {
     <section className="py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
+          <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
             Personal Work
           </p>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4 leading-tight">
             Made for{" "}
-            <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+            <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
               fun.
             </span>
           </h2>

@@ -4,12 +4,12 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 bg-slate-900">
       <Reveal className="max-w-5xl mx-auto text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-4">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
           Contact
         </p>
         <h2 className="text-4xl sm:text-6xl font-bold text-white mb-4 leading-tight">
           Let's{" "}
-          <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-400">
+          <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
             work together.
           </span>
         </h2>

@@ -43,12 +43,12 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left — bio */}
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
               About
             </p>
             <h2 key={audience ?? "default"} className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-[1.1] hero-swap">
               {copy.headLead}{" "}
-              <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+              <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
                 {copy.headAccent}
               </span>
             </h2>

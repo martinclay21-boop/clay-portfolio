@@ -45,8 +45,9 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="mailto:claymartin@miamioh.edu"
-            className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition-colors"
+            href="mailto:martinclay21@gmail.com"
+            style={{ background: "var(--accent)" }}
+            className="text-sm text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
           >
             Get in touch
           </a>
@@ -97,7 +98,7 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="mailto:claymartin@miamioh.edu"
+            href="mailto:martinclay21@gmail.com"
             className="text-sm text-indigo-600 font-medium"
           >
             Get in touch

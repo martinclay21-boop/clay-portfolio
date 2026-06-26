@@ -2,7 +2,7 @@
 
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
-import { projectsIntroFor } from "@/components/audience/content";
+import { projectsIntroFor, projectCtaFor, CURIOUS_TOP3 } from "@/components/audience/content";
 
 const BASE = "/clay-portfolio";
 
@@ -88,16 +88,19 @@ const projects = [
 
 export default function Projects() {
   const { audience } = useAudience();
+  const cta = projectCtaFor(audience);
+  const isCurious = audience === "curious";
+  const shown = isCurious ? projects.filter((p) => CURIOUS_TOP3.includes(p.slug)) : projects;
   return (
     <section id="projects" className="py-24 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
+          <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
             Work
           </p>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
-              Projects
+            <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
+              {isCurious ? "A few favorites" : "Projects"}
             </span>
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-16">
@@ -106,7 +109,7 @@ export default function Projects() {
         </Reveal>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p, i) => (
+          {shown.map((p, i) => (
             <Reveal key={p.slug} delay={i * 80}>
               <a
                 href={`${BASE}/projects/${p.slug}/`}
@@ -114,7 +117,7 @@ export default function Projects() {
               >
                 {/* Image / Preview area */}
                 <div
-                  className={`relative h-48 bg-gradient-to-br ${p.accent} overflow-hidden flex items-center justify-center`}
+                  className={`relative ${isCurious ? "h-64" : "h-48"} bg-gradient-to-br ${p.accent} overflow-hidden flex items-center justify-center`}
                 >
                   {p.image ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
@@ -143,7 +146,7 @@ export default function Projects() {
                   </h3>
                   {audience === "recruiter" ? (
                     <div className="flex-1">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 mb-1.5">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--accent)" }}>
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
@@ -168,8 +171,8 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 mt-2 group-hover:gap-2 transition-all">
-                    Read case study
+                  <span className="inline-flex items-center gap-1 text-xs font-medium mt-2 group-hover:gap-2 transition-all" style={{ color: "var(--accent)" }}>
+                    {cta}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>

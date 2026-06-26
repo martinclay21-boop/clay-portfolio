@@ -54,13 +54,13 @@ export default function Hero() {
       {/* key forces a soft re-animation when the lens changes */}
       <div key={audience ?? "default"} className="max-w-5xl mx-auto w-full pt-24 pb-16 relative hero-swap">
         {copy.showBadge && (
-          <div className="inline-flex items-center gap-2 text-sm text-indigo-600 font-medium bg-indigo-50 px-3 py-1.5 rounded-full mb-6">
-            <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full mb-6" style={{ color: "var(--accent)", background: "var(--accent-soft)" }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
             {copy.eyebrow}
           </div>
         )}
         {!copy.showBadge && (
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500 mb-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-5" style={{ color: "var(--accent)" }}>
             {copy.eyebrow}
           </p>
         )}
@@ -68,7 +68,7 @@ export default function Hero() {
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.05] tracking-tight mb-6">
           {copy.headLead}
           <br />
-          <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+          <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
             {copy.headAccent}
           </span>
         </h1>
@@ -80,7 +80,8 @@ export default function Hero() {
         <div className="flex flex-wrap gap-4">
           <a
             href={copy.primary.href}
-            className="group inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition-colors text-sm"
+            style={{ background: "var(--accent)" }}
+            className="group inline-flex items-center gap-2 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity text-sm"
           >
             {copy.primary.label}
             <svg

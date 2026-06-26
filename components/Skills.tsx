@@ -97,12 +97,12 @@ export default function Skills() {
   return (
     <section id="skills" className="py-24 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-4">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
           Capabilities
         </p>
         <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-tight">
           Skills &amp;{" "}
-          <span className="font-[family-name:var(--font-serif)] italic font-normal text-indigo-600">
+          <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
             Experience
           </span>
         </h2>

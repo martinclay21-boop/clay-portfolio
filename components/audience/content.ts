@@ -2,7 +2,7 @@
 // no invented metrics. The wow is that the portfolio reshapes itself per visitor.
 
 export type Audience = "recruiter" | "designer" | "curious";
-export type SectionKey = "about" | "projects" | "graphics" | "skills" | "contact";
+export type SectionKey = "signature" | "about" | "projects" | "graphics" | "skills" | "contact";
 
 export const AUDIENCES: Audience[] = ["recruiter", "designer", "curious"];
 
@@ -37,12 +37,20 @@ export const AUDIENCE_META: Record<
 // Order of sections AFTER the hero, per audience. Recruiter hides the "fun"
 // graphics; designer surfaces craft; curious leads with the human/visual side.
 export const SECTION_ORDER: Record<Audience, SectionKey[]> = {
-  recruiter: ["projects", "skills", "about", "contact"],
-  designer: ["about", "projects", "skills", "graphics", "contact"],
-  curious: ["about", "graphics", "projects", "skills", "contact"],
+  // recruiter leads with a scannable TL;DR card, then the work
+  recruiter: ["signature", "projects", "skills", "about", "contact"],
+  // designer gets the "how I work" process strip before the projects
+  designer: ["about", "signature", "projects", "skills", "graphics", "contact"],
+  // curious gets the warm "human" panel up front, fewer/bigger projects
+  curious: ["signature", "graphics", "projects", "skills", "contact"],
 };
 
 export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "graphics", "skills", "contact"];
+
+// Per-lens accent color drives the whole-site vibe (via a --accent CSS var)
+export function accentFor(a: Audience | null): string {
+  return a ? AUDIENCE_META[a].accent : "#4f46e5";
+}
 
 export const RESUME_HREF = "/clay-portfolio/documents/clay-martin-resume.pdf";
 
@@ -147,6 +155,56 @@ export const SKILLS_INTRO_DEFAULT =
 export function skillsIntroFor(a: Audience | null): string {
   return a ? SKILLS_INTRO[a] : SKILLS_INTRO_DEFAULT;
 }
+
+// ---- Signature modules (one unique block per lens) ----
+
+// Recruiter: a 15-second "TL;DR" card
+export const RECRUITER_TLDR = {
+  status: "Open to full-time UX/Product roles & internships",
+  location: "Fishers, IN",
+  graduating: "B.A. Emerging Technology — Miami University, May 2026",
+  highlights: [
+    "6 end-to-end case studies, research → hi-fi prototype",
+    "2 design internships (Damar Staffing, Spokenote)",
+    "ICAgile Certified · IRB (human-subjects) Certified",
+  ],
+  topSkills: ["Figma", "User Research", "Usability Testing", "Prototyping", "Photoshop", "WordPress"],
+};
+
+// Designer: the "how I work" process strip
+export const DESIGNER_PROCESS: { step: string; blurb: string }[] = [
+  { step: "Research", blurb: "Interviews, surveys, and usability tests to find where people actually get stuck." },
+  { step: "Synthesize", blurb: "Journey maps and user flows that turn messy findings into one clear problem." },
+  { step: "Wireframe", blurb: "Low-fi structure first — hierarchy and content before any polish." },
+  { step: "Prototype", blurb: "High-fidelity Figma prototypes that feel like the real thing." },
+  { step: "Test & iterate", blurb: "Put it in front of users and refine until the flow just works." },
+];
+
+// Curious: the warm "human" panel
+export const CURIOUS_HUMAN = {
+  intro:
+    "Hey — I'm Clay. I'm a senior at Miami University who fell for design because I like figuring out why things feel confusing and then quietly fixing them.",
+  facts: [
+    { emoji: "🏐", text: "Ran social media + content for Miami's Men's Club Volleyball team." },
+    { emoji: "🇰🇷", text: "Studied in Seoul and got conversational in Korean." },
+    { emoji: "🎨", text: "Makes posters for fun — cars, volleyball, whatever looks cool." },
+    { emoji: "🎓", text: "Graduating May 2026, hunting for my first full-time design role." },
+  ],
+};
+
+// ---- Per-lens project treatment ----
+export const PROJECT_CTA: Record<Audience, string> = {
+  recruiter: "See the case study",
+  designer: "Read the process",
+  curious: "Take a peek",
+};
+export const PROJECT_CTA_DEFAULT = "Read case study";
+export function projectCtaFor(a: Audience | null): string {
+  return a ? PROJECT_CTA[a] : PROJECT_CTA_DEFAULT;
+}
+
+// Curious sees a curated top 3 (her strongest), shown bigger
+export const CURIOUS_TOP3 = ["cuekit", "speaksynci-ai", "mu-luxembourg"];
 
 export function heroFor(a: Audience | null): HeroCopy {
   return a ? HERO_BY_AUDIENCE[a] : HERO_DEFAULT;

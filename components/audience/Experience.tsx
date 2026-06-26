@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -11,9 +12,11 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { AudienceProvider, useAudience } from "./AudienceContext";
 import AudienceGate from "./AudienceGate";
 import LensSwitcher from "./LensSwitcher";
-import { orderFor, type SectionKey } from "./content";
+import SignatureModule from "./SignatureModule";
+import { orderFor, accentFor, type SectionKey } from "./content";
 
 const SECTIONS: Record<SectionKey, React.ComponentType> = {
+  signature: SignatureModule,
   about: About,
   projects: Projects,
   graphics: Graphics,
@@ -34,9 +37,17 @@ function AdaptiveSections() {
   );
 }
 
-export default function Experience() {
+// Carries the per-lens accent color as a CSS variable so the whole site re-tints
+function Themed() {
+  const { audience } = useAudience();
+  const accent = accentFor(audience);
+  const style = {
+    "--accent": accent,
+    "--accent-soft": `${accent}1a`, // ~10% alpha
+  } as CSSProperties;
+
   return (
-    <AudienceProvider>
+    <div style={style}>
       <ScrollProgress />
       <Nav />
       <main>
@@ -49,6 +60,14 @@ export default function Experience() {
 
       <LensSwitcher />
       <AudienceGate />
+    </div>
+  );
+}
+
+export default function Experience() {
+  return (
+    <AudienceProvider>
+      <Themed />
     </AudienceProvider>
   );
 }
