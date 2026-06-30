@@ -131,11 +131,8 @@ export default function AudienceGate() {
                 >
                   <Glyph audience={a} />
                 </span>
-                <span className="block text-xs font-medium uppercase tracking-wider text-slate-400 mb-1">
-                  {meta.label}
-                </span>
                 <span className="block text-lg font-bold text-slate-900 mb-1.5">
-                  {meta.line}
+                  {meta.label}
                 </span>
                 <span className="block text-sm text-slate-500 leading-relaxed">
                   {meta.blurb}
