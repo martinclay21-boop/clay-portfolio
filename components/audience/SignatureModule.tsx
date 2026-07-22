@@ -39,7 +39,7 @@ function RecruiterTLDR() {
 
             <blockquote className="pl-4 border-l-2 mb-7 text-sm text-slate-600 leading-relaxed italic" style={{ borderColor: "var(--accent)" }}>
               {t.quote}
-              <span className="block not-italic text-xs text-slate-400 mt-1.5">Teammates, group projects</span>
+              <span className="block not-italic text-xs text-slate-500 mt-1.5">Anonymous teammate, group design sprint</span>
             </blockquote>
 
             <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Why I'm worth a call</p>

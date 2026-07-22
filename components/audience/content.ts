@@ -2,7 +2,7 @@
 // no invented metrics. The wow is that the portfolio reshapes itself per visitor.
 
 export type Audience = "recruiter" | "designer";
-export type SectionKey = "signature" | "about" | "projects" | "graphics" | "skills" | "contact";
+export type SectionKey = "signature" | "about" | "projects" | "testimonials" | "graphics" | "skills" | "contact";
 
 export const AUDIENCES: Audience[] = ["recruiter", "designer"];
 
@@ -30,11 +30,11 @@ export const AUDIENCE_META: Record<
 // Order of sections AFTER the hero, per audience. Recruiter leads with the
 // scannable TL;DR and hides the "fun" graphics; designer surfaces the craft.
 export const SECTION_ORDER: Record<Audience, SectionKey[]> = {
-  recruiter: ["signature", "projects", "skills", "about", "contact"],
-  designer: ["about", "signature", "projects", "skills", "graphics", "contact"],
+  recruiter: ["signature", "projects", "testimonials", "skills", "about", "contact"],
+  designer: ["about", "signature", "projects", "testimonials", "skills", "graphics", "contact"],
 };
 
-export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "graphics", "skills", "contact"];
+export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "testimonials", "graphics", "skills", "contact"];
 
 // Per-lens accent color drives the whole-site vibe (via a --accent CSS var)
 export function accentFor(a: Audience | null): string {
@@ -148,7 +148,7 @@ export const RECRUITER_TLDR = {
   location: "Fishers, IN",
   graduating: "B.A. Emerging Technology, Miami University, May 2026",
   quote:
-    "Teammates kept calling me the “glue” of the team, detail-obsessed, full of ideas, and the reason the work felt cohesive.",
+    "His contributions served as the connective tissue of the sprint. Wherever something felt disconnected, he stepped in and made it feel cohesive.",
   highlights: [
     "6 end-to-end case studies, from root need to tested, high-fidelity prototypes",
     "2 design internships (Damar Staffing and Spokenote)",
@@ -176,6 +176,31 @@ export const PROJECT_CTA_DEFAULT = "Read case study";
 export function projectCtaFor(a: Audience | null): string {
   return a ? PROJECT_CTA[a] : PROJECT_CTA_DEFAULT;
 }
+
+// Real anonymous peer feedback from a group design sprint. Verbatim wording,
+// punctuation lightly normalized (no em-dashes, straight quotes).
+export const TESTIMONIALS: { text: string; from: string }[] = [
+  {
+    text: "Clay had a real knack for making all the disparate pieces feel unified. His contributions served as the connective tissue of the sprint. Wherever something felt disconnected, he stepped in and made it feel cohesive.",
+    from: "Anonymous teammate",
+  },
+  {
+    text: "Clayton's strongest contribution has been his ability to act as a subtle leader. He is thoughtful, knowledgeable, and consistently expresses his opinions in an honest and respectful way, which helps guide the team's decision-making.",
+    from: "Anonymous teammate",
+  },
+  {
+    text: "Clay did a phenomenal job submitting high-quality work and picking up wherever possible, without making a fuss or needing recognition.",
+    from: "Anonymous teammate",
+  },
+  {
+    text: "Clay was very helpful throughout the sprint, and in answering any questions the group had about their tasks. He was very patient in helping others, and this really helped our final product.",
+    from: "Anonymous teammate",
+  },
+  {
+    text: "Was willing to do the tasks other people did not want to do.",
+    from: "Anonymous teammate",
+  },
+];
 
 export function heroFor(a: Audience | null): HeroCopy {
   return a ? HERO_BY_AUDIENCE[a] : HERO_DEFAULT;

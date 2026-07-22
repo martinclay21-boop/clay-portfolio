@@ -25,7 +25,7 @@ The portfolio designs for the person reading it, recruiter or designer, and in d
 - Primary CTA is to email Clay. Résumé download and case studies are supporting proof that funnel toward that email; they are the secondary path for a visitor not ready to reach out yet.
 - The line a visitor should remember after ten seconds: a designer who finds the root need and solves the rest like a puzzle.
 - Belief ladder — what a recruiter must believe, in order, before emailing: first, that this is a real designer with a point of view, not a generic template; second, that the work is grounded in genuine research and iteration, not just polished screens; third, that he is detail-obsessed and easy to work with, the "glue" a team wants; fourth, that he fits what they are hiring for. Every surface should move the reader one rung up.
-- Proof on hand: peer feedback that Clay was the "glue of the team" (paraphrased, not yet a named testimonial); six end-to-end case studies from root need to tested high-fidelity prototypes; two design internships (Damar Staffing, Spokenote); ICAgile and IRB Human-Subjects certifications. A named, attributable testimonial is the biggest missing piece of proof.
+- Proof on hand: five real (anonymous) peer testimonials from a group design sprint, now shown in a "What my teammates say" section, several directly backing the "glue / connective tissue" and "subtle leader" framing; six end-to-end case studies from root need to tested high-fidelity prototypes; two design internships (Damar Staffing, Spokenote); ICAgile and IRB Human-Subjects certifications. The remaining stretch is a named, attributable testimonial rather than an anonymous one.
 
 ## Brand Personality
 
