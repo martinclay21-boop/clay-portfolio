@@ -22,7 +22,7 @@ export default function MULuxembourg() {
       <p>
         As part of Miami University's IMS 440 senior practicum (Spring 2026),
         I was a member of the Blueprint Design Team working in collaboration
-        with the Miami University Luxembourg Foundation (MULF) — an
+        with the Miami University Luxembourg Foundation (MULF), an
         organization established in 2023 to provide European alumni and
         donors a tax-efficient vehicle to support MUDEC, Miami's study-abroad
         program in Luxembourg.
@@ -35,13 +35,13 @@ export default function MULuxembourg() {
 
       <h2>My Role</h2>
       <p>
-        I contributed across two phases of the project — visual design and
+        I contributed across two phases of the project, visual design and
         usability testing:
       </p>
       <ul>
         <li>
           <strong>Blueprint Design Team:</strong> Developed the site's visual
-          foundation — moodboard, style guide, wireframes, and WordPress
+          foundation, moodboard, style guide, wireframes, and WordPress
           implementation.
         </li>
         <li>
@@ -58,7 +58,7 @@ export default function MULuxembourg() {
       </p>
       <ul>
         <li>
-          <strong>Sprint 1 — Visual Foundation:</strong> Researched comparable
+          <strong>Sprint 1, Visual Foundation:</strong> Researched comparable
           nonprofit websites, built a moodboard drawing from Luxembourg's
           cultural identity and Miami University's brand, and delivered a
           comprehensive style guide covering color palette, typography, logo
@@ -69,13 +69,13 @@ export default function MULuxembourg() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${BASE}/images/mu-luxembourg/about-us-moodboard.png`}
-        alt="About Us page mood board — visual inspiration for the MULF website"
+        alt="About Us page mood board, visual inspiration for the MULF website"
         className="not-prose w-full rounded-2xl bg-slate-50 my-8"
       />
 
       <ul>
         <li>
-          <strong>Sprint 2 — Wireframing:</strong> Produced hand-drawn layout
+          <strong>Sprint 2, Wireframing:</strong> Produced hand-drawn layout
           sketches, then iterated into low- and medium-fidelity wireframes in
           Figma. Each team member owned an assigned page while the full team
           reviewed and gave feedback to maintain consistency.
@@ -116,7 +116,7 @@ export default function MULuxembourg() {
 
       <ul>
         <li>
-          <strong>Sprint 3 — WordPress Build:</strong> Translated Figma
+          <strong>Sprint 3, WordPress Build:</strong> Translated Figma
           wireframes into a live WordPress site hosted on CloudHosting.lu,
           applying the approved style guide and exploring plugins for donation
           processing and contact forms.
@@ -137,8 +137,8 @@ export default function MULuxembourg() {
         <li>Understanding of the "donate from abroad" flow</li>
       </ul>
       <p>
-        Sessions were conducted with representative users — a Luxembourg
-        alumnus, a Miami parent, and a Luxembourg student — using a
+        Sessions were conducted with representative users, a Luxembourg
+        alumnus, a Miami parent, and a Luxembourg student, using a
         think-aloud protocol. We observed hesitation points, misclicks, and
         moments of confusion, then followed up with structured questions about
         confidence in donating. Findings directly informed iterative design
@@ -149,7 +149,7 @@ export default function MULuxembourg() {
       <p>
         The project delivered a fully functional, multilingual (English, French,
         German) WordPress website for the Miami University Luxembourg
-        Foundation — a clean, donor-focused experience designed to build trust
+        Foundation, a clean, donor-focused experience designed to build trust
         with European audiences and facilitate international giving. The
         usability testing phase confirmed that core flows were navigable and
         helped surface improvements to the donation flow before launch.
@@ -158,7 +158,7 @@ export default function MULuxembourg() {
       <h2>Wireframes</h2>
       <p>
         Medium-fidelity wireframes produced in Sprint 2 for all five site
-        pages — Home, About, Donation, Thank You, and Contact. Each team
+        pages, Home, About, Donation, Thank You, and Contact. Each team
         member owned an assigned page and iterated based on group feedback.
       </p>
 
@@ -175,7 +175,7 @@ export default function MULuxembourg() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${BASE}/images/mu-luxembourg/${file}.png`}
-              alt={`MULF wireframe — ${label} page`}
+              alt={`MULF wireframe, ${label} page`}
               className="w-full rounded-xl border border-slate-200 bg-white"
             />
             <p className="text-xs text-center text-slate-500 font-medium">{label}</p>

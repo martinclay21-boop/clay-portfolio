@@ -25,7 +25,7 @@ export default function InteractiveYearbook() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${BASE}/images/fourward/home.png`}
-        alt="Fourward home dashboard — calendar and upcoming events"
+        alt="Fourward home dashboard, calendar and upcoming events"
         className="not-prose w-full rounded-2xl border border-slate-100 shadow-sm my-8"
       />
 
@@ -54,7 +54,7 @@ export default function InteractiveYearbook() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${BASE}/images/fourward/events.png`}
-        alt="Fourward events page — upcoming events list with photos and map pins"
+        alt="Fourward events page, upcoming events list with photos and map pins"
         className="not-prose w-full rounded-2xl border border-slate-100 shadow-sm my-8"
       />
 
@@ -72,7 +72,7 @@ export default function InteractiveYearbook() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${BASE}/images/fourward/friends.png`}
-        alt="Fourward friends page — sortable list by name, major, and year of enrollment"
+        alt="Fourward friends page, sortable list by name, major, and year of enrollment"
         className="not-prose w-full rounded-2xl border border-slate-100 shadow-sm my-8"
       />
 
@@ -80,19 +80,19 @@ export default function InteractiveYearbook() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${BASE}/images/fourward/event-detail.png`}
-        alt="Fourward event detail — Movie Night recap with friends who attended"
+        alt="Fourward event detail, Movie Night recap with friends who attended"
         className="not-prose w-full rounded-2xl border border-slate-100 shadow-sm my-8"
       />
 
       <h2>Reflection</h2>
       <p>
-        Fourward deepened my understanding of designing for multiple stakeholder
-        types with competing needs — students want personalization and social
-        connection, while moderators need control and consistency. Working within
-        an HCI framework at Korea University also exposed me to international
-        perspectives on digital memory and community platforms, which shaped how
-        I thought about filtering, privacy, and what "belonging" looks like in a
-        UI.
+        Fourward was my first real lesson in designing for people who want
+        opposite things. Students want personalization and somewhere to be
+        social. Moderators want control and consistency. The design had to serve
+        both without quietly picking a side. Building it inside an HCI course at
+        Korea University also put me around very different ideas about digital
+        memory and community, which changed how I thought about filtering,
+        privacy, and what "belonging" actually looks like on a screen.
       </p>
     </ProjectLayout>
   );

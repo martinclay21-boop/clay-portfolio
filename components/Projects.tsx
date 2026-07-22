@@ -14,7 +14,7 @@ const projects = [
     outcome:
       "Took a mental-readiness tool from research and usability testing to a high-fidelity prototype.",
     description:
-      "A mental readiness journal and cue system for college volleyball athletes — end-to-end design from research to high-fidelity Figma prototype.",
+      "A mental readiness journal and cue system for college volleyball athletes, end-to-end design from research to high-fidelity Figma prototype.",
     tags: ["Figma", "User Research", "Usability Testing"],
     accent: "from-indigo-100 via-purple-50 to-white",
     image: `${BASE}/images/cuekit/logo.jpg`,
@@ -51,9 +51,9 @@ const projects = [
     title: "Interactive Yearbook",
     category: "Interaction Design · HCI",
     outcome:
-      "Reimagined the yearbook as a personalized multimedia experience — built in Figma at Korea University.",
+      "Reimagined the yearbook as a personalized multimedia experience, built in Figma at Korea University.",
     description:
-      "A digital platform reimagining yearbooks as personalized, multimedia experiences — built during HCI coursework at Korea University.",
+      "A digital platform reimagining yearbooks as personalized, multimedia experiences, built during HCI coursework at Korea University.",
     tags: ["Figma", "HCI", "Prototyping"],
     accent: "from-emerald-100 via-teal-50 to-white",
     image: `${BASE}/images/fourward/login.webp`,
@@ -78,7 +78,7 @@ const projects = [
     outcome:
       "Produced 25 product use-case images across 3 pages, sharpening product clarity.",
     description:
-      "Use case illustrations across product pages using Photoshop and Illustrator — communicating Spokenote to potential customers and partners.",
+      "Use case illustrations across product pages using Photoshop and Illustrator, communicating Spokenote to potential customers and partners.",
     tags: ["Photoshop", "Illustrator", "Brand"],
     accent: "from-violet-100 via-fuchsia-50 to-white",
     image: `${BASE}/images/spokenote/logo-opengraph.png`,

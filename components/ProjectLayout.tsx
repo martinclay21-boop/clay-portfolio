@@ -25,7 +25,7 @@ export default function ProjectLayout({
 
       <main id="main-content" className="max-w-3xl mx-auto px-6 py-16">
         {/* Header */}
-        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3">
           {category}
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 leading-tight">

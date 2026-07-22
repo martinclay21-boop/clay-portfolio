@@ -31,7 +31,7 @@ export default function AcademicAdvising() {
 
       <h2>Process</h2>
       <p>
-        The team used service design methodology throughout — synthesizing pain
+        The team used service design methodology throughout, synthesizing pain
         points from both student and advisor perspectives, building a customer
         journey map, and creating a service blueprint to identify the highest-
         impact intervention points.
@@ -51,15 +51,16 @@ export default function AcademicAdvising() {
 
       <h2>Outcome</h2>
       <p>
-        The project demonstrated clear problem framing and provided a realistic
-        implementation roadmap that worked within existing institutional
-        systems. The next phase would involve usability testing with actual
-        students and advisors to validate whether the proposed changes reduced
-        confusion and improved scheduling rates.
+        We ended with a roadmap that fits inside the tools Miami already runs,
+        so none of it depends on the school buying or adopting a brand-new
+        system. The honest next step is usability testing with real students
+        and advisors to find out whether the changes actually cut the confusion
+        and get more people scheduled before registration opens.
       </p>
       <p>
-        This project strengthened my ability to connect service design thinking
-        to practical constraints — designing for real systems, not ideal ones.
+        The lesson that stuck with me was designing for the system that exists
+        instead of the one I wish existed. A fix nobody can realistically ship
+        is not a fix.
       </p>
     </ProjectLayout>
   );
