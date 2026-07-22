@@ -108,13 +108,12 @@ export default function SpeakSyncAI() {
 
       <h2>Key Design Decisions</h2>
       <p>
-        Accessibility was treated as a foundation, not a feature. Every
-        decision, contrast ratios, tap target sizes, layout hierarchy, was
-        validated against accessibility standards. The interface stays
-        intentionally minimal so students can focus on the lecture, not the
-        app. Customizable font sizes, color themes, and playback controls give
-        each student control over the experience without overwhelming the
-        default view.
+        I treated accessibility as a starting requirement rather than a final
+        polish step. I checked contrast, tap-target sizes, and layout hierarchy
+        against accessibility standards throughout. The interface stays minimal
+        so students can focus on the lecture instead of the app, and
+        customizable font sizes, color themes, and playback controls let each
+        student adjust the experience without cluttering the default view.
       </p>
 
       <h2>Reflection</h2>

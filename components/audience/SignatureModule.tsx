@@ -94,14 +94,13 @@ function DesignerProcess() {
             How I work
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 leading-tight">
-            Polish is the{" "}
+            A research-led process,{" "}
             <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
-              last step
+              start to finish.
             </span>
-            , not the first.
           </h2>
           <p className="text-slate-500 text-base max-w-xl mb-12">
-            Every project runs the same loop, starting with the real need and letting the work fail a few times before I call it done.
+            Every project moves through the same stages, from understanding the problem to testing with users and refining before it ships.
           </p>
         </Reveal>
 

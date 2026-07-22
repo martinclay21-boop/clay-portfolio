@@ -147,12 +147,11 @@ export default function MULuxembourg() {
 
       <h2>Outcome</h2>
       <p>
-        The project delivered a fully functional, multilingual (English, French,
-        German) WordPress website for the Miami University Luxembourg
-        Foundation, a clean, donor-focused experience designed to build trust
-        with European audiences and facilitate international giving. The
-        usability testing phase confirmed that core flows were navigable and
-        helped surface improvements to the donation flow before launch.
+        We delivered a fully functional, multilingual (English, French, German)
+        WordPress site for the Miami University Luxembourg Foundation, with a
+        clean, donor-focused layout aimed at European audiences and
+        international giving. Usability testing confirmed the core flows were
+        navigable and surfaced improvements to the donation flow before launch.
       </p>
 
       <h2>Wireframes</h2>

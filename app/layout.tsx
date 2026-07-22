@@ -17,7 +17,7 @@ const serif = Instrument_Serif({
 const SITE = "https://martinclay21-boop.github.io/clay-portfolio";
 const TITLE = "Clay Martin, UX & Product Designer";
 const DESCRIPTION =
-  "Portfolio of Clay Martin, a UX and product designer who starts with the root need and solves the rest like a puzzle: research, iteration, and care for the details.";
+  "Portfolio of Clay Martin, a UX and product designer focused on user research, usability testing, and turning findings into clear, accessible interfaces.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${SITE}/`),

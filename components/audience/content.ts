@@ -60,7 +60,7 @@ export const HERO_DEFAULT: HeroCopy = {
   showBadge: true,
   headLead: "Hi, I'm Clay Martin,",
   headAccent: "UX designer & researcher.",
-  sub: "I start every project with the root need, the real thing someone's trying to do, then treat the rest like a puzzle worth solving: research, iteration, and a lot of care for the small details.",
+  sub: "I work across the full UX process, from user research and wireframing to prototyping in Figma and usability testing. My focus is understanding the real problem before designing the solution, then refining it until it holds up with users.",
   primary: { label: "View my work", href: "#projects" },
   secondary: { label: "Contact me", href: "#contact" },
 };
@@ -69,9 +69,9 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
   recruiter: {
     eyebrow: "For recruiters & hiring managers",
     showBadge: true,
-    headLead: "Research in,",
-    headAccent: "experiences that work out.",
-    sub: "UX designer and researcher with two internships and six end-to-end case studies. I find the root need, sweat the details, and keep a team's work feeling cohesive.",
+    headLead: "Research-backed",
+    headAccent: "product design.",
+    sub: "UX designer and researcher with two design internships and six end-to-end case studies. Strong in user research, usability testing, and turning findings into clear, accessible interfaces.",
     primary: { label: "See the work", href: "#projects" },
     secondary: { label: "Get in touch", href: "#contact" },
     resume: { label: "Résumé", href: RESUME_HREF },
@@ -85,9 +85,9 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
   designer: {
     eyebrow: "For fellow designers",
     showBadge: false,
-    headLead: "Design is a puzzle",
-    headAccent: "with no single right answer.",
-    sub: "So I start with context and the root need, look everywhere for inspiration, then interpret and build, and let it fail a few times until the small stuff is right.",
+    headLead: "Grounded in",
+    headAccent: "research and iteration.",
+    sub: "My process is research-led: interviews and usability testing up front, then synthesis, wireframing, and several rounds of iteration before anything ships.",
     primary: { label: "See my process", href: "#projects" },
     secondary: { label: "Talk craft", href: "#contact" },
   },
@@ -110,23 +110,23 @@ export interface AboutCopy {
   headAccent: string;
 }
 export const ABOUT_DEFAULT: AboutCopy = {
-  headLead: "I design by starting with the",
-  headAccent: "root need.",
+  headLead: "How I",
+  headAccent: "approach design.",
 };
 export const ABOUT_BY_AUDIENCE: Record<Audience, AboutCopy> = {
-  recruiter: { headLead: "A designer who ships,", headAccent: "root need to final pixel." },
-  designer: { headLead: "Backed by purpose,", headAccent: "shaped by iteration." },
+  recruiter: { headLead: "A designer who ships,", headAccent: "research to final pixel." },
+  designer: { headLead: "Grounded in research,", headAccent: "refined by iteration." },
 };
 export function aboutFor(a: Audience | null): AboutCopy {
   return a ? ABOUT_BY_AUDIENCE[a] : ABOUT_DEFAULT;
 }
 
-// What I believe — short design principles, in Clay's voice (About section)
+// How I work — concrete method statements (About section)
 export const PRINCIPLES: { t: string; d: string }[] = [
-  { t: "Start with the root need", d: "A design out of context is just decoration. I get the real need first." },
-  { t: "There's no single right answer", d: "Only the best interpretation of the problem in front of me." },
-  { t: "Iteration over perfection", d: "You build, it fails, and each failure shows you the next thing to fix." },
-  { t: "Purpose first, polish last", d: "Backed by research, but it should still look good and feel effortless." },
+  { t: "Understand the problem first", d: "I dig into user needs and requirements before proposing a solution, so the design solves the actual problem." },
+  { t: "Test with real users", d: "Usability testing and feedback guide the work instead of assumptions." },
+  { t: "Iterate toward the details", d: "I refine through multiple rounds, down to spacing, hierarchy, and interaction states." },
+  { t: "Design for accessibility", d: "Contrast, structure, and clear interaction are built in from the start, not added at the end." },
 ];
 
 // ---- Skills section intro line, per lens ----
@@ -150,7 +150,7 @@ export const RECRUITER_TLDR = {
   quote:
     "His contributions served as the connective tissue of the sprint. Wherever something felt disconnected, he stepped in and made it feel cohesive.",
   highlights: [
-    "6 end-to-end case studies, from root need to tested, high-fidelity prototypes",
+    "6 end-to-end case studies, from research to tested, high-fidelity prototypes",
     "2 design internships (Damar Staffing and Spokenote)",
     "ICAgile Certified · IRB (Human-Subjects) Certified",
   ],
@@ -160,11 +160,11 @@ export const RECRUITER_TLDR = {
 
 // Designer: the "how I work" process strip
 export const DESIGNER_PROCESS: { step: string; blurb: string }[] = [
-  { step: "Find the root need", blurb: "First I get clear on what's actually being asked, and the context it lives in. Miss this and everything after is off." },
-  { step: "Gather the pieces", blurb: "I look everywhere for inspiration and dig into real user needs. No single right answer, so I collect a lot before I commit." },
-  { step: "Interpret & build", blurb: "All of it turns into wireframes and flows, something that does exactly what was asked, and maybe a little more." },
-  { step: "Test, and let it fail", blurb: "I put it in front of real people expecting it to break. Every failure points straight to the next fix." },
-  { step: "Sweat the details", blurb: "Then the small stuff, a color a shade off, a button a few pixels over. Nothing's ever perfect, but it gets close." },
+  { step: "Research", blurb: "Interviews, surveys, and usability testing to understand user needs and the problem behind the request." },
+  { step: "Synthesize", blurb: "Turn findings into journey maps, user flows, and a clear problem statement the team can align on." },
+  { step: "Wireframe", blurb: "Low-fidelity structure first: hierarchy, layout, and content before any visual polish." },
+  { step: "Prototype & test", blurb: "High-fidelity Figma prototypes, then usability testing with real users to catch what doesn't work." },
+  { step: "Iterate & refine", blurb: "Multiple rounds of refinement, down to spacing, states, and accessibility, before it ships." },
 ];
 
 // ---- Per-lens project treatment ----

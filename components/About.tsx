@@ -55,34 +55,31 @@ export default function About() {
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
               <p>
                 I'm a UX and product designer finishing my B.A. in Emerging
-                Technology at Miami University. I've always had an eye for
-                composition. In drawing, photography, and design, I can usually
-                feel when something is right before I can explain why. A lot of
-                what I do is chasing that feeling, then backing it up with
-                research.
+                Technology at Miami University. I work across the full process,
+                from user research and wireframing to prototyping in Figma and
+                usability testing, with a visual-design and branding background
+                from two internships.
               </p>
               <p>
-                The most important part of any project, for me, is understanding
-                the root need, what the client or user actually wants, and the
-                context the design lives in. From there it's a puzzle: there's
-                rarely one right answer, so I gather inspiration, dig into user
-                needs, and interpret all of it into something that does exactly
-                what was asked, and maybe a little more.
+                My focus is understanding the real problem before designing a
+                solution. I spend time on user research, requirements, and the
+                context a product lives in, then move through synthesis, user
+                flows, and iteration to reach something usable and accessible.
+                I've applied this across consumer apps, an accessibility
+                concept, a nonprofit website, and service design.
               </p>
               <p>
-                I also believe design only gets good through iteration. You
-                build, you test, it fails, and each failure points to the small
-                thing to change. Somewhere in all that group work I found out I
-                lead well, too. Teammates started calling me the &ldquo;glue&rdquo; of
-                the team. Turns out kindness and patience move people a lot
-                further than pressure ever could.
+                I also work well on a team. On group projects, teammates have
+                consistently described me as the person who keeps the work
+                cohesive and helps others get unstuck, and it's a role I've grown
+                to value.
               </p>
             </div>
 
             {/* What I believe */}
             <div className="mt-8">
               <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
-                What I believe
+                My approach
               </p>
               <ul className="space-y-3">
                 {PRINCIPLES.map((p) => (
