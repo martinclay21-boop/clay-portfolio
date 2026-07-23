@@ -59,11 +59,30 @@
   animation: sectionSwap 0.45s ease-out;
 }
 
+/* Entry gate: drifting ambient orbs + the color sweep on choose */
+@keyframes gateOrbA {
+  0%, 100% { transform: translate(-8%, -4%) scale(1); }
+  50%      { transform: translate(7%, 9%) scale(1.18); }
+}
+@keyframes gateOrbB {
+  0%, 100% { transform: translate(9%, 7%) scale(1.05); }
+  50%      { transform: translate(-9%, -5%) scale(1.22); }
+}
+@keyframes gateSweep {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+.gate-orb-a { animation: gateOrbA 15s ease-in-out infinite; }
+.gate-orb-b { animation: gateOrbB 19s ease-in-out infinite; }
+.gate-sweep { animation: gateSweep 0.6s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+
 @media (prefers-reduced-motion: reduce) {
   .hero-swap { animation: none; }
   .section-swap { animation: none; }
   .float { animation: none; }
   .reveal { transition: none; transform: none; opacity: 1; }
+  .gate-orb-a, .gate-orb-b { animation: none; }
+  .gate-sweep { animation: none; }
   html { scroll-behavior: auto; }
 }
 
