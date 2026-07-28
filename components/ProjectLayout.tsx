@@ -48,7 +48,7 @@ export default function ProjectLayout({
         </div>
       </main>
 
-      <footer className="py-8 text-center text-sm text-slate-400 border-t border-slate-100">
+      <footer className="py-8 text-center text-sm text-slate-500 border-t border-slate-100">
         © {new Date().getFullYear()} Clay Martin
       </footer>
     </div>

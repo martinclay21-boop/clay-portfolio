@@ -117,14 +117,14 @@ export default function About() {
                     )}
                   </div>
                   <div className="pb-6">
-                    <span className="text-xs font-medium text-slate-400 block mb-1">
+                    <span className="text-xs font-medium text-slate-500 block mb-1">
                       {item.year}
                     </span>
                     <p className="font-semibold text-slate-800 text-sm">
                       {item.title}
                     </p>
                     <p className="text-slate-500 text-sm">{item.org}</p>
-                    <p className="text-slate-400 text-xs mt-1">{item.detail}</p>
+                    <p className="text-slate-500 text-xs mt-1">{item.detail}</p>
                   </div>
                 </li>
               ))}
@@ -143,14 +143,14 @@ export default function About() {
                     )}
                   </div>
                   <div className="pb-6">
-                    <span className="text-xs font-medium text-slate-400 block mb-1">
+                    <span className="text-xs font-medium text-slate-500 block mb-1">
                       {item.year}
                     </span>
                     <p className="font-semibold text-slate-800 text-sm">
                       {item.title}
                     </p>
                     <p className="text-slate-500 text-sm">{item.org}</p>
-                    <p className="text-slate-400 text-xs mt-1">{item.detail}</p>
+                    <p className="text-slate-500 text-xs mt-1">{item.detail}</p>
                   </div>
                 </li>
               ))}

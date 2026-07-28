@@ -65,7 +65,7 @@ export default function LensSwitcher() {
       <div ref={ref} className="fixed bottom-6 right-6 z-[80]">
         {open && (
           <div className="absolute bottom-full right-0 mb-3 w-60 rounded-2xl bg-white shadow-2xl border border-slate-100 p-2">
-            <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               View this portfolio as
             </p>
             {AUDIENCES.map((a) => {
@@ -82,7 +82,7 @@ export default function LensSwitcher() {
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: meta.accent }} />
                   <span className="flex-1">
                     <span className="block text-sm font-medium text-slate-800">{meta.chip}</span>
-                    <span className="block text-xs text-slate-400">{meta.line}</span>
+                    <span className="block text-xs text-slate-500">{meta.line}</span>
                   </span>
                   {activeLens && (
                     <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -94,7 +94,7 @@ export default function LensSwitcher() {
             })}
             <button
               onClick={() => { reopenGate(); setOpen(false); }}
-              className="w-full text-left px-3 py-2 mt-1 rounded-xl text-xs text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors border-t border-slate-100"
+              className="w-full text-left px-3 py-2 mt-1 rounded-xl text-xs text-slate-500 hover:text-slate-600 hover:bg-slate-50 transition-colors border-t border-slate-100"
             >
               ↺ Start over
             </button>

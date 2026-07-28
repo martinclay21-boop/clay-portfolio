@@ -76,13 +76,23 @@
 .gate-orb-b { animation: gateOrbB 19s ease-in-out infinite; }
 .gate-sweep { animation: gateSweep 0.6s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
 
+/* Consistent, visible keyboard focus on every interactive element.
+   Uses the active lens accent where set, with an indigo fallback. */
+:focus-visible {
+  outline: 2px solid var(--accent, #4f46e5);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-swap { animation: none; }
-  .section-swap { animation: none; }
-  .float { animation: none; }
-  .reveal { transition: none; transform: none; opacity: 1; }
-  .gate-orb-a, .gate-orb-b { animation: none; }
-  .gate-sweep { animation: none; }
+  /* Universal safety net: neutralize every animation and transition */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Ensure reveal-gated content is visible without its transition */
+  .reveal { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }
 

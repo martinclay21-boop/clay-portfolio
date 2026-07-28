@@ -148,26 +148,26 @@ export default function Skills() {
             const c = colorMap[g.color];
             return (
               <div key={g.heading}>
-                <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
                   {g.heading}
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <ul className="flex flex-wrap gap-2">
                   {g.skills.map((s) => (
-                    <span
+                    <li
                       key={s}
                       className={`text-xs font-medium px-3 py-1.5 rounded-full cursor-default transition-all duration-150 hover:scale-105 hover:shadow-md ${c.pill}`}
                     >
                       {s}
-                    </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             );
           })}
         </div>
 
         {/* Experience */}
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-8">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-8">
           Experience
         </h3>
         <div className="space-y-10">
@@ -177,7 +177,7 @@ export default function Skills() {
               className="grid sm:grid-cols-[200px_1fr] gap-4 sm:gap-8 pb-10 border-b border-slate-100 last:border-0 last:pb-0"
             >
               <div>
-                <p className="text-xs text-slate-400">{e.period}</p>
+                <p className="text-xs text-slate-500">{e.period}</p>
                 <p className="font-semibold text-slate-800 text-sm mt-1">{e.org}</p>
                 <p className="text-xs text-slate-500">{e.location}</p>
               </div>

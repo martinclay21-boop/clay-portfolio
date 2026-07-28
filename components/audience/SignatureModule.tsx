@@ -12,27 +12,28 @@ function RecruiterTLDR() {
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-7 sm:p-9 shadow-sm">
+            <h2 className="sr-only">Quick summary</h2>
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <span className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full text-white" style={{ background: "var(--accent)" }}>
                 <span className="w-2 h-2 rounded-full bg-white/90 animate-pulse" />
                 Available
               </span>
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                 The 15-second version
               </span>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-6 mb-7">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Looking for</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Looking for</p>
                 <p className="text-sm text-slate-800 font-medium leading-snug">{t.status}</p>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Based in</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Based in</p>
                 <p className="text-sm text-slate-800 font-medium leading-snug">{t.location}</p>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Graduating</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Graduating</p>
                 <p className="text-sm text-slate-800 font-medium leading-snug">{t.graduating}</p>
               </div>
             </div>
@@ -42,7 +43,7 @@ function RecruiterTLDR() {
               <span className="block not-italic text-xs text-slate-500 mt-1.5">Anonymous teammate, group design sprint</span>
             </blockquote>
 
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Why I'm worth a call</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-3">Why I'm worth a call</p>
             <ul className="space-y-2 mb-7">
               {t.highlights.map((h) => (
                 <li key={h} className="flex items-start gap-2.5 text-sm text-slate-700">
@@ -54,14 +55,14 @@ function RecruiterTLDR() {
               ))}
             </ul>
 
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Top skills</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Top skills</p>
             <div className="flex flex-wrap gap-2 mb-6">
               {t.topSkills.map((s) => (
                 <span key={s} className="text-xs font-medium bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full">{s}</span>
               ))}
             </div>
 
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Curious about</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Curious about</p>
             <div className="flex flex-wrap gap-2 mb-7">
               {t.interests.map((x) => (
                 <span key={x} className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>{x}</span>

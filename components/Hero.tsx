@@ -4,9 +4,16 @@ import { useEffect, useState } from "react";
 import { useAudience } from "@/components/audience/AudienceContext";
 import { heroFor } from "@/components/audience/content";
 
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function AnimatedNumber({ target, suffix = "", delay = 0 }: { target: number; suffix?: string; delay?: number }) {
   const [value, setValue] = useState(0);
   useEffect(() => {
+    if (prefersReducedMotion()) {
+      setValue(target);
+      return;
+    }
     const timeout = setTimeout(() => {
       const duration = 1400;
       const startTime = performance.now();
@@ -27,13 +34,18 @@ function AnimatedNumber({ target, suffix = "", delay = 0 }: { target: number; su
 
 function AnimatedText({ text, delay = 0 }: { text: string; delay?: number }) {
   const [visible, setVisible] = useState(false);
+  const reduce = prefersReducedMotion();
   useEffect(() => {
+    if (reduce) {
+      setVisible(true);
+      return;
+    }
     const t = setTimeout(() => setVisible(true), delay);
     return () => clearTimeout(t);
-  }, [delay]);
+  }, [delay, reduce]);
   return (
     <span
-      style={{ transition: `opacity 600ms ease ${delay}ms, transform 600ms ease ${delay}ms` }}
+      style={reduce ? undefined : { transition: `opacity 600ms ease ${delay}ms, transform 600ms ease ${delay}ms` }}
       className={visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
     >
       {text}
@@ -149,7 +161,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator — positioned relative to the full section */}
-      <div className="hidden md:flex absolute bottom-8 left-0 right-0 justify-center flex-col items-center gap-2 text-slate-400 pointer-events-none">
+      <div className="hidden md:flex absolute bottom-8 left-0 right-0 justify-center flex-col items-center gap-2 text-slate-500 pointer-events-none">
         <span className="text-xs uppercase tracking-widest">Scroll</span>
         <div className="w-px h-10 bg-gradient-to-b from-slate-400 to-transparent" />
       </div>
