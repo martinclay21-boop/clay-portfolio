@@ -129,8 +129,10 @@ function Dock({
 
   return (
     <motion.div
-      style={{ height, scrollbarWidth: "none" }}
-      className="mx-2 flex max-w-full items-end overflow-x-auto"
+      style={{ height }}
+      // No overflow clipping: setting one axis to a non-visible value forces
+      // the other to match, which would crop the items' drop shadows.
+      className="mx-2 flex max-w-full items-end"
     >
       <motion.div
         onMouseMove={({ pageX }) => {
