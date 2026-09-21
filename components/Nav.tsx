@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ButtonColorful } from "@/components/ui/button-colorful";
 
 const links = [
   { label: "About", href: "#about" },
@@ -44,44 +47,31 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <a
+          <ButtonColorful
             href="mailto:martinclay21@gmail.com"
-            style={{ background: "var(--accent)" }}
-            className="text-sm text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
-          >
-            Get in touch
-          </a>
+            label="Get in touch"
+            icon={null}
+            className="h-9 px-4"
+            // The header stays calm at rest; the glow is a hover affordance only.
+            glowClassName="opacity-0 group-hover:opacity-80 group-focus-within:opacity-80"
+          />
         </nav>
 
         {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 text-slate-600"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-slate-600 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {open ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+          {open ? (
+            <X aria-hidden className="h-5 w-5" />
+          ) : (
+            <Menu aria-hidden className="h-5 w-5" />
+          )}
+        </Button>
       </div>
 
       {/* Mobile menu */}

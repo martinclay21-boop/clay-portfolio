@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowRight, Download } from "lucide-react";
 import { useAudience } from "@/components/audience/AudienceContext";
 import { heroFor } from "@/components/audience/content";
+import { Button } from "@/components/ui/button";
+import { ButtonColorful } from "@/components/ui/button-colorful";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -89,40 +92,42 @@ export default function Hero() {
           {copy.sub}
         </p>
 
-        <div className="flex flex-wrap gap-4">
-          <a
+        <div className="flex flex-wrap items-center gap-4">
+          <ButtonColorful
             href={copy.primary.href}
-            style={{ background: "var(--accent)" }}
-            className="group inline-flex items-center gap-2 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity text-sm"
+            label={copy.primary.label}
+            icon={
+              <ArrowRight
+                aria-hidden
+                className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+              />
+            }
+          />
+          <Button
+            asChild
+            variant="outline"
+            className="h-11 rounded-full border-slate-200 bg-white/60 px-6 text-sm font-medium text-slate-700 backdrop-blur"
           >
-            {copy.primary.label}
-            <svg
-              className="w-4 h-4 transition-transform group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
-          <a
-            href={copy.secondary.href}
-            className="inline-flex items-center gap-2 border border-slate-200 text-slate-700 px-6 py-3 rounded-full font-medium hover:border-indigo-300 hover:text-indigo-600 transition-colors text-sm bg-white/60 backdrop-blur"
-          >
-            {copy.secondary.label}
-          </a>
+            <a href={copy.secondary.href}>{copy.secondary.label}</a>
+          </Button>
           {copy.resume && (
-            <a
-              href={copy.resume.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-slate-700 px-5 py-3 rounded-full font-medium hover:text-indigo-600 transition-colors text-sm"
+            <Button
+              asChild
+              variant="ghost"
+              className="group h-11 rounded-full px-5 text-sm font-medium text-slate-700"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M4 6a2 2 0 012-2h8l6 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
-              </svg>
-              {copy.resume.label}
-            </a>
+              <a
+                href={copy.resume.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Download
+                  aria-hidden
+                  className="mr-2 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-y-0.5"
+                />
+                {copy.resume.label}
+              </a>
+            </Button>
           )}
         </div>
 

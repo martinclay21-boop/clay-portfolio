@@ -12,6 +12,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { AudienceProvider, useAudience } from "./AudienceContext";
 import AudienceGate from "./AudienceGate";
 import LensSwitcher from "./LensSwitcher";
+import SectionDock from "./SectionDock";
 import SignatureModule from "./SignatureModule";
 import Testimonials from "./Testimonials";
 import { orderFor, accentFor, type SectionKey } from "./content";
@@ -46,6 +47,8 @@ function Themed() {
   const style = {
     "--accent": accent,
     "--accent-soft": `${accent}1a`, // ~10% alpha
+    // Lighter sibling of the accent, used for the glow behind primary buttons
+    "--accent-lift": `color-mix(in oklab, ${accent} 45%, #ffffff)`,
   } as CSSProperties;
 
   return (
@@ -60,6 +63,7 @@ function Themed() {
         © {new Date().getFullYear()} Clay Martin. Built with Next.js.
       </footer>
 
+      <SectionDock />
       <LensSwitcher />
       <AudienceGate />
     </div>

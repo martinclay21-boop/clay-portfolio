@@ -27,7 +27,7 @@ const graphics = [
 
 export default function Graphics() {
   return (
-    <section className="py-24 px-6 bg-white">
+    <section id="graphics" className="py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>

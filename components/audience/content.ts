@@ -202,6 +202,30 @@ export const TESTIMONIALS: { text: string; from: string }[] = [
   },
 ];
 
+// ---- Section dock labels ----
+// The floating dock mirrors whatever order the active lens produced, so its
+// labels live here with the rest of the lens-specific copy.
+export const SECTION_NAV_LABEL: Record<SectionKey, string> = {
+  signature: "Overview",
+  about: "About",
+  projects: "Work",
+  testimonials: "Testimonials",
+  graphics: "Graphics",
+  skills: "Skills",
+  contact: "Contact",
+};
+
+// `signature` renders a different module per lens, so it gets a different label.
+export const SIGNATURE_NAV_LABEL: Record<Audience, string> = {
+  recruiter: "TL;DR",
+  designer: "Process",
+};
+
+export function sectionNavLabel(key: SectionKey, a: Audience | null): string {
+  if (key === "signature" && a) return SIGNATURE_NAV_LABEL[a];
+  return SECTION_NAV_LABEL[key];
+}
+
 export function heroFor(a: Audience | null): HeroCopy {
   return a ? HERO_BY_AUDIENCE[a] : HERO_DEFAULT;
 }

@@ -1,6 +1,9 @@
 "use client";
 
+import { Download } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import { Button } from "@/components/ui/button";
+import { ButtonColorful } from "@/components/ui/button-colorful";
 import { useAudience } from "./AudienceContext";
 import { RECRUITER_TLDR, DESIGNER_PROCESS, RESUME_HREF } from "./content";
 
@@ -8,7 +11,7 @@ import { RECRUITER_TLDR, DESIGNER_PROCESS, RESUME_HREF } from "./content";
 function RecruiterTLDR() {
   const t = RECRUITER_TLDR;
   return (
-    <section className="py-16 px-6 bg-white">
+    <section id="signature" className="py-16 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-7 sm:p-9 shadow-sm">
@@ -69,14 +72,26 @@ function RecruiterTLDR() {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <a href={RESUME_HREF} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-opacity" style={{ background: "var(--accent)" }}>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M4 6a2 2 0 012-2h8l6 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" /></svg>
-                Download résumé
-              </a>
-              <a href="mailto:martinclay21@gmail.com" className="inline-flex items-center gap-2 border border-slate-200 text-slate-700 px-5 py-2.5 rounded-full text-sm font-medium hover:border-slate-300 transition-colors">
-                Email me
-              </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <ButtonColorful
+                href={RESUME_HREF}
+                external
+                label="Download résumé"
+                className="h-10 px-5"
+                icon={
+                  <Download
+                    aria-hidden
+                    className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-y-0.5"
+                  />
+                }
+              />
+              <Button
+                asChild
+                variant="outline"
+                className="h-10 rounded-full border-slate-200 px-5 text-sm font-medium text-slate-700"
+              >
+                <a href="mailto:martinclay21@gmail.com">Email me</a>
+              </Button>
             </div>
           </div>
         </Reveal>
@@ -88,7 +103,7 @@ function RecruiterTLDR() {
 /* Designer — the "how I work" process strip */
 function DesignerProcess() {
   return (
-    <section className="py-20 px-6 bg-white">
+    <section id="signature" className="py-20 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>

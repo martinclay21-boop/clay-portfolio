@@ -9,6 +9,22 @@
   --accent-hover: #4f46e5;
   --surface: #f8fafc;
   --border: #e2e8f0;
+
+  /* Lighter sibling of the active lens accent, used for the glow behind
+     primary buttons. Experience.tsx overrides this per lens; this is the
+     fallback for pages rendered outside the adaptive shell. */
+  --accent-lift: #a5b4fc;
+
+  /* shadcn/ui component tokens. `--accent` above is this project's per-lens
+     brand color, not shadcn's hover token, so no `accent`/`muted` entries. */
+  --primary: #0f172a;
+  --primary-foreground: #f8fafc;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --destructive: #b91c1c;
+  --destructive-foreground: #f8fafc;
+  --input: #cbd5e1;
+  --ring: var(--accent);
 }
 
 @theme inline {
@@ -17,6 +33,15 @@
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
 /* Scroll reveal animations */
