@@ -142,7 +142,9 @@ function Dock({
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
-        className={cn("mx-auto flex w-fit gap-4 rounded-2xl px-4", className)}
+        // items-end keeps the row on a common baseline and stops the default
+        // stretch from overriding each item's square sizing.
+        className={cn("mx-auto flex w-fit items-end gap-4 px-4", className)}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Section navigation"
@@ -190,14 +192,16 @@ function DockItem({
     <motion.button
       ref={ref}
       type="button"
-      style={{ ...style, width }}
+      // Height tracks width off the same motion value so the item stays a
+      // circle at every point in the magnification curve.
+      style={{ ...style, width, height: width }}
       onClick={onClick}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
       onFocus={() => isHovered.set(1)}
       onBlur={() => isHovered.set(0)}
       className={cn(
-        "relative inline-flex items-center justify-center",
+        "relative inline-flex shrink-0 items-center justify-center",
         className,
       )}
       aria-label={ariaLabel}

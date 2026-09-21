@@ -29,6 +29,12 @@ const ICONS: Record<SectionKey, LucideIcon> = {
   contact: Mail,
 };
 
+// The dock has no panel behind it, so each circle carries its own surface to
+// stay legible over whatever section is scrolling past underneath.
+const INACTIVE_ITEM =
+  "rounded-full bg-white text-slate-600 shadow-md ring-1 ring-slate-200/80 transition-colors hover:bg-slate-50";
+const ACTIVE_ITEM = "rounded-full text-white shadow-md";
+
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -98,15 +104,11 @@ export default function SectionDock() {
           className="fixed bottom-6 left-1/2 z-[70] hidden -translate-x-1/2 md:block"
         >
           <nav aria-label="Jump to section">
-            <Dock
-              className="border border-slate-200 bg-white/90 shadow-lg backdrop-blur-md"
-              magnification={64}
-              panelHeight={56}
-            >
+            <Dock magnification={64} panelHeight={48}>
               <DockItem
                 onClick={jumpToTop}
                 aria-label="Back to top"
-                className="aspect-square rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200"
+                className={INACTIVE_ITEM}
               >
                 <DockLabel>Top</DockLabel>
                 <DockIcon>
@@ -128,11 +130,7 @@ export default function SectionDock() {
                     onClick={() => jumpTo(key)}
                     aria-label={`Jump to ${label}`}
                     aria-current={isActive}
-                    className={
-                      isActive
-                        ? "aspect-square rounded-full text-white"
-                        : "aspect-square rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200"
-                    }
+                    className={isActive ? ACTIVE_ITEM : INACTIVE_ITEM}
                     style={
                       isActive ? { background: "var(--accent)" } : undefined
                     }
