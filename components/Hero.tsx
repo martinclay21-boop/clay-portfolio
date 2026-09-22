@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ButtonColorful } from "@/components/ui/button-colorful";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { TextRepel } from "@/components/ui/text-repel";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -90,7 +91,7 @@ export default function Hero() {
             )}
 
             <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-              Clay Martin
+              <TextRepel text="Clay Martin" radius={140} strength={38} />
             </h1>
 
             <p className="mt-4 font-[family-name:var(--font-serif)] text-2xl italic sm:text-3xl lg:text-4xl" style={{ color: "var(--accent)" }}>
