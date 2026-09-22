@@ -13,12 +13,10 @@ import { AudienceProvider, useAudience } from "./AudienceContext";
 import AudienceGate from "./AudienceGate";
 import LensSwitcher from "./LensSwitcher";
 import SectionDock from "./SectionDock";
-import SignatureModule from "./SignatureModule";
 import Testimonials from "./Testimonials";
 import { orderFor, accentFor, type SectionKey } from "./content";
 
 const SECTIONS: Record<SectionKey, React.ComponentType> = {
-  signature: SignatureModule,
   about: About,
   projects: Projects,
   testimonials: Testimonials,

@@ -8,9 +8,7 @@ import {
   Mail,
   Palette,
   Quote,
-  Sparkles,
   User,
-  Workflow,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -20,7 +18,6 @@ import { useAudience } from "./AudienceContext";
 import { orderFor, sectionNavLabel, type SectionKey } from "./content";
 
 const ICONS: Record<SectionKey, LucideIcon> = {
-  signature: Sparkles,
   about: User,
   projects: FolderOpen,
   testimonials: Quote,
@@ -117,11 +114,8 @@ export default function SectionDock() {
               </DockItem>
 
               {order.map((key) => {
-                const Icon =
-                  key === "signature" && audience === "designer"
-                    ? Workflow
-                    : ICONS[key];
-                const label = sectionNavLabel(key, audience);
+                const Icon = ICONS[key];
+                const label = sectionNavLabel(key);
                 const isActive = active === key;
 
                 return (

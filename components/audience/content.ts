@@ -2,7 +2,7 @@
 // no invented metrics. The wow is that the portfolio reshapes itself per visitor.
 
 export type Audience = "recruiter" | "designer";
-export type SectionKey = "signature" | "about" | "projects" | "testimonials" | "graphics" | "skills" | "contact";
+export type SectionKey = "about" | "projects" | "testimonials" | "graphics" | "skills" | "contact";
 
 export const AUDIENCES: Audience[] = ["recruiter", "designer"];
 
@@ -27,14 +27,15 @@ export const AUDIENCE_META: Record<
   },
 };
 
-// Order of sections AFTER the hero, per audience. Recruiter leads with the
-// scannable TL;DR and hides the "fun" graphics; designer surfaces the craft.
+// Order of sections AFTER the hero. Both lenses share the same skeleton: work
+// first, then the skills and experience behind it, then who I am, then proof.
+// Designer additionally gets the graphics section.
 export const SECTION_ORDER: Record<Audience, SectionKey[]> = {
-  recruiter: ["signature", "projects", "testimonials", "skills", "about", "contact"],
-  designer: ["about", "signature", "projects", "testimonials", "skills", "graphics", "contact"],
+  recruiter: ["projects", "skills", "about", "testimonials", "contact"],
+  designer: ["projects", "skills", "about", "testimonials", "graphics", "contact"],
 };
 
-export const DEFAULT_ORDER: SectionKey[] = ["about", "projects", "testimonials", "graphics", "skills", "contact"];
+export const DEFAULT_ORDER: SectionKey[] = ["projects", "skills", "about", "testimonials", "contact"];
 
 // Per-lens accent color drives the whole-site vibe (via a --accent CSS var)
 export function accentFor(a: Audience | null): string {
@@ -43,11 +44,14 @@ export function accentFor(a: Audience | null): string {
 
 export const RESUME_HREF = "/clay-portfolio/documents/clay-martin-resume.pdf";
 
+// The hero headline is Clay's name on every lens; the roles below it are the
+// jobs he is actively looking for. Shared, because they don't change by viewer.
+export const TARGET_ROLES = ["UX Designer", "Product Designer", "Scrum Master"];
+export const LOOKING_FOR = "Currently looking for full-time roles in these areas.";
+
 export interface HeroCopy {
   eyebrow: string;
   showBadge: boolean;
-  headLead: string;   // plain line
-  headAccent: string; // serif-italic indigo line
   sub: string;
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
@@ -58,8 +62,6 @@ export interface HeroCopy {
 export const HERO_DEFAULT: HeroCopy = {
   eyebrow: "Available for opportunities",
   showBadge: true,
-  headLead: "Hi, I'm Clay Martin,",
-  headAccent: "UX designer & researcher.",
   sub: "I work across the full UX process, from user research and wireframing to prototyping in Figma and usability testing. My focus is understanding the real problem before designing the solution, then refining it until it holds up with users.",
   primary: { label: "View my work", href: "#projects" },
   secondary: { label: "Contact me", href: "#contact" },
@@ -69,8 +71,6 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
   recruiter: {
     eyebrow: "For recruiters & hiring managers",
     showBadge: true,
-    headLead: "Research-backed",
-    headAccent: "product design.",
     sub: "UX designer and researcher with two design internships and six end-to-end case studies. Strong in user research, usability testing, and turning findings into clear, accessible interfaces.",
     primary: { label: "See the work", href: "#projects" },
     secondary: { label: "Get in touch", href: "#contact" },
@@ -85,8 +85,6 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
   designer: {
     eyebrow: "For fellow designers",
     showBadge: false,
-    headLead: "Grounded in",
-    headAccent: "research and iteration.",
     sub: "My process is research-led: interviews and usability testing up front, then synthesis, wireframing, and several rounds of iteration before anything ships.",
     primary: { label: "See my process", href: "#projects" },
     secondary: { label: "Talk craft", href: "#contact" },
@@ -140,33 +138,6 @@ export function skillsIntroFor(a: Audience | null): string {
   return a ? SKILLS_INTRO[a] : SKILLS_INTRO_DEFAULT;
 }
 
-// ---- Signature modules (one unique block per lens) ----
-
-// Recruiter: a 15-second "TL;DR" card
-export const RECRUITER_TLDR = {
-  status: "Open to UX Designer & Researcher roles, also into product design and Agile project management",
-  location: "Fishers, IN",
-  graduating: "B.A. Emerging Technology, Miami University, May 2026",
-  quote:
-    "His contributions served as the connective tissue of the sprint. Wherever something felt disconnected, he stepped in and made it feel cohesive.",
-  highlights: [
-    "6 end-to-end case studies, from research to tested, high-fidelity prototypes",
-    "2 design internships (Damar Staffing and Spokenote)",
-    "ICAgile Certified · IRB (Human-Subjects) Certified",
-  ],
-  topSkills: ["Figma", "User Research", "Usability Testing", "Prototyping", "Photoshop", "WordPress", "HTML / CSS"],
-  interests: ["Software & Technology", "Healthcare & Pharma", "AI & Emerging Tech", "Agile Project Management"],
-};
-
-// Designer: the "how I work" process strip
-export const DESIGNER_PROCESS: { step: string; blurb: string }[] = [
-  { step: "Research", blurb: "Interviews, surveys, and usability testing to understand user needs and the problem behind the request." },
-  { step: "Synthesize", blurb: "Turn findings into journey maps, user flows, and a clear problem statement the team can align on." },
-  { step: "Wireframe", blurb: "Low-fidelity structure first: hierarchy, layout, and content before any visual polish." },
-  { step: "Prototype & test", blurb: "High-fidelity Figma prototypes, then usability testing with real users to catch what doesn't work." },
-  { step: "Iterate & refine", blurb: "Multiple rounds of refinement, down to spacing, states, and accessibility, before it ships." },
-];
-
 // ---- Per-lens project treatment ----
 export const PROJECT_CTA: Record<Audience, string> = {
   recruiter: "See the case study",
@@ -206,7 +177,6 @@ export const TESTIMONIALS: { text: string; from: string }[] = [
 // The floating dock mirrors whatever order the active lens produced, so its
 // labels live here with the rest of the lens-specific copy.
 export const SECTION_NAV_LABEL: Record<SectionKey, string> = {
-  signature: "Overview",
   about: "About",
   projects: "Work",
   testimonials: "Testimonials",
@@ -215,14 +185,7 @@ export const SECTION_NAV_LABEL: Record<SectionKey, string> = {
   contact: "Contact",
 };
 
-// `signature` renders a different module per lens, so it gets a different label.
-export const SIGNATURE_NAV_LABEL: Record<Audience, string> = {
-  recruiter: "TL;DR",
-  designer: "Process",
-};
-
-export function sectionNavLabel(key: SectionKey, a: Audience | null): string {
-  if (key === "signature" && a) return SIGNATURE_NAV_LABEL[a];
+export function sectionNavLabel(key: SectionKey): string {
   return SECTION_NAV_LABEL[key];
 }
 

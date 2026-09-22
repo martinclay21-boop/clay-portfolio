@@ -3,9 +3,14 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { useAudience } from "@/components/audience/AudienceContext";
-import { heroFor } from "@/components/audience/content";
+import {
+  heroFor,
+  LOOKING_FOR,
+  TARGET_ROLES,
+} from "@/components/audience/content";
 import { Button } from "@/components/ui/button";
 import { ButtonColorful } from "@/components/ui/button-colorful";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -61,115 +66,114 @@ export default function Hero() {
   const copy = heroFor(audience);
 
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-slate-50 via-white to-indigo-50 px-6 overflow-hidden">
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50">
       {/* Soft floating blobs */}
-      <div className="absolute top-20 right-20 w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl float pointer-events-none" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl float pointer-events-none" style={{ animationDelay: "2s" }} />
+      <div className="pointer-events-none absolute right-20 top-20 h-72 w-72 rounded-full bg-indigo-200/40 blur-3xl float" />
+      <div className="pointer-events-none absolute bottom-20 left-10 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl float" style={{ animationDelay: "2s" }} />
 
-      {/* key forces a soft re-animation when the lens changes */}
-      <div key={audience ?? "default"} className="max-w-5xl mx-auto w-full pt-24 pb-16 relative hero-swap">
-        {copy.showBadge && (
-          <div className="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full mb-6" style={{ color: "var(--accent)", background: "var(--accent-soft)" }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
-            {copy.eyebrow}
+      <ContainerScroll
+        className="relative"
+        titleComponent={
+          <div key={audience ?? "default"} className="hero-swap px-4">
+            {copy.showBadge ? (
+              <div
+                className="mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium"
+                style={{ color: "var(--accent)", background: "var(--accent-soft)" }}
+              >
+                <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "var(--accent)" }} />
+                {copy.eyebrow}
+              </div>
+            ) : (
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--accent)" }}>
+                {copy.eyebrow}
+              </p>
+            )}
+
+            <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+              Clay Martin
+            </h1>
+
+            <p className="mt-4 font-[family-name:var(--font-serif)] text-2xl italic sm:text-3xl lg:text-4xl" style={{ color: "var(--accent)" }}>
+              {TARGET_ROLES.join(" · ")}
+            </p>
+
+            <p className="mt-4 text-base text-slate-500 sm:text-lg">{LOOKING_FOR}</p>
           </div>
-        )}
-        {!copy.showBadge && (
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-5" style={{ color: "var(--accent)" }}>
-            {copy.eyebrow}
+        }
+      >
+        <div key={audience ?? "default"} className="hero-swap flex h-full flex-col justify-center text-left">
+          <p className="max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            {copy.sub}
           </p>
-        )}
 
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.05] tracking-tight mb-6">
-          {copy.headLead}
-          <br />
-          <span className="font-[family-name:var(--font-serif)] italic font-normal" style={{ color: "var(--accent)" }}>
-            {copy.headAccent}
-          </span>
-        </h1>
-
-        <p className="text-lg sm:text-xl text-slate-500 max-w-2xl leading-relaxed mb-10">
-          {copy.sub}
-        </p>
-
-        <div className="flex flex-wrap items-center gap-4">
-          <ButtonColorful
-            href={copy.primary.href}
-            label={copy.primary.label}
-            icon={
-              <ArrowRight
-                aria-hidden
-                className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1"
-              />
-            }
-          />
-          <Button
-            asChild
-            variant="outline"
-            className="h-11 rounded-full border-slate-200 bg-white/60 px-6 text-sm font-medium text-slate-700 backdrop-blur"
-          >
-            <a href={copy.secondary.href}>{copy.secondary.label}</a>
-          </Button>
-          {copy.resume && (
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <ButtonColorful
+              href={copy.primary.href}
+              label={copy.primary.label}
+              icon={
+                <ArrowRight
+                  aria-hidden
+                  className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                />
+              }
+            />
             <Button
               asChild
-              variant="ghost"
-              className="group h-11 rounded-full px-5 text-sm font-medium text-slate-700"
+              variant="outline"
+              className="h-11 rounded-full border-slate-200 bg-white/60 px-6 text-sm font-medium text-slate-700 backdrop-blur"
             >
-              <a
-                href={copy.resume.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Download
-                  aria-hidden
-                  className="mr-2 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-y-0.5"
-                />
-                {copy.resume.label}
-              </a>
+              <a href={copy.secondary.href}>{copy.secondary.label}</a>
             </Button>
+            {copy.resume && (
+              <Button
+                asChild
+                variant="ghost"
+                className="group h-11 rounded-full px-5 text-sm font-medium text-slate-700"
+              >
+                <a href={copy.resume.href} target="_blank" rel="noopener noreferrer">
+                  <Download
+                    aria-hidden
+                    className="mr-2 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-y-0.5"
+                  />
+                  {copy.resume.label}
+                </a>
+              </Button>
+            )}
+          </div>
+
+          {/* Recruiter-only scan strip — truthful quick facts */}
+          {copy.quickFacts && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {copy.quickFacts.map((fact) => (
+                <span key={fact} className="rounded-full border border-slate-200 bg-white/70 px-3 py-1.5 text-xs font-medium text-slate-600 backdrop-blur">
+                  {fact}
+                </span>
+              ))}
+            </div>
           )}
-        </div>
 
-        {/* Recruiter-only scan strip — truthful quick facts */}
-        {copy.quickFacts && (
-          <div className="flex flex-wrap gap-2 mt-6">
-            {copy.quickFacts.map((fact) => (
-              <span key={fact} className="text-xs font-medium bg-white/70 border border-slate-200 text-slate-600 px-3 py-1.5 rounded-full backdrop-blur">
-                {fact}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Quick stats with animated counters */}
-        <div className="mt-16 pt-10 border-t border-slate-200 grid grid-cols-3 gap-6 sm:gap-16 max-w-2xl">
-          <div>
-            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
-              <AnimatedNumber target={6} suffix="+" delay={0} />
+          <div className="mt-10 grid max-w-2xl grid-cols-3 gap-6 border-t border-slate-200 pt-8 sm:gap-16">
+            <div>
+              <div className="font-[family-name:var(--font-serif)] text-3xl font-bold text-slate-900 sm:text-4xl">
+                <AnimatedNumber target={6} suffix="+" delay={0} />
+              </div>
+              <div className="mt-1 text-xs text-slate-500 sm:text-sm">Case Studies</div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-500 mt-1">Case Studies</div>
-          </div>
-          <div>
-            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
-              <AnimatedNumber target={2} suffix="+" delay={200} />
+            <div>
+              <div className="font-[family-name:var(--font-serif)] text-3xl font-bold text-slate-900 sm:text-4xl">
+                <AnimatedNumber target={2} suffix="+" delay={200} />
+              </div>
+              <div className="mt-1 text-xs text-slate-500 sm:text-sm">Years Experience</div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-500 mt-1">Years Experience</div>
-          </div>
-          <div>
-            <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-[family-name:var(--font-serif)]">
-              <AnimatedText text="ICP" delay={400} />
+            <div>
+              <div className="font-[family-name:var(--font-serif)] text-3xl font-bold text-slate-900 sm:text-4xl">
+                <AnimatedText text="ICP" delay={400} />
+              </div>
+              <div className="mt-1 text-xs text-slate-500 sm:text-sm">Agile Certified</div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-500 mt-1">Agile Certified</div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll indicator — positioned relative to the full section */}
-      <div className="hidden md:flex absolute bottom-8 left-0 right-0 justify-center flex-col items-center gap-2 text-slate-500 pointer-events-none">
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
-        <div className="w-px h-10 bg-gradient-to-b from-slate-400 to-transparent" />
-      </div>
+      </ContainerScroll>
     </section>
   );
 }
