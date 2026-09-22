@@ -1,13 +1,26 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
 import { projectsIntroFor, projectCtaFor } from "@/components/audience/content";
+import { CardStack, type CardStackItem } from "@/components/ui/card-stack";
 
 const BASE = "/clay-portfolio";
 
-const projects = [
+type Project = CardStackItem & {
+  slug: string;
+  category: string;
+  outcome: string;
+  description: string;
+  tags: string[];
+  accent: string;
+  preview: string;
+};
+
+const projects: Project[] = [
   {
+    id: "cuekit",
     slug: "cuekit",
     title: "CueKit",
     category: "UX Design · Senior Degree Project",
@@ -17,10 +30,11 @@ const projects = [
       "A mental readiness journal and cue system for college volleyball athletes, end-to-end design from research to high-fidelity Figma prototype.",
     tags: ["Figma", "User Research", "Usability Testing"],
     accent: "from-indigo-100 via-purple-50 to-white",
-    image: `${BASE}/images/cuekit/logo.jpg`,
+    imageSrc: `${BASE}/images/cuekit/logo.jpg`,
     preview: "🏐",
   },
   {
+    id: "speaksynci-ai",
     slug: "speaksynci-ai",
     title: "SpeakSyncAI",
     category: "UX Design · Concept App",
@@ -30,10 +44,11 @@ const projects = [
       "Real-time lecture transcription and AI-generated summaries for deaf and hard-of-hearing students. Accessibility-first design.",
     tags: ["Figma", "Accessibility", "Interaction Design"],
     accent: "from-sky-100 via-cyan-50 to-white",
-    image: `${BASE}/images/speaksynci/three-phone-mockup.png`,
+    imageSrc: `${BASE}/images/speaksynci/three-phone-mockup.png`,
     preview: "🎧",
   },
   {
+    id: "mu-luxembourg",
     slug: "mu-luxembourg",
     title: "MU Luxembourg Foundation",
     category: "UI Design · WordPress",
@@ -43,10 +58,11 @@ const projects = [
       "Donation-focused foundation website with responsive page layouts and clear interaction design that guides visitors to the donate flow.",
     tags: ["Figma", "WordPress", "UI Design"],
     accent: "from-red-100 via-orange-50 to-white",
-    image: `${BASE}/images/mu-luxembourg/logo.png`,
+    imageSrc: `${BASE}/images/mu-luxembourg/logo.png`,
     preview: "🎓",
   },
   {
+    id: "interactive-yearbook",
     slug: "interactive-yearbook",
     title: "Interactive Yearbook",
     category: "Interaction Design · HCI",
@@ -56,10 +72,11 @@ const projects = [
       "A digital platform reimagining yearbooks as personalized, multimedia experiences, built during HCI coursework at Korea University.",
     tags: ["Figma", "HCI", "Prototyping"],
     accent: "from-emerald-100 via-teal-50 to-white",
-    image: `${BASE}/images/fourward/login.webp`,
+    imageSrc: `${BASE}/images/fourward/login.webp`,
     preview: "📖",
   },
   {
+    id: "academic-advising",
     slug: "academic-advising",
     title: "Academic Advising",
     category: "Service Design",
@@ -72,6 +89,7 @@ const projects = [
     preview: "🧭",
   },
   {
+    id: "spokenote",
     slug: "spokenote",
     title: "Spokenote Use Cases",
     category: "Visual Design · Marketing",
@@ -81,14 +99,45 @@ const projects = [
       "Use case illustrations across product pages using Photoshop and Illustrator, communicating Spokenote to potential customers and partners.",
     tags: ["Photoshop", "Illustrator", "Brand"],
     accent: "from-violet-100 via-fuchsia-50 to-white",
-    image: `${BASE}/images/spokenote/logo-opengraph.png`,
+    imageSrc: `${BASE}/images/spokenote/logo-opengraph.png`,
     preview: "✨",
   },
 ];
 
+/** Card geometry that fits the container, since the stack is absolutely sized. */
+function useStackSize() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(1024);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const compact = width < 720;
+  const cardWidth = Math.round(Math.min(compact ? width - 24 : 460, Math.max(260, width * 0.62)));
+
+  return {
+    ref,
+    compact,
+    cardWidth,
+    cardHeight: compact ? 400 : 380,
+    maxVisible: compact ? 3 : 5,
+    spreadDeg: compact ? 24 : 40,
+    overlap: compact ? 0.3 : 0.42,
+  };
+}
+
 export default function Projects() {
   const { audience } = useAudience();
   const cta = projectCtaFor(audience);
+  const { ref, compact, cardWidth, cardHeight, maxVisible, spreadDeg, overlap } = useStackSize();
+
   return (
     <section id="projects" className="py-24 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
@@ -101,85 +150,86 @@ export default function Projects() {
               Projects
             </span>
           </h2>
-          <p className="text-slate-500 text-base max-w-xl mb-16">
+          <p className="text-slate-500 text-base max-w-xl mb-12">
             {projectsIntroFor(audience)}
           </p>
         </Reveal>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 80}>
-              <a
-                href={`${BASE}/projects/${p.slug}/`}
-                className="group block h-full rounded-3xl bg-white border border-slate-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              >
-                {/* Image / Preview area */}
+        <div ref={ref}>
+          <CardStack<Project>
+            items={projects}
+            label="Case studies"
+            maxVisible={maxVisible}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            spreadDeg={spreadDeg}
+            overlap={overlap}
+            depthPx={compact ? 80 : 130}
+            renderCard={(p, { active }) => (
+              <article className="flex h-full flex-col">
                 <div
-                  className={`relative h-48 bg-gradient-to-br ${p.accent} overflow-hidden flex items-center justify-center`}
+                  className={`relative flex h-40 shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br ${p.accent}`}
                 >
-                  {p.image ? (
+                  {p.imageSrc ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={p.image}
-                      alt={p.title}
-                      className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                      src={p.imageSrc}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-contain p-4"
+                      draggable={false}
                     />
                   ) : (
-                    <span className="text-7xl group-hover:scale-110 transition-transform duration-500">
+                    <span className="text-6xl" aria-hidden>
                       {p.preview}
                     </span>
                   )}
-                  <span className="absolute top-4 left-4 text-xs font-mono text-slate-700 bg-white/80 backdrop-blur px-2 py-1 rounded-full">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                 </div>
 
-                {/* Content */}
-                <div className="p-6 flex flex-col gap-3">
-                  <span className="text-xs text-slate-500 font-medium">
-                    {p.category}
-                  </span>
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                    {p.title}
-                  </h3>
-                  {audience === "recruiter" ? (
-                    <div className="flex-1">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--accent)" }}>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Outcome
-                      </span>
-                      <p className="text-sm text-slate-700 font-medium leading-relaxed">
-                        {p.outcome}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-slate-600 leading-relaxed flex-1">
-                      {p.description}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-2 pt-2">
+                <div className="flex flex-1 flex-col gap-2 p-5">
+                  <span className="text-xs font-medium text-slate-500">{p.category}</span>
+                  <h3 className="text-lg font-bold leading-snug text-slate-900">{p.title}</h3>
+                  <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-slate-600">
+                    {audience === "recruiter" ? p.outcome : p.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5">
                     {p.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full"
-                      >
+                      <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium mt-2 group-hover:gap-2 transition-all" style={{ color: "var(--accent)" }}>
+
+                  {/* Only the front card is reachable; the rest are aria-hidden,
+                      so their links must stay out of the tab order. */}
+                  <a
+                    href={`${BASE}/projects/${p.slug}/`}
+                    tabIndex={active ? undefined : -1}
+                    className="mt-1 inline-flex w-fit items-center gap-1 text-sm font-medium transition-all hover:gap-2"
+                    style={{ color: "var(--accent)" }}
+                  >
                     {cta}
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                  </span>
+                  </a>
                 </div>
-              </a>
-            </Reveal>
-          ))}
+              </article>
+            )}
+          />
         </div>
+
+        {/* The stack only exposes the front card, so every case study still gets
+            a plain reachable link here for keyboard users and crawlers. */}
+        <nav aria-label="All case studies" className="sr-only">
+          <ul>
+            {projects.map((p) => (
+              <li key={p.slug}>
+                <a href={`${BASE}/projects/${p.slug}/`}>{p.title}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </section>
   );
