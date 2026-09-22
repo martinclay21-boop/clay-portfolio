@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
 import { projectsIntroFor, projectCtaFor } from "@/components/audience/content";
-import { CardStack, type CardStackItem } from "@/components/ui/card-stack";
+import { CardStack, useContainerWidth, type CardStackItem } from "@/components/ui/card-stack";
 
 const BASE = "/clay-portfolio";
 
@@ -106,18 +105,7 @@ const projects: Project[] = [
 
 /** Card geometry that fits the container, since the stack is absolutely sized. */
 function useStackSize() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(1024);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref, width } = useContainerWidth<HTMLDivElement>();
 
   const compact = width < 720;
   const cardWidth = compact

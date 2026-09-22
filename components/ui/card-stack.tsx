@@ -60,6 +60,27 @@ function useReducedMotionLive() {
   return reduced;
 }
 
+/**
+ * Measures the element the ref is attached to. The stack positions its cards
+ * absolutely, so callers need a real width to size the geometry against.
+ */
+export function useContainerWidth<T extends HTMLElement>(fallback = 1024) {
+  const ref = React.useRef<T>(null);
+  const [width, setWidth] = React.useState(fallback);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, width };
+}
+
 function wrapIndex(n: number, len: number) {
   if (len <= 0) return 0;
   return ((n % len) + len) % len;
