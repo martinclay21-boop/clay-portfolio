@@ -67,7 +67,9 @@ export default function Hero() {
   const copy = heroFor(audience);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50">
+    // Vertical, not diagonal: a diagonal gradient ends at a different colour on
+    // each side, which left a visible seam against the Projects section below.
+    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-indigo-50">
       {/* Soft floating blobs */}
       <div className="pointer-events-none absolute right-20 top-20 h-72 w-72 rounded-full bg-indigo-200/40 blur-3xl float" />
       <div className="pointer-events-none absolute bottom-20 left-10 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl float" style={{ animationDelay: "2s" }} />

@@ -120,13 +120,15 @@ function useStackSize() {
   }, []);
 
   const compact = width < 720;
-  const cardWidth = Math.round(Math.min(compact ? width - 24 : 460, Math.max(260, width * 0.62)));
+  const cardWidth = compact
+    ? Math.max(260, width - 28)
+    : Math.round(Math.min(620, Math.max(360, width * 0.42)));
 
   return {
     ref,
     compact,
     cardWidth,
-    cardHeight: compact ? 400 : 380,
+    cardHeight: compact ? 410 : 440,
     maxVisible: compact ? 3 : 5,
     spreadDeg: compact ? 24 : 40,
     overlap: compact ? 0.3 : 0.42,
@@ -138,9 +140,11 @@ export default function Projects() {
   const cta = projectCtaFor(audience);
   const { ref, compact, cardWidth, cardHeight, maxVisible, spreadDeg, overlap } = useStackSize();
 
+  // The background picks up where the hero gradient ends and dissolves to
+  // white, so the wash carries behind the cards and disappears into Skills.
   return (
-    <section id="projects" className="py-24 px-6 bg-slate-50">
-      <div className="max-w-6xl mx-auto">
+    <section id="projects" className="py-24 bg-gradient-to-b from-indigo-50 via-white to-white">
+      <div className="max-w-6xl mx-auto px-6">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--accent)" }}>
             Work
@@ -154,9 +158,12 @@ export default function Projects() {
             {projectsIntroFor(audience)}
           </p>
         </Reveal>
+      </div>
 
-        <div ref={ref}>
-          <CardStack<Project>
+      {/* Full-bleed. Clipping at the viewport edge reads as cards running off
+          screen; clipping at the container edge looked like a hard slice. */}
+      <div ref={ref}>
+        <CardStack<Project>
             items={projects}
             label="Case studies"
             maxVisible={maxVisible}
@@ -216,21 +223,20 @@ export default function Projects() {
                 </div>
               </article>
             )}
-          />
-        </div>
-
-        {/* The stack only exposes the front card, so every case study still gets
-            a plain reachable link here for keyboard users and crawlers. */}
-        <nav aria-label="All case studies" className="sr-only">
-          <ul>
-            {projects.map((p) => (
-              <li key={p.slug}>
-                <a href={`${BASE}/projects/${p.slug}/`}>{p.title}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        />
       </div>
+
+      {/* The stack only exposes the front card, so every case study still gets
+          a plain reachable link here for keyboard users and crawlers. */}
+      <nav aria-label="All case studies" className="sr-only">
+        <ul>
+          {projects.map((p) => (
+            <li key={p.slug}>
+              <a href={`${BASE}/projects/${p.slug}/`}>{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </section>
   );
 }
