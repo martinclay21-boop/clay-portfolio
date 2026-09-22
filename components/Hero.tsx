@@ -95,10 +95,12 @@ export default function Hero() {
             </h1>
 
             <p className="mt-4 font-[family-name:var(--font-serif)] text-2xl italic sm:text-3xl lg:text-4xl" style={{ color: "var(--accent)" }}>
-              {TARGET_ROLES.join(" · ")}
+              <TextRepel text={TARGET_ROLES.join(" · ")} radius={110} strength={13} />
             </p>
 
-            <p className="mt-4 text-base text-slate-500 sm:text-lg">{LOOKING_FOR}</p>
+            <p className="mt-4 text-base text-slate-500 sm:text-lg">
+              <TextRepel text={LOOKING_FOR} radius={90} strength={8} />
+            </p>
           </div>
         }
       >

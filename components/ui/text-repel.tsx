@@ -72,12 +72,8 @@ function Letter({
   }, [register, x, y]);
 
   return (
-    <motion.span
-      ref={ref}
-      style={{ x, y }}
-      className={cn("inline-block will-change-transform", className)}
-    >
-      {char === " " ? " " : char}
+    <motion.span ref={ref} style={{ x, y }} className={cn("inline-block", className)}>
+      {char}
     </motion.span>
   );
 }
@@ -183,14 +179,24 @@ export function TextRepel({
           announce one character at a time. */}
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
-        {text.split("").map((char, i) => (
-          <Letter
-            key={`${char}-${i}`}
-            char={char}
-            spring={spring}
-            register={register}
-            className={letterClassName}
-          />
+        {/* Split by word first. Per-letter inline-blocks are individually
+            breakable, so without a nowrap wrapper the browser would happily
+            wrap a line in the middle of a word. */}
+        {text.split(" ").map((word, wordIndex, words) => (
+          <React.Fragment key={`${word}-${wordIndex}`}>
+            <span className="inline-block whitespace-nowrap">
+              {word.split("").map((char, i) => (
+                <Letter
+                  key={`${char}-${i}`}
+                  char={char}
+                  spring={spring}
+                  register={register}
+                  className={letterClassName}
+                />
+              ))}
+            </span>
+            {wordIndex < words.length - 1 ? " " : null}
+          </React.Fragment>
         ))}
       </span>
     </span>
