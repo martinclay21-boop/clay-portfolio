@@ -9,6 +9,7 @@ import Graphics from "@/components/Graphics";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import ScrollProgress from "@/components/ScrollProgress";
+import GradualBlur from "@/components/ui/gradual-blur";
 import { AudienceProvider, useAudience } from "./AudienceContext";
 import AudienceGate from "./AudienceGate";
 import LensSwitcher from "./LensSwitcher";
@@ -57,9 +58,26 @@ function Themed() {
         <Hero />
         <AdaptiveSections />
       </main>
-      <footer className="py-8 text-center text-sm text-slate-500 border-t border-slate-100">
+      {/* Bottom padding clears the fixed blur band. Without it the footer sits
+          permanently inside the blur with no way to scroll it out. */}
+      <footer className="pt-8 pb-40 text-center text-sm text-slate-500 border-t border-slate-100">
         © {new Date().getFullYear()} Clay Martin. Built with Next.js.
       </footer>
+
+      {/* Full-width blur along the bottom edge, doubling as the surface the
+          dock and lens switcher sit on. A `page` target adds 100 to zIndex, so
+          the explicit style keeps it under the dock (70) and switcher (80). */}
+      <GradualBlur
+        target="page"
+        position="bottom"
+        height="9rem"
+        strength={2}
+        divCount={6}
+        curve="bezier"
+        exponential
+        opacity={1}
+        style={{ zIndex: 60 }}
+      />
 
       <SectionDock />
       <LensSwitcher />
