@@ -54,8 +54,8 @@ export default function About() {
             </h2>
             <div className="space-y-4 text-slate-600 leading-relaxed text-base">
               <p>
-                I'm a UX and product designer finishing my B.A. in Emerging
-                Technology at Miami University. I work across the full process,
+                I'm a UX and product designer with a B.A. in Emerging Technology
+                from Miami University. I work across the full process,
                 from user research and wireframing to prototyping in Figma and
                 usability testing, with a visual-design and branding background
                 from two internships.
