@@ -33,7 +33,7 @@ export const ContainerScroll = ({
   children: React.ReactNode;
   className?: string;
   cardClassName?: string;
-  /** Skip the single inner panel so the caller can lay out several of its own. */
+  /** Skip the default card so the caller can stack several ContainerScrollCards. */
   bare?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,28 +115,29 @@ export const Card = ({
   className?: string;
   bare?: boolean;
 }) => {
+  // In bare mode the tilting wrapper has no frame of its own, so the caller can
+  // stack several framed cards that still rotate as one unit.
   return (
     <motion.div
       style={{ rotateX: rotate, scale }}
-      className={cn(
-        "mx-auto mt-10 w-full max-w-5xl rounded-[30px] border border-slate-200 bg-white/80 p-2 shadow-2xl backdrop-blur md:p-4",
-        className,
-      )}
+      className={cn("mx-auto mt-10 w-full max-w-5xl", className)}
     >
-      {bare ? children : <ContainerScrollPanel>{children}</ContainerScrollPanel>}
+      {bare ? children : <ContainerScrollCard>{children}</ContainerScrollCard>}
     </motion.div>
   );
 };
 
-/** The white inner panel. Use directly with `bare` to place several side by side. */
-export const ContainerScrollPanel = ({
+/** A framed card: frosted border around a white panel. Stack several with `bare`. */
+export const ContainerScrollCard = ({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
 }) => (
-  <div className={cn("h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10", className)}>
-    {children}
+  <div className="rounded-[30px] border border-slate-200 bg-white/80 p-2 shadow-2xl backdrop-blur md:p-4">
+    <div className={cn("h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10", className)}>
+      {children}
+    </div>
   </div>
 );
