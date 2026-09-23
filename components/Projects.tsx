@@ -278,6 +278,10 @@ export default function Projects() {
                   glowColor={glowColor}
                   colors={GLOW_COLORS}
                   animated
+                  outerOnly
+                  // Outer-only loses the inner wash that carried most of the
+                  // visible colour, so the halo runs stronger to compensate.
+                  glowIntensity={1.6}
                 >
                   {body}
                 </BorderGlow>

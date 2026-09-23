@@ -23,6 +23,12 @@ export type BorderGlowProps = {
   /** Three colours for the mesh-gradient border. Any CSS colour, including var(). */
   colors?: string[];
   fillOpacity?: number;
+  /**
+   * Keep the glow outside the card: no tinted fill and no inward shadows.
+   * Those sit behind the content, so they only show through transparent
+   * areas and vanish behind anything opaque such as an image header.
+   */
+  outerOnly?: boolean;
 };
 
 function parseHSL(hslStr: string) {
@@ -97,12 +103,18 @@ export default function BorderGlow({
   animated = false,
   colors = ["#c084fc", "#f472b6", "#38bdf8"],
   fillOpacity = 0.5,
+  outerOnly = false,
 }: BorderGlowProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const stopSweepRef = React.useRef<(() => void) | null>(null);
 
   const handlePointerMove = React.useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const card = cardRef.current;
     if (!card) return;
+
+    // The sweep writes the angle and proximity every frame, so while it runs
+    // the glow ignores the cursor. The pointer wins the moment it arrives.
+    stopSweepRef.current?.();
 
     const rect = card.getBoundingClientRect();
     const cx = rect.width / 2;
@@ -182,11 +194,14 @@ export default function BorderGlow({
       onEnd: () => card.classList.remove("sweep-active"),
     });
 
-    return () => {
+    const stop = () => {
       cancelled = true;
       timers.forEach(clearTimeout);
       card.classList.remove("sweep-active");
+      stopSweepRef.current = null;
     };
+    stopSweepRef.current = stop;
+    return stop;
   }, [animated]);
 
   const style = {
@@ -209,6 +224,7 @@ export default function BorderGlow({
       className={[
         "border-glow-card",
         isLightColor(backgroundColor) && "border-glow-card--light",
+        outerOnly && "border-glow-card--outer",
         className,
       ]
         .filter(Boolean)
