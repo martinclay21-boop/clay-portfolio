@@ -36,6 +36,11 @@ export type CardStackProps<T extends CardStackItem> = {
   intervalMs?: number;
   pauseOnHover?: boolean;
   showDots?: boolean;
+  /**
+   * Drop the default border, background, shadow and clipping so renderCard can
+   * draw the whole surface itself, e.g. an effect that paints past the edge.
+   */
+  unstyledCards?: boolean;
   className?: string;
   /** Accessible name for the carousel region. */
   label?: string;
@@ -115,6 +120,7 @@ export function CardStack<T extends CardStackItem>({
   intervalMs = 2800,
   pauseOnHover = true,
   showDots = true,
+  unstyledCards = false,
   className,
   label = "Carousel",
   onChangeIndex,
@@ -240,8 +246,9 @@ export function CardStack<T extends CardStackItem>({
                 <motion.div
                   key={item.id}
                   className={cn(
-                    "absolute bottom-0 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl",
-                    "select-none",
+                    "absolute bottom-0 select-none",
+                    !unstyledCards &&
+                      "overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl",
                     isActive ? "cursor-grab active:cursor-grabbing" : "cursor-pointer",
                   )}
                   style={{ width: cardWidth, height: cardHeight, zIndex: 100 - abs, transformStyle: "preserve-3d" }}

@@ -2,7 +2,8 @@
 
 import Reveal from "@/components/Reveal";
 import { useAudience } from "@/components/audience/AudienceContext";
-import { projectsIntroFor, projectCtaFor } from "@/components/audience/content";
+import { accentFor, projectsIntroFor, projectCtaFor } from "@/components/audience/content";
+import BorderGlow from "@/components/ui/border-glow";
 import { CardStack, useContainerWidth, type CardStackItem } from "@/components/ui/card-stack";
 
 const BASE = "/clay-portfolio";
@@ -123,9 +124,104 @@ function useStackSize() {
   };
 }
 
+// Mesh colours for the glowing border, taken from the lens accent so the glow
+// re-tints with it instead of carrying upstream's fixed purple, pink and sky.
+const GLOW_COLORS = [
+  "var(--accent)",
+  "var(--accent-lift)",
+  "color-mix(in oklab, var(--accent) 70%, #ffffff)",
+];
+
+/** BorderGlow takes its glow as an "H S L" string, so convert the accent hex. */
+function hexToHslTriplet(hex: string) {
+  const v = hex.replace("#", "");
+  const r = parseInt(v.slice(0, 2), 16) / 255;
+  const g = parseInt(v.slice(2, 4), 16) / 255;
+  const b = parseInt(v.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0;
+  let s = 0;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return `${Math.round(h)} ${Math.round(s * 100)} ${Math.round(l * 100)}`;
+}
+
+function ProjectCardBody({
+  p,
+  active,
+  showOutcome,
+  cta,
+}: {
+  p: Project;
+  active: boolean;
+  showOutcome: boolean;
+  cta: string;
+}) {
+  return (
+    <article className="flex h-full flex-col">
+      <div
+        className={`relative flex h-40 shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br ${p.accent}`}
+      >
+        {p.imageSrc ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={p.imageSrc}
+            alt=""
+            className="absolute inset-0 h-full w-full object-contain p-4"
+            draggable={false}
+          />
+        ) : (
+          <span className="text-6xl" aria-hidden>
+            {p.preview}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <span className="text-xs font-medium text-slate-500">{p.category}</span>
+        <h3 className="text-lg font-bold leading-snug text-slate-900">{p.title}</h3>
+        <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-slate-600">
+          {showOutcome ? p.outcome : p.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5">
+          {p.tags.map((tag) => (
+            <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Only the front card is reachable; the rest are aria-hidden,
+            so their links must stay out of the tab order. */}
+        <a
+          href={`${BASE}/projects/${p.slug}/`}
+          tabIndex={active ? undefined : -1}
+          className="mt-1 inline-flex w-fit items-center gap-1 text-sm font-medium transition-all hover:gap-2"
+          style={{ color: "var(--accent)" }}
+        >
+          {cta}
+          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </article>
+  );
+}
+
 export default function Projects() {
   const { audience } = useAudience();
   const cta = projectCtaFor(audience);
+  const glowColor = hexToHslTriplet(accentFor(audience));
   const { ref, compact, cardWidth, cardHeight, maxVisible, spreadDeg, overlap } = useStackSize();
 
   // The background picks up where the hero gradient ends and dissolves to
@@ -160,57 +256,37 @@ export default function Projects() {
             spreadDeg={spreadDeg}
             overlap={overlap}
             depthPx={compact ? 80 : 130}
-            renderCard={(p, { active }) => (
-              <article className="flex h-full flex-col">
-                <div
-                  className={`relative flex h-40 shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br ${p.accent}`}
+            unstyledCards
+            renderCard={(p, { active }) => {
+              const body = (
+                <ProjectCardBody
+                  p={p}
+                  active={active}
+                  showOutcome={audience === "recruiter"}
+                  cta={cta}
+                />
+              );
+
+              // Only the front card glows. It mounts fresh each time a new
+              // project comes forward, so the intro sweep marks the change.
+              return active ? (
+                <BorderGlow
+                  className="h-full shadow-xl"
+                  backgroundColor="#ffffff"
+                  borderRadius={24}
+                  glowRadius={36}
+                  glowColor={glowColor}
+                  colors={GLOW_COLORS}
+                  animated
                 >
-                  {p.imageSrc ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={p.imageSrc}
-                      alt=""
-                      className="absolute inset-0 h-full w-full object-contain p-4"
-                      draggable={false}
-                    />
-                  ) : (
-                    <span className="text-6xl" aria-hidden>
-                      {p.preview}
-                    </span>
-                  )}
+                  {body}
+                </BorderGlow>
+              ) : (
+                <div className="h-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+                  {body}
                 </div>
-
-                <div className="flex flex-1 flex-col gap-2 p-5">
-                  <span className="text-xs font-medium text-slate-500">{p.category}</span>
-                  <h3 className="text-lg font-bold leading-snug text-slate-900">{p.title}</h3>
-                  <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-slate-600">
-                    {audience === "recruiter" ? p.outcome : p.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Only the front card is reachable; the rest are aria-hidden,
-                      so their links must stay out of the tab order. */}
-                  <a
-                    href={`${BASE}/projects/${p.slug}/`}
-                    tabIndex={active ? undefined : -1}
-                    className="mt-1 inline-flex w-fit items-center gap-1 text-sm font-medium transition-all hover:gap-2"
-                    style={{ color: "var(--accent)" }}
-                  >
-                    {cta}
-                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
-                </div>
-              </article>
-            )}
+              );
+            }}
         />
       </div>
 
