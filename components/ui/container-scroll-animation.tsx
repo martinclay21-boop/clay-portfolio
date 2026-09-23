@@ -27,14 +27,11 @@ export const ContainerScroll = ({
   children,
   className,
   cardClassName,
-  bare = false,
 }: {
   titleComponent: string | React.ReactNode;
   children: React.ReactNode;
   className?: string;
   cardClassName?: string;
-  /** Skip the default card so the caller can stack several ContainerScrollCards. */
-  bare?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
@@ -67,17 +64,14 @@ export const ContainerScroll = ({
   return (
     <div
       ref={containerRef}
-      // min-h, not h: the height sets how long the tilt lasts, but content that
-      // outgrows it (stacked cards on a phone) must push the page down rather
-      // than overflow into the next section.
       className={cn(
-        "relative flex min-h-[62rem] items-center justify-center p-2 md:min-h-[76rem] md:p-20",
+        "relative flex h-[62rem] items-center justify-center p-2 md:h-[76rem] md:p-20",
         className,
       )}
     >
       <div className="relative w-full py-10 md:py-28" style={{ perspective: "1000px" }}>
         <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} scale={scale} className={cardClassName} bare={bare}>
+        <Card rotate={rotate} scale={scale} className={cardClassName}>
           {children}
         </Card>
       </div>
@@ -107,37 +101,23 @@ export const Card = ({
   scale,
   children,
   className,
-  bare = false,
 }: {
   rotate: MotionValue<number>;
   scale: MotionValue<number>;
   children: React.ReactNode;
   className?: string;
-  bare?: boolean;
 }) => {
-  // In bare mode the tilting wrapper has no frame of its own, so the caller can
-  // stack several framed cards that still rotate as one unit.
   return (
     <motion.div
       style={{ rotateX: rotate, scale }}
-      className={cn("mx-auto mt-10 w-full max-w-5xl", className)}
+      className={cn(
+        "mx-auto mt-10 w-full max-w-5xl rounded-[30px] border border-slate-200 bg-white/80 p-2 shadow-2xl backdrop-blur md:p-4",
+        className,
+      )}
     >
-      {bare ? children : <ContainerScrollCard>{children}</ContainerScrollCard>}
+      <div className="h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10">
+        {children}
+      </div>
     </motion.div>
   );
 };
-
-/** A framed card: frosted border around a white panel. Stack several with `bare`. */
-export const ContainerScrollCard = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => (
-  <div className="rounded-[30px] border border-slate-200 bg-white/80 p-2 shadow-2xl backdrop-blur md:p-4">
-    <div className={cn("h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10", className)}>
-      {children}
-    </div>
-  </div>
-);

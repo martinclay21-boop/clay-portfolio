@@ -5,17 +5,12 @@ import { ArrowRight, Download } from "lucide-react";
 import { useAudience } from "@/components/audience/AudienceContext";
 import {
   heroFor,
-  heroSideCardFor,
   LOOKING_FOR,
   TARGET_ROLES,
-  type HeroSideCard,
 } from "@/components/audience/content";
 import { Button } from "@/components/ui/button";
 import { ButtonColorful } from "@/components/ui/button-colorful";
-import {
-  ContainerScroll,
-  ContainerScrollCard,
-} from "@/components/ui/container-scroll-animation";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { TextRepel } from "@/components/ui/text-repel";
 
 const prefersReducedMotion = () =>
@@ -67,45 +62,9 @@ function AnimatedText({ text, delay = 0 }: { text: string; delay?: number }) {
   );
 }
 
-function SideCard({ card }: { card: HeroSideCard }) {
-  return (
-    <ContainerScrollCard className="text-left">
-      <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--accent)" }}>
-        {card.eyebrow}
-      </p>
-
-      <div className="mt-6 grid gap-8 md:grid-cols-3">
-        {card.rows.map((row) => (
-          <dl key={row.label}>
-            <dt className="text-xs font-medium text-slate-500">{row.label}</dt>
-            <dd className="mt-1 text-base font-semibold leading-snug text-slate-900">{row.value}</dd>
-            <dd className="mt-0.5 text-sm text-slate-500">{row.detail}</dd>
-          </dl>
-        ))}
-
-        <div>
-          <p className="text-xs font-medium text-slate-500">{card.chipsLabel}</p>
-          <ul className="mt-2 flex flex-wrap gap-2">
-            {card.chips.map((chip) => (
-              <li
-                key={chip}
-                className="rounded-full px-3 py-1.5 text-xs font-medium"
-                style={{ background: "var(--accent-soft)", color: "var(--accent)" }}
-              >
-                {chip}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </ContainerScrollCard>
-  );
-}
-
 export default function Hero() {
   const { audience } = useAudience();
   const copy = heroFor(audience);
-  const side = heroSideCardFor(audience);
 
   return (
     // Vertical, not diagonal: a diagonal gradient ends at a different colour on
@@ -117,7 +76,6 @@ export default function Hero() {
 
       <ContainerScroll
         className="relative"
-        bare
         titleComponent={
           <div key={audience ?? "default"} className="hero-swap px-4">
             {copy.showBadge ? (
@@ -148,8 +106,7 @@ export default function Hero() {
           </div>
         }
       >
-        <div key={audience ?? "default"} className="hero-swap flex flex-col gap-6">
-        <ContainerScrollCard className="flex flex-col justify-center text-left">
+        <div key={audience ?? "default"} className="hero-swap flex h-full flex-col justify-center text-left">
           <p className="max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
             {copy.sub}
           </p>
@@ -220,9 +177,6 @@ export default function Hero() {
               <div className="mt-1 text-xs text-slate-500 sm:text-sm">Agile Certified</div>
             </div>
           </div>
-        </ContainerScrollCard>
-
-        {side && <SideCard card={side} />}
         </div>
       </ContainerScroll>
     </section>

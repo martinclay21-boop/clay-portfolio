@@ -91,54 +91,6 @@ export const HERO_BY_AUDIENCE: Record<Audience, HeroCopy> = {
   },
 };
 
-// ---- Second hero card, different per lens ----
-// Recruiter gets the logistics a hiring manager checks next; designer gets the
-// credentials behind the "researcher" half of the title. Every fact here is
-// already stated elsewhere on the site (About, Skills, the old TL;DR).
-export interface HeroSideCard {
-  eyebrow: string;
-  rows: { label: string; value: string; detail: string }[];
-  chipsLabel: string;
-  chips: string[];
-}
-
-export const HERO_SIDE_CARD: Record<Audience, HeroSideCard> = {
-  recruiter: {
-    eyebrow: "Availability & fit",
-    rows: [
-      {
-        label: "Education",
-        value: "B.A. Emerging Technology in Business & Design",
-        detail: "Miami University · May 2026",
-      },
-      { label: "Based in", value: "Fishers, IN", detail: "Indianapolis area" },
-    ],
-    chipsLabel: "Interested in",
-    chips: ["Software & Technology", "Healthcare & Pharma", "AI & Emerging Tech", "Agile Project Management"],
-  },
-  designer: {
-    eyebrow: "Research credentials",
-    rows: [
-      {
-        label: "Certification",
-        value: "IRB, Humans as Subjects",
-        detail: "CITI Program · Expires 2029",
-      },
-      {
-        label: "Study abroad",
-        value: "Human Computer Interaction",
-        detail: "Korea University, Seoul · Aug – Dec 2025",
-      },
-    ],
-    chipsLabel: "Methods I use",
-    chips: ["User Research", "Usability Testing", "Journey Mapping", "Service Design"],
-  },
-};
-
-export function heroSideCardFor(a: Audience | null): HeroSideCard | null {
-  return a ? HERO_SIDE_CARD[a] : null;
-}
-
 // Audience-tuned intro line for the Projects section
 export const PROJECTS_INTRO: Record<Audience, string> = {
   recruiter:
