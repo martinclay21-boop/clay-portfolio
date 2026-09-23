@@ -27,11 +27,14 @@ export const ContainerScroll = ({
   children,
   className,
   cardClassName,
+  bare = false,
 }: {
   titleComponent: string | React.ReactNode;
   children: React.ReactNode;
   className?: string;
   cardClassName?: string;
+  /** Skip the single inner panel so the caller can lay out several of its own. */
+  bare?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
@@ -64,14 +67,17 @@ export const ContainerScroll = ({
   return (
     <div
       ref={containerRef}
+      // min-h, not h: the height sets how long the tilt lasts, but content that
+      // outgrows it (stacked cards on a phone) must push the page down rather
+      // than overflow into the next section.
       className={cn(
-        "relative flex h-[62rem] items-center justify-center p-2 md:h-[76rem] md:p-20",
+        "relative flex min-h-[62rem] items-center justify-center p-2 md:min-h-[76rem] md:p-20",
         className,
       )}
     >
       <div className="relative w-full py-10 md:py-28" style={{ perspective: "1000px" }}>
         <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} scale={scale} className={cardClassName}>
+        <Card rotate={rotate} scale={scale} className={cardClassName} bare={bare}>
           {children}
         </Card>
       </div>
@@ -101,11 +107,13 @@ export const Card = ({
   scale,
   children,
   className,
+  bare = false,
 }: {
   rotate: MotionValue<number>;
   scale: MotionValue<number>;
   children: React.ReactNode;
   className?: string;
+  bare?: boolean;
 }) => {
   return (
     <motion.div
@@ -115,9 +123,20 @@ export const Card = ({
         className,
       )}
     >
-      <div className="h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10">
-        {children}
-      </div>
+      {bare ? children : <ContainerScrollPanel>{children}</ContainerScrollPanel>}
     </motion.div>
   );
 };
+
+/** The white inner panel. Use directly with `bare` to place several side by side. */
+export const ContainerScrollPanel = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={cn("h-full w-full rounded-2xl bg-white p-6 ring-1 ring-slate-100 md:p-10", className)}>
+    {children}
+  </div>
+);
